@@ -1,0 +1,112 @@
+{
+  "results": [
+    {
+      "graph_id": 1,
+      "vertices": 5,
+      "edges": 7,
+      "prim": {
+        "edges": [
+          {
+            "from": "A",
+            "to": "C",
+            "weight": 3
+          },
+          {
+            "from": "C",
+            "to": "B",
+            "weight": 2
+          },
+          {
+            "from": "B",
+            "to": "D",
+            "weight": 5
+          },
+          {
+            "from": "D",
+            "to": "E",
+            "weight": 6
+          }
+        ],
+        "totalWeight": 16,
+        "operations": 20,
+        "executionTimeMs": 7
+      },
+      "kruskal": {
+        "edges": [
+          {
+            "from": "B",
+            "to": "C",
+            "weight": 2
+          },
+          {
+            "from": "A",
+            "to": "C",
+            "weight": 3
+          },
+          {
+            "from": "B",
+            "to": "D",
+            "weight": 5
+          },
+          {
+            "from": "D",
+            "to": "E",
+            "weight": 6
+          }
+        ],
+        "totalWeight": 16,
+        "operations": 37,
+        "executionTimeMs": 0
+      }
+    },
+    {
+      "graph_id": 2,
+      "vertices": 4,
+      "edges": 5,
+      "prim": {
+        "edges": [
+          {
+            "from": "A",
+            "to": "B",
+            "weight": 1
+          },
+          {
+            "from": "B",
+            "to": "C",
+            "weight": 2
+          },
+          {
+            "from": "C",
+            "to": "D",
+            "weight": 3
+          }
+        ],
+        "totalWeight": 6,
+        "operations": 14,
+        "executionTimeMs": 0
+      },
+      "kruskal": {
+        "edges": [
+          {
+            "from": "A",
+            "to": "B",
+            "weight": 1
+          },
+          {
+            "from": "B",
+            "to": "C",
+            "weight": 2
+          },
+          {
+            "from": "C",
+            "to": "D",
+            "weight": 3
+          }
+        ],
+        "totalWeight": 6,
+        "operations": 25,
+        "executionTimeMs": 0
+      }
+    }
+  ]
+}
