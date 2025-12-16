@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Checkout - GadgetStore</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="../css/styles.css" />
+        <link rel="stylesheet" href="../css/dark-mode.css" />
+        <link rel="stylesheet" href="../css/checkout.css" />
+        <link rel="stylesheet" href="../css/jquery-features.css" />
+        <link rel="stylesheet" href="../css/cart-sidebar.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        
+        <!-- jQuery CDN -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+                <div class="container">
+                    <a class="navbar-brand" href="../index.html">
+                        <h1 class="mb-0">GadgetStore</h1>
+                    </a>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="../index.html"
+                                    >Home</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="products.html"
+                                    >Products</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="contact.html"
+                                    >Contact Us</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="about.html"
+                                    >About Us</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="checkout.html"
+                                    >Checkout</a
+                                >
+                            </li>
+                            <li class="nav-item" id="auth-nav-item">
+                                <a class="nav-link" href="login.html">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                                </a>
+                            </li>
+                            <li class="nav-item cart-button" onclick="toggleCart()">
+                                <a class="nav-link" style="cursor: pointer;">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span id="cart-badge" class="cart-badge" style="display: none;">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Checkout Hero Section -->
+            <section class="checkout-hero">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h1 class="display-4 mb-3">Checkout</h1>
+                            <p class="lead">Complete your purchase securely</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Checkout Content -->
+            <section class="checkout-content py-5">
+                <div class="container">
+                    <div class="row g-4">
+                        <!-- Checkout Form -->
+                        <div class="col-lg-8">
+                            <div class="checkout-form-section">
+                                <h2>
+                                    <i class="fas fa-user me-2"></i>Billing
+                                    Information
+                                </h2>
+                                <form id="checkout-form">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label
+                                                for="firstName"
+                                                class="form-label"
+                                                >First Name</label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="firstName"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label
+                                                for="lastName"
+                                                class="form-label"
+                                                >Last Name</label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="lastName"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-12">
+                                            <label
+                                                for="email"
+                                                class="form-label"
+                                                >Email Address</label
+                                            >
+                                            <input
+                                                type="email"
+                                                class="form-control"
+                                                id="email"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-12">
+                                            <label
+                                                for="address"
+                                                class="form-label"
+                                                >Address</label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="address"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="city" class="form-label"
+                                                >City</label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="city"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label
+                                                for="postalCode"
+                                                class="form-label"
+                                                >Postal Code</label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="postalCode"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-12">
+                                            <label
+                                                for="country"
+                                                class="form-label"
+                                                >Country</label
+                                            >
+                                            <select
+                                                class="form-control"
+                                                id="country"
+                                                required
+                                            >
+                                                <option value="">
+                                                    Select Country
+                                                </option>
+                                                <option value="KZ">
+                                                    Kazakhstan
+                                                </option>
+                                                <option value="US">
+                                                    United States
+                                                </option>
+                                                <option value="CA">
+                                                    Canada
+                                                </option>
+                                                <option value="GB">
+                                                    United Kingdom
+                                                </option>
+                                                <option value="DE">
+                                                    Germany
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <h3>
+                                        <i class="fas fa-credit-card me-2"></i
+                                        >Payment Information
+                                    </h3>
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label
+                                                for="cardNumber"
+                                                class="form-label"
+                                                >Card Number</label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="cardNumber"
+                                                placeholder="1234 5678 9012 3456"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label
+                                                for="expiryDate"
+                                                class="form-label"
+                                                >Expiry Date</label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="expiryDate"
+                                                placeholder="MM/YY"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="cvv" class="form-label"
+                                                >CVV</label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="cvv"
+                                                placeholder="123"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="d-flex gap-2">
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-primary btn-lg flex-grow-1"
+                                                >
+                                                    <i class="fas fa-lock me-2"></i
+                                                    >Complete Order
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-outline-secondary btn-lg reset-form-btn"
+                                                >
+                                                    <i class="fas fa-redo me-2"></i>Reset Form
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Order Summary -->
+                        <div class="col-lg-4">
+                            <div class="order-summary">
+                                <h2>
+                                    <i class="fas fa-shopping-cart me-2"></i
+                                    >Order Summary
+                                </h2>
+                                <div class="cart-items" id="cart-items">
+                                    <!-- Cart items will be populated by JavaScript -->
+                                </div>
+                                <div class="price-breakdown">
+                                    <div
+                                        class="price-row d-flex justify-content-between"
+                                    >
+                                        <span>Subtotal:</span>
+                                        <span id="subtotal">$0.00</span>
+                                    </div>
+                                    <div
+                                        class="price-row d-flex justify-content-between"
+                                    >
+                                        <span>Tax:</span>
+                                        <span id="tax">$0.00</span>
+                                    </div>
+                                    <div
+                                        class="price-row d-flex justify-content-between"
+                                    >
+                                        <span>Shipping:</span>
+                                        <span id="shipping">$0.00</span>
+                                    </div>
+                                    <div
+                                        class="price-row total-row d-flex justify-content-between h5"
+                                    >
+                                        <strong>Total:</strong>
+                                        <strong id="total">$0.00</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-dark text-white py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p class="mb-2">
+                            &copy; 2025 GadgetStore. All rights reserved.
+                        </p>
+                        <p class="mb-0 small">
+                            Team Members: Alexey Azarenkov, Timur Imbergenov,
+                            Ali Yerbolatov
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../js/form-validation.js"></script>
+        <script>
+            function loadCheckoutData() {
+                const checkoutData = JSON.parse(
+                    sessionStorage.getItem("checkoutData"),
+                );
+                const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+                let items = [];
+                if (checkoutData && checkoutData.items) {
+                    items = checkoutData.items;
+                } else if (cart.length > 0) {
+                    items = cart;
+                }
+
+                // Fix image extensions - convert .jpg and .jpeg to .png
+                items = items.map(item => {
+                    if (item.image) {
+                        item.image = item.image.replace(/\.(jpg|jpeg)$/i, '.png');
+                    }
+                    return item;
+                });
+
+                if (items.length === 0) {
+                    document.getElementById("cart-items").innerHTML =
+                        '<p class="text-center text-muted">No items in cart</p>';
+                    return;
+                }
+
+                const cartItemsContainer =
+                    document.getElementById("cart-items");
+                cartItemsContainer.innerHTML = "";
+
+                let subtotal = 0;
+                items.forEach((item) => {
+                    const itemTotal = item.price * item.quantity;
+                    subtotal += itemTotal;
+
+                    const itemElement = document.createElement("div");
+                    itemElement.className =
+                        "cart-item d-flex align-items-center";
+                    
+                    // Use currency formatter if available
+                    const formatter = window.formatPrice || ((price) => `$${price.toFixed(2)}`);
+                    
+                    itemElement.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="item-image me-3">
+                        <div class="item-details flex-grow-1">
+                            <h4 class="mb-1">${item.name}</h4>
+                            <p class="mb-0">Quantity: ${item.quantity}</p>
+                        </div>
+                        <div class="item-price" data-original-price="${itemTotal}">${formatter(itemTotal)}</div>
+                    `;
+                    cartItemsContainer.appendChild(itemElement);
+                });
+
+                const tax = subtotal * 0.1;
+                const shipping = subtotal > 0 ? 10 : 0;
+                const total = subtotal + tax + shipping;
+
+                // Use currency formatter if available
+                const formatter = window.formatPrice || ((price) => `$${price.toFixed(2)}`);
+                
+                // Store original USD prices and display converted prices
+                const subtotalEl = document.getElementById("subtotal");
+                const taxEl = document.getElementById("tax");
+                const shippingEl = document.getElementById("shipping");
+                const totalEl = document.getElementById("total");
+                
+                subtotalEl.setAttribute('data-original-price', subtotal);
+                taxEl.setAttribute('data-original-price', tax);
+                shippingEl.setAttribute('data-original-price', shipping);
+                totalEl.setAttribute('data-original-price', total);
+                
+                subtotalEl.textContent = formatter(subtotal);
+                taxEl.textContent = formatter(tax);
+                shippingEl.textContent = formatter(shipping);
+                totalEl.textContent = formatter(total);
+            }
+
+            document
+                .getElementById("checkout-form")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+
+                    const requiredFields = this.querySelectorAll("[required]");
+                    let isValid = true;
+
+                    requiredFields.forEach((field) => {
+                        if (!field.value.trim()) {
+                            field.classList.add("is-invalid");
+                            isValid = false;
+                        } else {
+                            field.classList.remove("is-invalid");
+                            field.classList.add("is-valid");
+                        }
+                    });
+
+                    if (isValid) {
+                        const button = this.querySelector(
+                            'button[type="submit"]',
+                        );
+                        const originalText = button.innerHTML;
+                        button.innerHTML =
+                            '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                        button.disabled = true;
+
+                        setTimeout(() => {
+                            alert(
+                                "Order placed successfully! Thank you for your purchase.",
+                            );
+                            localStorage.removeItem("cart");
+                            sessionStorage.removeItem("checkoutData");
+                            window.location.href = "../index.html";
+                        }, 2000);
+                    }
+                });
+
+            document
+                .getElementById("cardNumber")
+                .addEventListener("input", function (e) {
+                    let value = e.target.value
+                        .replace(/\s/g, "")
+                        .replace(/[^0-9]/gi, "");
+                    let formattedValue =
+                        value.match(/.{1,4}/g)?.join(" ") || value;
+                    if (formattedValue !== e.target.value) {
+                        e.target.value = formattedValue;
+                    }
+                });
+
+            document
+                .getElementById("expiryDate")
+                .addEventListener("input", function (e) {
+                    let value = e.target.value.replace(/\D/g, "");
+                    if (value.length >= 2) {
+                        value =
+                            value.substring(0, 2) + "/" + value.substring(2, 4);
+                    }
+                    e.target.value = value;
+                });
+
+            window.addEventListener("load", loadCheckoutData);
+        </script>
+        
+        <script src="../js/dark-mode.js"></script>
+        <script src="../js/animations.js"></script>
+        <script src="../js/keyboard-navigation.js"></script>
+        <script src="../js/form-reset.js"></script>
+        
+        <script src="../js/jquery-init.js"></script>
+        <script src="../js/jquery-ux-elements.js"></script>
+        <script src="../js/jquery-notifications.js"></script>
+        <script src="../js/jquery-clipboard.js"></script>
+        <script src="../js/jquery-lazy-loading.js"></script>
+        <script src="../js/currency-converter.js"></script>
+        <script src="../js/auth.js"></script>
+        <script src="../js/cart-sidebar.js"></script>
+    </body>
+</html>

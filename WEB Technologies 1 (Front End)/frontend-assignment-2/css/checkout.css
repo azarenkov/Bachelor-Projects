@@ -1,0 +1,453 @@
+/* Checkout Page Styles - Enhanced with Bootstrap */
+
+.checkout-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    min-height: 40vh;
+    display: flex;
+    align-items: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.checkout-hero h1 {
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.checkout-hero p {
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Checkout Content */
+.checkout-content {
+    background: #f8f9fa;
+}
+
+/* Form Section */
+.checkout-form-section {
+    background: white;
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+    height: 100%;
+}
+
+.checkout-form-section h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.checkout-form-section h3 {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 1.3rem;
+    border-top: 2px solid #e9ecef;
+    padding-top: 2rem;
+}
+
+/* Bootstrap Form Enhancements */
+.form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.8rem;
+}
+
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.1);
+    background-color: white;
+    transform: translateY(-1px);
+}
+
+.form-control:hover {
+    border-color: #007bff;
+    background-color: white;
+}
+
+.form-control::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+/* Submit Button */
+.btn-primary {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Order Summary */
+.order-summary {
+    background: white;
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.order-summary h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+/* Cart Items */
+.cart-items {
+    margin-bottom: 2rem;
+}
+
+.cart-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item:hover {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0 -1rem;
+}
+
+.item-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    padding: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.item-details h4 {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.item-details p {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.item-price {
+    font-weight: 600;
+    color: #007bff;
+    font-size: 1.1rem;
+}
+
+/* Price Breakdown */
+.price-breakdown {
+    border-top: 2px solid #e9ecef;
+    padding-top: 1.5rem;
+}
+
+.price-row {
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+}
+
+.price-row.total-row {
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    color: #2c3e50;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1199.98px) {
+    .checkout-hero {
+        min-height: 35vh;
+    }
+
+    .checkout-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .checkout-form-section,
+    .order-summary {
+        padding: 2rem;
+    }
+
+    .order-summary {
+        position: static;
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .checkout-hero {
+        min-height: 30vh;
+        padding: 4rem 0;
+    }
+
+    .checkout-hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .checkout-hero p {
+        font-size: 1.1rem;
+    }
+
+    .checkout-form-section,
+    .order-summary {
+        padding: 1.8rem;
+    }
+
+    .checkout-form-section h3 {
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .checkout-hero {
+        min-height: 25vh;
+        padding: 3rem 0;
+    }
+
+    .checkout-hero h1 {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .checkout-hero p {
+        font-size: 1rem;
+    }
+
+    .checkout-form-section,
+    .order-summary {
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+
+    .checkout-form-section h2,
+    .order-summary h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .checkout-form-section h3 {
+        font-size: 1.2rem;
+        padding-top: 1.25rem;
+        margin-top: 1.25rem;
+    }
+
+    .form-control {
+        padding: 0.75rem;
+        font-size: 0.95rem;
+    }
+
+    .btn-primary {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .item-image {
+        width: 50px;
+        height: 50px;
+    }
+
+    .item-details h4 {
+        font-size: 1rem;
+    }
+
+    .price-row {
+        font-size: 0.95rem;
+    }
+
+    .price-row.total-row {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .checkout-hero {
+        padding: 2.5rem 0;
+    }
+
+    .checkout-hero h1 {
+        font-size: 1.6rem;
+    }
+
+    .checkout-hero p {
+        font-size: 0.95rem;
+    }
+
+    .checkout-form-section,
+    .order-summary {
+        padding: 1.25rem;
+        border-radius: 10px;
+    }
+
+    .checkout-form-section h2,
+    .order-summary h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .checkout-form-section h3 {
+        font-size: 1.1rem;
+    }
+
+    .form-control {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.85rem;
+    }
+
+    .item-image {
+        width: 45px;
+        height: 45px;
+    }
+
+    .item-details h4 {
+        font-size: 0.95rem;
+    }
+
+    .item-details p {
+        font-size: 0.8rem;
+    }
+
+    .item-price {
+        font-size: 1rem;
+    }
+
+    .price-row {
+        font-size: 0.9rem;
+    }
+
+    .price-row.total-row {
+        font-size: 1.05rem;
+    }
+}
+
+/* Animation Effects - REMOVED fadeInUp animations */
+
+/* Form Validation Styles */
+.form-control.is-valid {
+    border-color: #28a745;
+    background-color: #f8fff9;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    background-color: #fff8f8;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.valid-feedback {
+    color: #28a745;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Loading State */
+.btn-primary.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-primary.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Security Icons */
+.form-control[type="text"]#cardNumber::before {
+    content: "🔒";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Accessibility Improvements */
+.checkout-form-section:focus-within {
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+}
+
+.order-summary:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Print Styles */
+@media print {
+    .checkout-hero {
+        background: #f8f9fa;
+        color: #333;
+        padding: 1rem 0;
+    }
+
+    .checkout-form-section,
+    .order-summary {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+    }
+
+    .btn-primary {
+        display: none;
+    }
+}

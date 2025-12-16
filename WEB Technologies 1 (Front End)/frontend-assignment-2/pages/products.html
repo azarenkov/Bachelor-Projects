@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Products - GadgetStore</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="../css/styles.css" />
+        <link rel="stylesheet" href="../css/dark-mode.css" />
+        <link rel="stylesheet" href="../css/products.css" />
+        <link rel="stylesheet" href="../css/jquery-features.css" />
+        <link rel="stylesheet" href="../css/cart-sidebar.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        
+        <!-- jQuery CDN -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+                <div class="container">
+                    <a class="navbar-brand" href="../index.html">
+                        <h1 class="mb-0">GadgetStore</h1>
+                    </a>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="../index.html"
+                                    >Home</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="products.html"
+                                    >Products</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="contact.html"
+                                    >Contact Us</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="about.html"
+                                    >About Us</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="checkout.html"
+                                    >Checkout</a
+                                >
+                            </li>
+                            <li class="nav-item" id="auth-nav-item">
+                                <a class="nav-link" href="login.html">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                                </a>
+                            </li>
+                            <li class="nav-item cart-button" onclick="toggleCart()">
+                                <a class="nav-link" style="cursor: pointer;">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span id="cart-badge" class="cart-badge" style="display: none;">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section class="products py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="text-center mb-5 display-4">
+                                Our Products
+                            </h1>
+                        </div>
+                    </div>
+                    
+                    <!-- Search Bar for Live Filter -->
+                    <div class="row mb-4">
+                        <div class="col-12 col-md-8 mx-auto">
+                            <div class="search-container">
+                                <input type="text" id="product-search" class="form-control" 
+                                    placeholder="🔍 Search products..." />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Filter Buttons -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                <button class="btn filter-btn active" data-category="all">All Products</button>
+                                <button class="btn filter-btn" data-category="smartphones">Smartphones</button>
+                                <button class="btn filter-btn" data-category="laptops">Laptops</button>
+                                <button class="btn filter-btn" data-category="audio">Audio</button>
+                                <button class="btn filter-btn" data-category="wearables">Wearables</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div
+                                class="product-card h-100"
+                                data-category="smartphones"
+                                onclick="openProductDetails('smartphone', 'Premium Smartphone', 699.99, '../assets/images/smartphone.png')"
+                            >
+                                <div class="card-body text-center">
+                                    <img
+                                        src="../assets/images/smartphone.png"
+                                        alt="Smartphone"
+                                        class="img-fluid mb-3"
+                                    />
+                                    <h3 class="card-title h5">
+                                        Premium Smartphone
+                                    </h3>
+                                    <p class="price h4 text-primary mb-3">
+                                        $699.99
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div
+                                class="product-card h-100"
+                                data-category="laptops"
+                                onclick="openProductDetails('laptop', 'Gaming Laptop', 1299.99, '../assets/images/laptop.png')"
+                            >
+                                <div class="card-body text-center">
+                                    <img
+                                        src="../assets/images/laptop.png"
+                                        alt="Laptop"
+                                        class="img-fluid mb-3"
+                                    />
+                                    <h3 class="card-title h5">Gaming Laptop</h3>
+                                    <p class="price h4 text-primary mb-3">
+                                        $1,299.99
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div
+                                class="product-card h-100"
+                                onclick="openProductDetails('tablet', 'Pro Tablet', 599.99, '../assets/images/tablet.png')"
+                            >
+                                <div class="card-body text-center">
+                                    <img
+                                        src="../assets/images/tablet.png"
+                                        alt="Tablet"
+                                        class="img-fluid mb-3"
+                                    />
+                                    <h3 class="card-title h5">Pro Tablet</h3>
+                                    <p class="price h4 text-primary mb-3">
+                                        $599.99
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div
+                                class="product-card h-100"
+                                onclick="openProductDetails('camera', 'Digital Camera', 899.99, '../assets/images/camera.png')"
+                            >
+                                <div class="card-body text-center">
+                                    <img
+                                        src="../assets/images/camera.png"
+                                        alt="Camera"
+                                        class="img-fluid mb-3"
+                                    />
+                                    <h3 class="card-title h5">
+                                        Digital Camera
+                                    </h3>
+                                    <p class="price h4 text-primary mb-3">
+                                        $899.99
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div
+                                class="product-card h-100"
+                                data-category="audio"
+                                onclick="openProductDetails('headphones', 'Wireless Headphones', 199.99, '../assets/images/headphones.png')"
+                            >
+                                <div class="card-body text-center">
+                                    <img
+                                        src="../assets/images/headphones.png"
+                                        alt="Headphones"
+                                        class="img-fluid mb-3"
+                                    />
+                                    <h3 class="card-title h5">
+                                        Wireless Headphones
+                                    </h3>
+                                    <p class="price h4 text-primary mb-3">
+                                        $199.99
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div
+                                class="product-card h-100"
+                                data-category="wearables"
+                                onclick="openProductDetails('smartwatch', 'Smart Watch', 399.99, '../assets/images/smartwatch.png')"
+                            >
+                                <div class="card-body text-center">
+                                    <img
+                                        src="../assets/images/smartwatch.png"
+                                        alt="Smart Watch"
+                                        class="img-fluid mb-3"
+                                    />
+                                    <h3 class="card-title h5">Smart Watch</h3>
+                                    <p class="price h4 text-primary mb-3">
+                                        $399.99
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-dark text-white py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p class="mb-2">
+                            &copy; 2025 GadgetStore. All rights reserved.
+                        </p>
+                        <p class="mb-0 small">
+                            Team Members: Alexey Azarenkov, Timur Imbergenov,
+                            Ali Yerbolatov
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function openProductDetails(
+                productId,
+                productName,
+                price,
+                imageSrc,
+            ) {
+                const productData = {
+                    id: productId,
+                    name: productName,
+                    price: price,
+                    image: imageSrc,
+                };
+                sessionStorage.setItem(
+                    "selectedProduct",
+                    JSON.stringify(productData),
+                );
+                
+                window.location.href = "product-details.html";
+            }
+            
+            // Fix for back button - ensure page is always visible
+            window.addEventListener('pageshow', function(event) {
+                document.body.style.opacity = '1';
+            });
+        </script>
+        
+        <script src="../js/dark-mode.js"></script>
+        <script src="../js/animations.js"></script>
+        <script src="../js/keyboard-navigation.js"></script>
+        <script src="../js/product-filter.js"></script>
+        
+        <script src="../js/jquery-init.js"></script>
+        <script src="../js/jquery-search.js"></script>
+        <script src="../js/jquery-ux-elements.js"></script>
+        <script src="../js/jquery-notifications.js"></script>
+        <script src="../js/jquery-clipboard.js"></script>
+        <script src="../js/jquery-lazy-loading.js"></script>
+        <script src="../js/currency-converter.js"></script>
+        <script src="../js/auth.js"></script>
+        <script src="../js/cart-sidebar.js"></script>
+    </body>
+</html>

@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>My Profile - GadgetStore</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="../css/styles.css" />
+        <link rel="stylesheet" href="../css/dark-mode.css" />
+        <link rel="stylesheet" href="../css/cart-sidebar.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <script src="../js/dark-mode.js"></script>
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            main {
+                flex: 1;
+            }
+            .profile-container {
+                min-height: calc(100vh - 200px);
+                padding: 120px 0 50px;
+            }
+            .profile-card {
+                background: white;
+                border-radius: 15px;
+                padding: 3rem;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            }
+            .profile-header {
+                text-align: center;
+                margin-bottom: 2rem;
+                padding-bottom: 2rem;
+                border-bottom: 2px solid #e9ecef;
+            }
+            .profile-avatar {
+                width: 120px;
+                height: 120px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1rem;
+                font-size: 3rem;
+                color: white;
+                font-weight: 700;
+            }
+            .profile-name {
+                font-size: 2rem;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 0.5rem;
+            }
+            .profile-email {
+                color: #6c757d;
+                font-size: 1.1rem;
+            }
+            .profile-details {
+                margin-top: 2rem;
+            }
+            .detail-row {
+                padding: 1rem;
+                border-bottom: 1px solid #e9ecef;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .detail-row:last-child {
+                border-bottom: none;
+            }
+            .detail-label {
+                font-weight: 600;
+                color: #2c3e50;
+            }
+            .detail-value {
+                color: #6c757d;
+            }
+            .btn-logout {
+                background: linear-gradient(135deg, #dc3545, #c82333);
+                border: none;
+                color: white;
+                padding: 0.875rem 2rem;
+                border-radius: 8px;
+                font-weight: 600;
+                margin-top: 2rem;
+            }
+            .btn-logout:hover {
+                background: linear-gradient(135deg, #c82333, #bd2130);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+            }
+            
+            /* Dark mode styles */
+            [data-theme="dark"] .profile-card {
+                background: #2d2d2d;
+            }
+            [data-theme="dark"] .profile-header {
+                border-bottom-color: #4d4d4d;
+            }
+            [data-theme="dark"] .profile-name {
+                color: #e0e0e0;
+            }
+            [data-theme="dark"] .profile-email {
+                color: #b0b0b0;
+            }
+            [data-theme="dark"] .detail-row {
+                border-bottom-color: #4d4d4d;
+            }
+            [data-theme="dark"] .detail-label {
+                color: #e0e0e0;
+            }
+            [data-theme="dark"] .detail-value {
+                color: #b0b0b0;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+                <div class="container">
+                    <a class="navbar-brand" href="../index.html">
+                        <h1 class="mb-0">GadgetStore</h1>
+                    </a>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="../index.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="products.html">Products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="contact.html">Contact Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="about.html">About Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="profile.html">
+                                    <i class="fas fa-user me-1"></i>Profile
+                                </a>
+                            </li>
+                            <li class="nav-item cart-button" onclick="toggleCart()">
+                                <a class="nav-link" style="cursor: pointer;">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span id="cart-badge" class="cart-badge" style="display: none;">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <div class="profile-container">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="profile-card">
+                                <div class="profile-header">
+                                    <div class="profile-avatar" id="avatar"></div>
+                                    <h1 class="profile-name" id="profile-name">Loading...</h1>
+                                    <p class="profile-email" id="profile-email">Loading...</p>
+                                </div>
+                                
+                                <div class="profile-details">
+                                    <h3 class="mb-4"><i class="fas fa-info-circle me-2"></i>Account Details</h3>
+                                    <div class="detail-row">
+                                        <span class="detail-label">
+                                            <i class="fas fa-user me-2"></i>Full Name
+                                        </span>
+                                        <span class="detail-value" id="detail-name">-</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">
+                                            <i class="fas fa-envelope me-2"></i>Email Address
+                                        </span>
+                                        <span class="detail-value" id="detail-email">-</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">
+                                            <i class="fas fa-calendar me-2"></i>Member Since
+                                        </span>
+                                        <span class="detail-value" id="detail-date">-</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">
+                                            <i class="fas fa-shield-alt me-2"></i>Account Status
+                                        </span>
+                                        <span class="detail-value">
+                                            <span class="badge bg-success">Active</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center">
+                                    <button id="logout-btn" class="btn btn-logout">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-dark text-white py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p class="mb-2">&copy; 2025 GadgetStore. All rights reserved.</p>
+                        <p class="mb-0 small">
+                            Team Members: Alexey Azarenkov, Timur Imbergenov, Ali Yerbolatov
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../js/auth.js"></script>
+        <script src="../js/cart-sidebar.js"></script>
+        <script>
+            // Load user profile data
+            window.addEventListener('load', function() {
+                const user = getCurrentUser();
+                
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // Set avatar initial
+                const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('avatar').textContent = initials;
+                
+                // Set profile info
+                document.getElementById('profile-name').textContent = user.name;
+                document.getElementById('profile-email').textContent = user.email;
+                document.getElementById('detail-name').textContent = user.name;
+                document.getElementById('detail-email').textContent = user.email;
+                document.getElementById('detail-date').textContent = new Date(user.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            });
+            
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    logout();
+                    window.location.href = 'login.html';
+                }
+            });
+        </script>
+    </body>
+</html>

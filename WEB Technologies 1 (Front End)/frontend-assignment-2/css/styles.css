@@ -1,0 +1,347 @@
+/* Custom styles to work with Bootstrap */
+body {
+    font-family: "Arial", sans-serif;
+    line-height: 1.6;
+    color: #333;
+    padding-top: 76px; /* Account for fixed navbar */
+}
+
+/* Header */
+.navbar {
+    background: #2c3e50 !important;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand h1 {
+    color: #3498db;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+    font-weight: 500;
+    margin: 0 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: #3498db !important;
+}
+
+.navbar-toggler {
+    border: 1px solid #3498db;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%233498db' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+/* Main content */
+main {
+    flex: 1;
+}
+
+/* Hero section */
+.hero {
+    background: linear-gradient(135deg, #94a4eb 0%, #764ba2 100%);
+    color: white;
+    padding: 100px 0;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+}
+
+.hero-content h1 {
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.cta-button {
+    background: #3498db !important;
+    border: none;
+    padding: 15px 40px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.cta-button:hover {
+    background: #2980b9 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+/* Features section */
+.features {
+    background: #f8f9fa;
+}
+
+.features h2 {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.feature {
+    background: white;
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.feature-icon {
+    margin-bottom: 1.5rem;
+}
+
+.feature h3 {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.feature p {
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+/* Stay Updated section - smaller than hero */
+section.py-5.bg-primary.text-white.text-center {
+    padding: 2.5rem 0 !important;
+}
+
+section.py-5.bg-primary.text-white.text-center h2 {
+    font-size: 1.8rem !important;
+    margin-bottom: 1rem !important;
+}
+
+section.py-5.bg-primary.text-white.text-center p.lead {
+    font-size: 1rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+section.py-5.bg-primary.text-white.text-center .btn {
+    padding: 10px 30px !important;
+    font-size: 1rem !important;
+}
+
+/* Footer */
+footer {
+    background: #2c3e50 !important;
+    color: white;
+    margin-top: auto;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1200px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .feature {
+        padding: 2rem 1.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .navbar-brand h1 {
+        font-size: 1.6rem;
+    }
+
+    .hero {
+        padding: 80px 0;
+        min-height: 50vh;
+    }
+
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-content p {
+        font-size: 1.1rem;
+    }
+
+    .cta-button {
+        padding: 12px 30px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 70px;
+    }
+
+    .navbar {
+        padding: 0.8rem 0;
+    }
+
+    .navbar-brand h1 {
+        font-size: 1.4rem;
+    }
+
+    .hero {
+        padding: 60px 0;
+        min-height: 40vh;
+    }
+
+    .hero-content h1 {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .cta-button {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+
+    .features h2 {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+
+    .feature {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-icon i {
+        font-size: 2rem !important;
+    }
+
+    .feature h3 {
+        font-size: 1rem;
+    }
+    
+    /* Make Stay Updated section smaller on mobile */
+    section.py-5.bg-primary.text-white.text-center {
+        padding: 1.5rem 0 !important;
+    }
+    
+    section.py-5.bg-primary.text-white.text-center h2 {
+        font-size: 1.3rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    
+    section.py-5.bg-primary.text-white.text-center p.lead {
+        font-size: 0.9rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    section.py-5.bg-primary.text-white.text-center .btn {
+        padding: 8px 20px !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        padding-top: 65px;
+    }
+
+    .navbar-brand h1 {
+        font-size: 1.2rem;
+    }
+
+    .hero {
+        padding: 40px 0;
+        min-height: 35vh;
+    }
+
+    .hero-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero-content p {
+        font-size: 0.95rem;
+    }
+
+    .cta-button {
+        padding: 8px 20px;
+        font-size: 0.85rem;
+    }
+
+    .features {
+        padding: 3rem 0;
+    }
+
+    .features h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature {
+        padding: 1.25rem;
+    }
+
+    .feature-icon i {
+        font-size: 1.8rem !important;
+    }
+
+    .feature h3 {
+        font-size: 1.1rem;
+    }
+
+    .feature p {
+        font-size: 0.9rem;
+    }
+
+    footer {
+        padding: 1.5rem 0;
+    }
+
+    footer p {
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Bootstrap Grid Enhancements */
+.row {
+    --bs-gutter-x: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .row {
+        --bs-gutter-x: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .row {
+        --bs-gutter-x: 0.75rem;
+    }
+}
+
+/* Utility Classes for Responsive Design */
+.text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hover-lift:hover {
+    transform: translateY(-3px);
+    transition: transform 0.3s ease;
+}
+
+.shadow-soft {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}

@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Product Details - GadgetStore</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="../css/styles.css" />
+        <link rel="stylesheet" href="../css/dark-mode.css" />
+        <link rel="stylesheet" href="../css/product-details.css" />
+        <link rel="stylesheet" href="../css/jquery-features.css" />
+        <link rel="stylesheet" href="../css/cart-sidebar.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        
+        <!-- jQuery CDN -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        
+        <style>
+            /* Hide content until product data is loaded */
+            .product-info {
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            .product-info.loaded {
+                opacity: 1;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+                <div class="container">
+                    <a class="navbar-brand" href="../index.html">
+                        <h1 class="mb-0">GadgetStore</h1>
+                    </a>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="../index.html"
+                                    >Home</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="products.html"
+                                    >Products</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="contact.html"
+                                    >Contact Us</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="about.html"
+                                    >About Us</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="checkout.html"
+                                    >Checkout</a
+                                >
+                            </li>
+                            <li class="nav-item" id="auth-nav-item">
+                                <a class="nav-link" href="login.html">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                                </a>
+                            </li>
+                            <li class="nav-item cart-button" onclick="toggleCart()">
+                                <a class="nav-link" style="cursor: pointer;">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span id="cart-badge" class="cart-badge" style="display: none;">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Breadcrumb Navigation -->
+            <section class="breadcrumb-section py-3 mt-5">
+                <div class="container">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="../index.html">Home</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="products.html">Products</a>
+                            </li>
+                            <li
+                                class="breadcrumb-item active"
+                                aria-current="page"
+                                id="breadcrumb-product"
+                            >
+                                Product Details
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </section>
+
+            <!-- Product Details Section -->
+            <section class="product-details py-5">
+                <div class="container">
+                    <div class="row">
+                        <!-- Product Images -->
+                        <div class="col-lg-6 col-md-6">
+                            <div class="main-image-container">
+                                <img
+                                    id="main-image"
+                                    src="../assets/images/smartphone.png"
+                                    alt="Product Image"
+                                    class="img-fluid"
+                                />
+                            </div>
+                            <div class="thumbnail-images">
+                                <div class="row g-2">
+                                    <div class="col-3">
+                                        <img
+                                            src="../assets/images/smartphone.png"
+                                            alt="Thumbnail 1"
+                                            class="thumbnail active"
+                                            onclick="changeMainImage(this.src)"
+                                        />
+                                    </div>
+                                    <div class="col-3">
+                                        <img
+                                            src="../assets/images/laptop.png"
+                                            alt="Thumbnail 2"
+                                            class="thumbnail"
+                                            onclick="changeMainImage(this.src)"
+                                        />
+                                    </div>
+                                    <div class="col-3">
+                                        <img
+                                            src="../assets/images/tablet.png"
+                                            alt="Thumbnail 3"
+                                            class="thumbnail"
+                                            onclick="changeMainImage(this.src)"
+                                        />
+                                    </div>
+                                    <div class="col-3">
+                                        <img
+                                            src="../assets/images/camera.png"
+                                            alt="Thumbnail 4"
+                                            class="thumbnail"
+                                            onclick="changeMainImage(this.src)"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product Information -->
+                        <div class="col-lg-6 col-md-6">
+                            <div class="product-info">
+                                <h1 id="product-title" class="mb-3">
+                                    Premium Smartphone
+                                </h1>
+
+                                <!-- Rating -->
+                                <div class="rating">
+                                    <div class="stars me-2">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="rating-text"
+                                        >(4.5/5) - 124 reviews</span
+                                    >
+                                </div>
+                                
+                                <!-- Interactive User Rating -->
+                                <div class="product-rating-container mt-3 mb-3">
+                                    <p class="mb-2"><strong>Rate this product:</strong></p>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="fas fa-star rating-star" style="cursor: pointer; font-size: 1.5rem; color: #ddd;"></i>
+                                        <i class="fas fa-star rating-star" style="cursor: pointer; font-size: 1.5rem; color: #ddd;"></i>
+                                        <i class="fas fa-star rating-star" style="cursor: pointer; font-size: 1.5rem; color: #ddd;"></i>
+                                        <i class="fas fa-star rating-star" style="cursor: pointer; font-size: 1.5rem; color: #ddd;"></i>
+                                        <i class="fas fa-star rating-star" style="cursor: pointer; font-size: 1.5rem; color: #ddd;"></i>
+                                        <span class="user-rating-text ms-2 text-muted"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Price -->
+                                <div class="price">
+                                    <span
+                                        id="product-price"
+                                        class="current-price h2"
+                                        ></span
+                                    >
+                                    <span class="original-price"></span>
+                                    <span class="badge discount"></span>
+                                </div>
+
+                                <!-- Quantity Selection -->
+                                <div class="quantity-selection">
+                                    <label for="quantity" class="form-label"
+                                        >Quantity:</label
+                                    >
+                                    <div class="quantity-controls">
+                                        <button
+                                            type="button"
+                                            class="btn btn-outline-secondary"
+                                            onclick="decreaseQuantity()"
+                                        >
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input
+                                            type="number"
+                                            id="quantity"
+                                            class="form-control text-center"
+                                            value="1"
+                                            min="1"
+                                            max="10"
+                                            style="width: 80px"
+                                        />
+                                        <button
+                                            type="button"
+                                            class="btn btn-outline-secondary"
+                                            onclick="increaseQuantity()"
+                                        >
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="action-buttons d-flex flex-wrap">
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary btn-lg me-2 mb-2 flex-grow-1"
+                                        onclick="addToCart()"
+                                    >
+                                        <i class="fas fa-shopping-cart me-2"></i
+                                        >Add to Cart
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-success btn-lg mb-2 flex-grow-1"
+                                        onclick="buyNow()"
+                                    >
+                                        <i class="fas fa-bolt me-2"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Description -->
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <div class="product-description">
+                                <h3>
+                                    <i class="fas fa-info-circle me-2"></i
+                                    >Product Description
+                                </h3>
+                                <p id="product-description-text">
+                                    Experience the latest in mobile technology
+                                    with our premium smartphone. Featuring a
+                                    stunning display, powerful processor, and
+                                    advanced camera system, this device delivers
+                                    exceptional performance for both work and
+                                    entertainment.
+                                </p>
+                                <h4>Key Features:</h4>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <i
+                                            class="fas fa-check-circle text-success me-2"
+                                        ></i
+                                        >6.7" OLED Display with 120Hz refresh
+                                        rate
+                                    </li>
+                                    <li>
+                                        <i
+                                            class="fas fa-check-circle text-success me-2"
+                                        ></i
+                                        >Advanced triple-camera system
+                                    </li>
+                                    <li>
+                                        <i
+                                            class="fas fa-check-circle text-success me-2"
+                                        ></i
+                                        >256GB storage capacity
+                                    </li>
+                                    <li>
+                                        <i
+                                            class="fas fa-check-circle text-success me-2"
+                                        ></i
+                                        >5G connectivity
+                                    </li>
+                                    <li>
+                                        <i
+                                            class="fas fa-check-circle text-success me-2"
+                                        ></i
+                                        >All-day battery life
+                                    </li>
+                                    <li>
+                                        <i
+                                            class="fas fa-check-circle text-success me-2"
+                                        ></i
+                                        >Water and dust resistant
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-dark text-white py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p class="mb-2">
+                            &copy; 2025 GadgetStore. All rights reserved.
+                        </p>
+                        <p class="mb-0 small">
+                            Team Members: Alexey Azarenkov, Timur Imbergenov,
+                            Ali Yerbolatov
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <!-- Load currency converter BEFORE inline scripts -->
+        <script src="../js/currency-converter.js"></script>
+        
+        <script>
+            // Load product data from sessionStorage
+            function loadProductData() {
+                const productData = JSON.parse(
+                    sessionStorage.getItem("selectedProduct"),
+                );
+                if (productData) {
+                    document.getElementById("product-title").textContent =
+                        productData.name;
+                    
+                    // Set price in USD and store original value
+                    const priceElement = document.getElementById("product-price");
+                    priceElement.textContent = `$${productData.price}`;
+                    priceElement.setAttribute('data-original-price', productData.price);
+                    
+                    document.getElementById("main-image").src =
+                        productData.image;
+                    document.getElementById("breadcrumb-product").textContent =
+                        productData.name;
+
+                    // Update page title
+                    document.title = productData.name + " - GadgetStore";
+
+                    // Update main image alt text
+                    document.getElementById("main-image").alt =
+                        productData.name;
+
+                    // Set first thumbnail as active and matching the main image
+                    const firstThumbnail = document.querySelector(".thumbnail");
+                    if (firstThumbnail) {
+                        firstThumbnail.src = productData.image;
+                        firstThumbnail.classList.add("active");
+                    }
+
+                    // Update product description based on product type
+                    updateProductDescription(productData.id);
+                    
+                    // Wait a bit then trigger currency conversion if needed
+                    setTimeout(() => {
+                        if (typeof window.getCurrentCurrency === 'function') {
+                            const currencyInfo = window.getCurrentCurrency();
+                            if (currencyInfo && currencyInfo.code !== 'USD') {
+                                // Convert the price to the selected currency
+                                const priceElement = document.getElementById("product-price");
+                                const originalPrice = parseFloat(priceElement.getAttribute('data-original-price'));
+                                const rate = currencyInfo.rate;
+                                const symbol = currencyInfo.symbol;
+                                const convertedPrice = (originalPrice * rate).toFixed(currencyInfo.code === 'KZT' ? 0 : 2);
+                                priceElement.textContent = `${symbol}${convertedPrice}`;
+                            }
+                        }
+                        
+                        // Show content now that data is loaded and converted
+                        document.querySelector('.product-info').classList.add('loaded');
+                    }, 100);
+                } else {
+                    // If no product data, redirect to products page
+                    window.location.href = "products.html";
+                }
+            }
+
+            function updateProductDescription(productId) {
+                const descriptions = {
+                    smartphone: {
+                        description:
+                            "Experience the latest in mobile technology with our premium smartphone. Featuring a stunning display, powerful processor, and advanced camera system, this device delivers exceptional performance for both work and entertainment.",
+                        features: [
+                            '6.7" OLED Display with 120Hz refresh rate',
+                            "Advanced triple-camera system",
+                            "256GB storage capacity",
+                            "5G connectivity",
+                            "All-day battery life",
+                            "Water and dust resistant",
+                        ],
+                    },
+                    laptop: {
+                        description:
+                            "Unleash your gaming potential with our high-performance gaming laptop. Built for gamers and professionals who demand the best, featuring cutting-edge graphics and lightning-fast processing power.",
+                        features: [
+                            '15.6" Full HD 144Hz Gaming Display',
+                            "NVIDIA GeForce RTX Graphics",
+                            "16GB DDR4 RAM",
+                            "1TB SSD Storage",
+                            "Advanced cooling system",
+                            "RGB backlit keyboard",
+                        ],
+                    },
+                    tablet: {
+                        description:
+                            "Perfect for work and creativity, our Pro Tablet combines the portability of a tablet with the power of a laptop. Ideal for digital artists, students, and professionals on the go.",
+                        features: [
+                            '12.9" Liquid Retina Display',
+                            "Apple M1 Chip",
+                            "128GB Storage",
+                            "All-day battery life",
+                            "Apple Pencil support",
+                            "Face ID security",
+                        ],
+                    },
+                    camera: {
+                        description:
+                            "Capture life's precious moments with professional quality using our advanced digital camera. Perfect for photographers of all levels, from beginners to professionals.",
+                        features: [
+                            "24.1 Megapixel CMOS Sensor",
+                            "4K Video Recording",
+                            "Image Stabilization",
+                            "Wi-Fi and Bluetooth connectivity",
+                            "Dual Memory Card Slots",
+                            "Weather-sealed body",
+                        ],
+                    },
+                    headphones: {
+                        description:
+                            "Immerse yourself in crystal-clear audio with our premium wireless headphones. Featuring noise cancellation and superior sound quality for the ultimate listening experience.",
+                        features: [
+                            "Active Noise Cancellation",
+                            "30-hour battery life",
+                            "Premium audio drivers",
+                            "Comfortable over-ear design",
+                            "Quick charge capability",
+                            "Multi-device connectivity",
+                        ],
+                    },
+                    smartwatch: {
+                        description:
+                            "Stay connected and track your fitness goals with our advanced smartwatch. Combining style with functionality for the modern lifestyle.",
+                        features: [
+                            "Always-on Retina Display",
+                            "GPS and Cellular options",
+                            "Health and fitness tracking",
+                            "Water resistant to 50 meters",
+                            "ECG and blood oxygen monitoring",
+                            "Multiple sport modes",
+                        ],
+                    },
+                };
+
+                const productInfo = descriptions[productId];
+                if (productInfo) {
+                    document.getElementById(
+                        "product-description-text",
+                    ).textContent = productInfo.description;
+
+                    // Update features list
+                    const featuresList = document.querySelector(
+                        ".product-description ul",
+                    );
+                    featuresList.innerHTML = "";
+                    productInfo.features.forEach((feature) => {
+                        const li = document.createElement("li");
+                        li.innerHTML =
+                            '<i class="fas fa-check-circle text-success me-2"></i>' +
+                            feature;
+                        featuresList.appendChild(li);
+                    });
+                }
+            }
+
+            // Change main image when thumbnail is clicked
+            function changeMainImage(src) {
+                document.getElementById("main-image").src = src;
+
+                // Update active thumbnail
+                document.querySelectorAll(".thumbnail").forEach((thumb) => {
+                    thumb.classList.remove("active");
+                });
+                event.target.classList.add("active");
+            }
+
+            // Quantity controls
+            function increaseQuantity() {
+                const quantityInput = document.getElementById("quantity");
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue < 10) {
+                    quantityInput.value = currentValue + 1;
+                }
+            }
+
+            function decreaseQuantity() {
+                const quantityInput = document.getElementById("quantity");
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            }
+
+            // Add to cart functionality
+            function addToCart() {
+                const productData = JSON.parse(
+                    sessionStorage.getItem("selectedProduct"),
+                );
+                const quantity = parseInt(
+                    document.getElementById("quantity").value,
+                );
+
+                if (productData) {
+                    // Get existing cart or create new one
+                    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+                    // Check if product already exists in cart
+                    const existingItem = cart.find(
+                        (item) => item.id === productData.id,
+                    );
+
+                    if (existingItem) {
+                        existingItem.quantity += quantity;
+                    } else {
+                        cart.push({
+                            id: productData.id,
+                            name: productData.name,
+                            price: productData.price,
+                            image: productData.image,
+                            quantity: quantity,
+                        });
+                    }
+
+                    // Save cart to localStorage
+                    localStorage.setItem("cart", JSON.stringify(cart));
+
+                    // Show success message
+                    const button = event.target;
+                    const originalText = button.innerHTML;
+                    button.innerHTML =
+                        '<i class="fas fa-check me-2"></i>Added to Cart!';
+                    button.classList.add("loading");
+
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.classList.remove("loading");
+                    }, 2000);
+                }
+            }
+
+            // Buy now functionality
+            function buyNow() {
+                const productData = JSON.parse(
+                    sessionStorage.getItem("selectedProduct"),
+                );
+                const quantity = parseInt(
+                    document.getElementById("quantity").value,
+                );
+
+                if (productData) {
+                    // Create checkout data
+                    const checkoutData = {
+                        items: [
+                            {
+                                id: productData.id,
+                                name: productData.name,
+                                price: productData.price,
+                                image: productData.image,
+                                quantity: quantity,
+                            },
+                        ],
+                        total: (productData.price * quantity).toFixed(2),
+                    };
+
+                    // Save to sessionStorage for checkout page
+                    sessionStorage.setItem(
+                        "checkoutData",
+                        JSON.stringify(checkoutData),
+                    );
+
+                    // Redirect to checkout
+                    window.location.href = "checkout.html";
+                }
+            }
+
+            // Load product data when page loads
+            window.addEventListener("load", loadProductData);
+            
+            // Fix for back button - ensure page is always visible
+            window.addEventListener('pageshow', function(event) {
+                document.body.style.opacity = '1';
+            });
+        </script>
+        
+        <script src="../js/dark-mode.js"></script>
+        <script src="../js/animations.js"></script>
+        <script src="../js/keyboard-navigation.js"></script>
+        <script src="../js/star-rating.js"></script>
+        
+        <script src="../js/jquery-init.js"></script>
+        <script src="../js/jquery-ux-elements.js"></script>
+        <script src="../js/jquery-notifications.js"></script>
+        <script src="../js/jquery-clipboard.js"></script>
+        <script src="../js/jquery-lazy-loading.js"></script>
+        <script src="../js/auth.js"></script>
+        <script src="../js/cart-sidebar.js"></script>
+    </body>
+</html>

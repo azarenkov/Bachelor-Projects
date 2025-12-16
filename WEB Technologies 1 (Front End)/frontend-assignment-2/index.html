@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gadget Store - Home</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="css/dark-mode.css" />
+        <link rel="stylesheet" href="css/jquery-features.css" />
+        <link rel="stylesheet" href="css/cart-sidebar.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        
+        <script src="js/dark-mode.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+                <div class="container">
+                    <a class="navbar-brand" href="index.html">
+                        <h1 class="mb-0">GadgetStore</h1>
+                    </a>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="index.html"
+                                    >Home</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="pages/products.html"
+                                    >Products</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="pages/contact.html"
+                                    >Contact Us</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="pages/about.html"
+                                    >About Us</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="pages/checkout.html"
+                                    >Checkout</a
+                                >
+                            </li>
+                            <li class="nav-item" id="auth-nav-item">
+                                <a class="nav-link" href="pages/login.html">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                                </a>
+                            </li>
+                            <li class="nav-item cart-button" onclick="toggleCart()">
+                                <a class="nav-link" style="cursor: pointer;">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span id="cart-badge" class="cart-badge" style="display: none;">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="container">
+                    <div class="row justify-content-center text-center">
+                        <div class="col-12 col-lg-8">
+                            <div class="hero-content">
+                                <h1 class="display-4 fw-bold mb-4">
+                                    Welcome to GadgetStore
+                                </h1>
+                                <p class="lead mb-4">
+                                    Discover the latest technology and gadgets
+                                </p>
+                                <a
+                                    href="pages/products.html"
+                                    class="btn btn-primary btn-lg cta-button"
+                                    >Shop Now</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="carousel-section py-5 bg-light">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h2 class="text-center mb-5 display-5">
+                                Featured Products
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-10 mx-auto">
+                            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="6" aria-label="Slide 7"></button>
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="7" aria-label="Slide 8"></button>
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="8" aria-label="Slide 9"></button>
+                                </div>
+
+                                <div class="carousel-inner rounded shadow">
+                                    <div class="carousel-item active">
+                                        <div class="d-flex justify-content-center align-items-center bg-white" style="height: 500px;">
+                                            <img src="assets/images/smartphone.png" class="img-fluid" alt="Premium Smartphone" style="max-height: 500px; object-fit: contain;">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                            <h5 class="fw-bold">Premium Smartphone</h5>
+                                            <p>Latest technology with stunning display and powerful performance</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <div class="d-flex justify-content-center align-items-center bg-white" style="height: 500px;">
+                                            <img src="assets/images/laptop.png" class="img-fluid" alt="Gaming Laptop" style="max-height: 500px; object-fit: contain;">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                            <h5 class="fw-bold">Gaming Laptop</h5>
+                                            <p>High-performance laptop for gaming and productivity</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <div class="d-flex justify-content-center align-items-center bg-white" style="height: 500px;">
+                                            <img src="assets/images/headphones.png" class="img-fluid" alt="Wireless Headphones" style="max-height: 500px; object-fit: contain;">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                            <h5 class="fw-bold">Wireless Headphones</h5>
+                                            <p>Premium sound quality with active noise cancellation</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <div class="d-flex justify-content-center align-items-center bg-white" style="height: 500px;">
+                                            <img src="assets/images/tablet.png" class="img-fluid" alt="Tablet Pro" style="max-height: 500px; object-fit: contain;">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                            <h5 class="fw-bold">Tablet Pro</h5>
+                                            <p>Versatile tablet perfect for work and entertainment</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <div class="d-flex justify-content-center align-items-center bg-white" style="height: 500px;">
+                                            <img src="assets/images/smartwatch.png" class="img-fluid" alt="Smartwatch Ultra" style="max-height: 500px; object-fit: contain;">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                            <h5 class="fw-bold">Smartwatch Ultra</h5>
+                                            <p>Advanced fitness tracking and health monitoring</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <div class="d-flex justify-content-center align-items-center bg-white" style="height: 500px;">
+                                            <img src="assets/images/camera.png" class="img-fluid" alt="Digital Camera" style="max-height: 500px; object-fit: contain;">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                            <h5 class="fw-bold">Digital Camera</h5>
+                                            <p>Professional photography with advanced features</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <div class="d-flex justify-content-center align-items-center bg-white" style="height: 500px;">
+                                            <img src="assets/images/smartphone.png" class="img-fluid" alt="Smartphone Pro Max" style="max-height: 500px; object-fit: contain;">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                            <h5 class="fw-bold">Smartphone Pro Max</h5>
+                                            <p>Ultimate flagship experience with cutting-edge technology</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <div class="d-flex justify-content-center align-items-center bg-white" style="height: 500px;">
+                                            <img src="assets/images/laptop.png" class="img-fluid" alt="Ultrabook" style="max-height: 500px; object-fit: contain;">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                            <h5 class="fw-bold">Ultrabook</h5>
+                                            <p>Lightweight and powerful for professionals on the go</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <div class="d-flex justify-content-center align-items-center bg-white" style="height: 500px;">
+                                            <img src="assets/images/headphones.png" class="img-fluid" alt="Premium Audio" style="max-height: 500px; object-fit: contain;">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                            <h5 class="fw-bold">Premium Audio Collection</h5>
+                                            <p>Immersive sound experience for audiophiles</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="features py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h2 class="text-center mb-5 display-5">
+                                Why Choose Us
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="feature text-center h-100">
+                                <div class="feature-icon mb-3">
+                                    <i
+                                        class="fas fa-star fa-3x text-primary"
+                                    ></i>
+                                </div>
+                                <h3 class="h4 mb-3">Quality Products</h3>
+                                <p class="text-muted">
+                                    Only the best gadgets and electronics
+                                </p>
+                                <div id="quality-details" style="display: none;">
+                                    <p class="text-muted mt-2">
+                                        We carefully curate our product selection to ensure every item meets our high standards. Each product undergoes rigorous quality testing before being offered to our customers.
+                                    </p>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary mt-2 read-more-btn" data-target="quality-details">
+                                    <i class="fas fa-chevron-down me-2"></i>Read More
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="feature text-center h-100">
+                                <div class="feature-icon mb-3">
+                                    <i
+                                        class="fas fa-shipping-fast fa-3x text-primary"
+                                    ></i>
+                                </div>
+                                <h3 class="h4 mb-3">Fast Shipping</h3>
+                                <p class="text-muted">
+                                    Quick delivery to your doorstep
+                                </p>
+                                <div id="shipping-details" style="display: none;">
+                                    <p class="text-muted mt-2">
+                                        We partner with leading shipping carriers to ensure your orders arrive quickly and safely. Most orders ship within 24 hours and include tracking information.
+                                    </p>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary mt-2 read-more-btn" data-target="shipping-details">
+                                    <i class="fas fa-chevron-down me-2"></i>Read More
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="feature text-center h-100">
+                                <div class="feature-icon mb-3">
+                                    <i
+                                        class="fas fa-headset fa-3x text-primary"
+                                    ></i>
+                                </div>
+                                <h3 class="h4 mb-3">Great Support</h3>
+                                <p class="text-muted">24/7 customer service</p>
+                                <div id="support-details" style="display: none;">
+                                    <p class="text-muted mt-2">
+                                        Our dedicated support team is available around the clock to assist you. Whether you have questions about products or need help with an order, we're here to help.
+                                    </p>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary mt-2 read-more-btn" data-target="support-details">
+                                    <i class="fas fa-chevron-down me-2"></i>Read More
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-4 bg-light">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">
+                                        <i class="fas fa-clock me-2"></i>Current Date & Time
+                                    </h5>
+                                    <p class="card-text fs-5 fw-semibold" id="current-datetime">
+                                        Loading...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-5 bg-primary text-white text-center">
+                <div class="container">
+                    <h2 class="display-6 fw-bold mb-3">Stay Updated!</h2>
+                    <p class="lead mb-4">Subscribe to our newsletter for exclusive deals and updates</p>
+                    <button id="subscribe-btn" class="btn btn-light btn-lg px-5">
+                        <i class="fas fa-envelope me-2"></i>Subscribe Now
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <div id="popup-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center;">
+            <div class="popup-content bg-white rounded p-4 position-relative" style="max-width: 500px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                <button id="popup-close" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close"></button>
+                <h3 class="text-center mb-4">Subscribe to Our Newsletter</h3>
+                <form id="popup-form">
+                    <div class="mb-3">
+                        <label for="popup-name" class="form-label">Your Name</label>
+                        <input type="text" class="form-control" id="popup-name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="popup-email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="popup-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="popup-terms" required>
+                        <label class="form-check-label" for="popup-terms">
+                            I agree to receive promotional emails
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+                </form>
+            </div>
+        </div>
+
+        <footer class="bg-dark text-white py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p class="mb-2">
+                            &copy; 2025 GadgetStore. All rights reserved.
+                        </p>
+                        <p class="mb-0 small">
+                            Team Members: Alexey Azarenkov, Timur Imbergenov,
+                            Ali Yerbolatov
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script
+            src="https://kit.fontawesome.com/your-kit-id.js"
+            crossorigin="anonymous"
+        ></script>
+        
+        <script src="js/datetime.js"></script>
+        <script src="js/background-color.js"></script>
+        <script src="js/popup.js"></script>
+        
+        <script src="js/animations.js"></script>
+        <script src="js/keyboard-navigation.js"></script>
+        <script src="js/read-more.js"></script>
+        
+        <script src="js/jquery-init.js"></script>
+        <script src="js/jquery-ux-elements.js"></script>
+        <script src="js/jquery-notifications.js"></script>
+        <script src="js/jquery-clipboard.js"></script>
+        <script src="js/jquery-lazy-loading.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/cart-sidebar.js"></script>
+    </body>
+</html>
