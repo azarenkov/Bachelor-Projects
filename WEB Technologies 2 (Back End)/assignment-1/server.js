@@ -10,10 +10,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 function readTemplate(filename, replacements = {}) {
-  let html = fs.readFileSync(
-    path.join(__dirname, "public/views", filename),
-    "utf-8",
-  );
+  let html = fs.readFileSync(path.join(__dirname, "views", filename), "utf-8");
 
   Object.keys(replacements).forEach((key) => {
     const placeholder = `{{${key}}}`;
