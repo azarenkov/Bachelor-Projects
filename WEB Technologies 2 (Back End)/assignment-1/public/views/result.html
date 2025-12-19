@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>BMI Result</title>
+        <link rel="stylesheet" href="/styles.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="calculator-card">
+                <h1>Your BMI Result</h1>
+
+                <div class="result-display">
+                    <div class="bmi-value {{categoryClass}}">{{bmi}}</div>
+                    <div class="bmi-category {{categoryClass}}">
+                        {{category}}
+                    </div>
+                </div>
+
+                <div class="input-summary">
+                    <p><strong>Weight:</strong> {{weight}} kg</p>
+                    <p><strong>Height:</strong> {{height}} m</p>
+                </div>
+
+                <div class="health-advice">
+                    <h3>Health Advice:</h3>
+                    <p>{{healthAdvice}}</p>
+                </div>
+
+                <div class="info-section">
+                    <h3>BMI Categories:</h3>
+                    <ul>
+                        <li>
+                            <span class="category underweight"
+                                >Underweight:</span
+                            >
+                            BMI &lt; 18.5
+                        </li>
+                        <li>
+                            <span class="category normal">Normal weight:</span>
+                            18.5 ≤ BMI &lt; 24.9
+                        </li>
+                        <li>
+                            <span class="category overweight">Overweight:</span>
+                            25 ≤ BMI &lt; 29.9
+                        </li>
+                        <li>
+                            <span class="category obese">Obese:</span> BMI ≥ 30
+                        </li>
+                    </ul>
+                </div>
+
+                <a href="/" class="btn-calculate">Calculate Again</a>
+            </div>
+        </div>
+    </body>
+</html>
