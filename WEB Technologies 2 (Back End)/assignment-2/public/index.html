@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Random User Profile Generator</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>🌍 Random User Profile Generator</h1>
+                <p>
+                    Discover random users from around the world with real-time
+                    data
+                </p>
+            </header>
+
+            <div class="control-section">
+                <button id="generateBtn" class="generate-btn">
+                    <span class="btn-text">Generate Random User</span>
+                    <span class="loader" style="display: none"></span>
+                </button>
+            </div>
+
+            <div
+                id="errorMessage"
+                class="error-message"
+                style="display: none"
+            ></div>
+
+            <div id="content" class="content" style="display: none">
+                <!-- User Profile Section -->
+                <section class="profile-section card">
+                    <h2>👤 User Profile</h2>
+                    <div class="profile-content">
+                        <div class="profile-image-container">
+                            <img
+                                id="profilePicture"
+                                src=""
+                                alt="Profile Picture"
+                                class="profile-image"
+                            />
+                        </div>
+                        <div class="profile-details">
+                            <h3 id="fullName"></h3>
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <span class="label">Gender:</span>
+                                    <span id="gender"></span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Age:</span>
+                                    <span id="age"></span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Date of Birth:</span>
+                                    <span id="dob"></span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">City:</span>
+                                    <span id="city"></span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Country:</span>
+                                    <span id="country"></span>
+                                </div>
+                                <div class="detail-item full-width">
+                                    <span class="label">Address:</span>
+                                    <span id="address"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Country Information Section -->
+                <section class="country-section card">
+                    <h2>🏳️ Country Information</h2>
+                    <div class="country-content">
+                        <img
+                            id="countryFlag"
+                            src=""
+                            alt="Country Flag"
+                            class="country-flag"
+                        />
+                        <div class="country-details">
+                            <div class="detail-item">
+                                <span class="label">Capital:</span>
+                                <span id="capital"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Languages:</span>
+                                <span id="languages"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Currency:</span>
+                                <span id="currency"></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Exchange Rates Section -->
+                <section
+                    id="exchangeSection"
+                    class="exchange-section card"
+                    style="display: none"
+                >
+                    <h2>💱 Exchange Rates</h2>
+                    <div class="exchange-content">
+                        <div class="exchange-item">
+                            <span class="exchange-label">To USD:</span>
+                            <span
+                                id="exchangeUSD"
+                                class="exchange-value"
+                            ></span>
+                        </div>
+                        <div class="exchange-item">
+                            <span class="exchange-label">To KZT:</span>
+                            <span
+                                id="exchangeKZT"
+                                class="exchange-value"
+                            ></span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- News Section -->
+                <section
+                    id="newsSection"
+                    class="news-section"
+                    style="display: none"
+                >
+                    <h2>📰 Latest News</h2>
+                    <div id="newsContainer" class="news-container"></div>
+                </section>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
