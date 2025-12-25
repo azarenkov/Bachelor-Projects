@@ -77,9 +77,19 @@ contract GasProfilingAnalysis {
         versionC_ExtremeOptimized(count);
         uint256 gasC = lastGasUsed;
         
-        emit GasReport("Comparison - A vs B savings", gasA - gasB);
-        emit GasReport("Comparison - A vs C savings", gasA - gasC);
-        emit GasReport("Comparison - B vs C savings", gasB - gasC);
+        emit GasReport("Version A total gas", gasA);
+        emit GasReport("Version B total gas", gasB);
+        emit GasReport("Version C total gas", gasC);
+        
+        if (gasA > gasB) {
+            emit GasReport("A vs B savings", gasA - gasB);
+        }
+        if (gasA > gasC) {
+            emit GasReport("A vs C savings", gasA - gasC);
+        }
+        if (gasB > gasC) {
+            emit GasReport("B vs C savings", gasB - gasC);
+        }
     }
 }
 
