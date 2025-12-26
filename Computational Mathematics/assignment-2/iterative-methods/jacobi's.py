@@ -1,35 +1,52 @@
-from pprint import pprint
-
-from numpy import array, diag, diagflat, dot, zeros
+import numpy as np
 
 
-def jacobi(A, b, N=25, x=None):
-    # Create an initial guess if needed
-    if x is None:
-        x = zeros(len(A[0]))
+def jacobi(A, b, x_0, k):
+    n = A.shape[0]
+    x = x_0.copy()
+    x_new = x_0.copy()
 
-    # Create a vector of the diagonal elements of A
-    # and subtract them from A
-    D = diag(A)
-    R = A - diagflat(D)
+    for iteration in range(k):
+        for i in range(n):
+            sum_val = 0.0
+            for j in range(n):
+                if i != j:
+                    sum_val += A[i, j] * x[j]
 
-    # Iterate for N times
-    for i in range(N):
-        x = (b - dot(R, x)) / D
+            x_new[i] = (b[i] - sum_val) / A[i, i]
+
+        x = x_new.copy()
+
     return x
 
 
-A = array([[2.0, 1.0], [5.0, 7.0]])
-b = array([11.0, 13.0])
-guess = array([1.0, 1.0])
+A = np.array([[2.0, 1.0], [5.0, 7.0]], dtype=float)
 
-sol = jacobi(A, b, N=25, x=guess)
+b = np.array([11.0, 13.0], dtype=float)
 
-print("A:")
-pprint(A)
+x_0 = np.array([1.0, 1.0], dtype=float)
 
-print("b:")
-pprint(b)
+k = 25
 
-print("x:")
-pprint(sol)
+print("Matrix A:")
+print(A)
+print("\nVector b:")
+print(b)
+print("\nInitial guess x_0:")
+print(x_0)
+print("\nNumber of iterations:", k)
+
+x = jacobi(A, b, x_0, k)
+
+print("\nSolution after", k, "iterations:")
+for i in range(len(x)):
+    print(f"x[{i}] = {x[i]}")
+
+# Verification
+print("\nVerification (A*x):")
+result = np.dot(A, x)
+print(result)
+print("Should equal b:")
+print(b)
+print("\nError:")
+print(np.abs(result - b))

@@ -15,8 +15,6 @@ def Gauss_Seidel(A, b, x_0, k):
     return x
 
 
-# Example usage
-# Diagonally dominant system of equations:
 # 10x + y + z = 12
 # x + 10y + z = 12
 # x + y + 10z = 12
