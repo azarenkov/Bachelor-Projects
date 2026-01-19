@@ -1,0 +1,14 @@
+{
+  "name": "token-contract-testing",
+  "version": "1.0.0",
+  "description": "Comprehensive unit tests for SimpleToken contract using Hardhat",
+  "scripts": {
+    "test": "hardhat test",
+    "test:gas": "REPORT_GAS=true hardhat test",
+    "compile": "hardhat compile",
+    "coverage": "hardhat coverage"
+  },
+  "keywords": ["ethereum", "hardhat", "testing", "token", "erc20"],
+  "author": "",
+  "license": "MIT"
+}
