@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog CRUD Application</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1><i class="fas fa-blog"></i> Blog Platform</h1>
+                <p class="subtitle">Create, Read, Update, and Delete Blog Posts</p>
+            </div>
+        </div></h1>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <i class="fas fa-file-alt"></i>
+                <div class="stat-info">
+                    <h3 id="totalBlogs">0</h3>
+                    <p>Total Posts</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-info">
+                    <h3 id="totalAuthors">0</h3>
+                    <p>Authors</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create/Update Blog Form -->
+        <section class="form-section">
+            <div class="form-header">
+                <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Create New Blog Post</h2>
+                <button class="btn-cancel" id="cancelBtn" style="display: none;">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+
+            <form id="blogForm">
+                <div class="form-group">
+                    <label for="title">
+                        <i class="fas fa-heading"></i> Title *
+                    </label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        placeholder="Enter blog title (min 3 characters)"
+                        required
+                        minlength="3"
+                        maxlength="200"
+                    >
+                    <span class="error-message" id="titleError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="author">
+                        <i class="fas fa-user"></i> Author
+                    </label>
+                    <input
+                        type="text"
+                        id="author"
+                        name="author"
+                        placeholder="Enter author name (optional, defaults to Anonymous)"
+                        maxlength="100"
+                    >
+                    <span class="error-message" id="authorError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="body">
+                        <i class="fas fa-align-left"></i> Body *
+                    </label>
+                    <textarea
+                        id="body"
+                        name="body"
+                        rows="8"
+                        placeholder="Enter blog content (min 10 characters)"
+                        required
+                        minlength="10"
+                    ></textarea>
+                    <span class="error-message" id="bodyError"></span>
+                    <div class="char-count">
+                        <span id="bodyCharCount">0</span> characters
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-save"></i> Create Post
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Search and Filter Section -->
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search blogs by title, body, or author..."
+                    >
+                    <button class="btn-clear" id="clearSearch" style="display: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <button class="btn btn-secondary" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </section>
+
+        <!-- Blog Posts List -->
+        <section class="blogs-section">
+            <div class="section-header">
+                <h2><i class="fas fa-newspaper"></i> Blog Posts</h2>
+                <div</h2> class="sort-options">
+                    <label for="sortBy">Sort by:</label>
+                    <select id="sortBy">
+                        <option value="-createdAt">Newest First</option>
+                        <option value="createdAt">Oldest First</option>
+                        <option value="title">Title (A-Z)</option>
+                        <option value="-title">Title (Z-A)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Loading blogs...</p>
+            </div>
+
+            <!-- No Blogs Message -->
+            <div class="no-blogs" id="noBlogs" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <h3>No blog posts found</h3>
+                <p>Start by creating your first blog post above!</p>
+            </div>
+
+            <!-- Blogs Container -->
+            <div class="blogs-grid" id="blogsContainer">
+                <!-- Blog cards will be inserted here dynamically -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination" style="display: none;">
+                <button class="btn-page" id="prevPage" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <span class="page-info" id="pageInfo">Page 1 of 1</span>
+                <button class="btn-page" id="nextPage" disabled>
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Blog CRUD Application. Built with Node.js, Express, and MongoDB.</p>
+        </div>
+    </footer>
+
+    <!-- Modal for Blog Details -->
+    <div class="modal" id="blogModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-meta">
+                    <span><i class="fas fa-user"></i> <span id="modalAuthor"></span></span>
+                    <span><i class="fas fa-calendar"></i> <span id="modalDate"></span></span>
+                </div>
+                <div class="modal-content-body" id="modalBody"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalEditBtn">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-danger" id="modalDeleteBtn">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/js/app.js"></script>
+</body>
+</html>
