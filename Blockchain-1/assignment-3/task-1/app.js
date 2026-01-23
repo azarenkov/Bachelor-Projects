@@ -4,6 +4,16 @@ let signer;
 let contract;
 let userAccount;
 
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
+
+function init() {
+  console.log("DOM loaded, app initialized");
+}
+
 // SimpleToken ABI - only the functions we need to interact with
 const CONTRACT_ABI = [
   "function name() public view returns (string)",
@@ -172,10 +182,28 @@ async function initializeContract() {
       return;
     }
 
-    // Enable interaction buttons
-    document.getElementById("readInfoBtn").disabled = false;
-    document.getElementById("checkBalanceBtn").disabled = false;
-    document.getElementById("totalSupplyBtn").disabled = false;
+    // Enable interaction buttons with safety checks
+    const readInfoBtn = document.getElementById("readInfoBtn");
+    const checkBalanceBtn = document.getElementById("checkBalanceBtn");
+    const totalSupplyBtn = document.getElementById("totalSupplyBtn");
+
+    if (readInfoBtn) {
+      readInfoBtn.disabled = false;
+    } else {
+      console.warn("Warning: readInfoBtn element not found");
+    }
+
+    if (checkBalanceBtn) {
+      checkBalanceBtn.disabled = false;
+    } else {
+      console.warn("Warning: checkBalanceBtn element not found");
+    }
+
+    if (totalSupplyBtn) {
+      totalSupplyBtn.disabled = false;
+    } else {
+      console.warn("Warning: totalSupplyBtn element not found");
+    }
 
     showSuccess(
       "contractInfo",
