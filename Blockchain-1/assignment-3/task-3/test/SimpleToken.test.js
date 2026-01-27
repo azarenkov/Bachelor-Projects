@@ -1,0 +1,607 @@
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
+const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
+
+describe("SimpleToken Contract - Comprehensive Tests", function () {
+  async function deployTokenFixture() {
+    const [owner, addr1, addr2, addr3] = await ethers.getSigners();
+    const SimpleToken = await ethers.getContractFactory("SimpleToken");
+    const token = await SimpleToken.deploy(
+      "MyToken",
+      "MTK",
+      18,
+      ethers.parseUnits("1000", 18)
+    );
+    return { token, owner, addr1, addr2, addr3 };
+  }
+
+  // ==========================================
+  // 1. BASIC BALANCE CHECKS
+  // ==========================================
+  describe("1. Basic Balance Checks", function () {
+    it("Should assign total supply to owner", async function () {
+      const { token, owner } = await loadFixture(deployTokenFixture);
+      expect(await token.balanceOf(owner.address)).to.equal(
+        await token.totalSupply()
+      );
+    });
+
+    it("Should have correct initial balance", async function () {
+      const { token, owner } = await loadFixture(deployTokenFixture);
+      expect(await token.balanceOf(owner.address)).to.equal(
+        ethers.parseUnits("1000", 18)
+      );
+    });
+
+    it("Should have zero balance for new addresses", async function () {
+      const { token, addr1 } = await loadFixture(deployTokenFixture);
+      expect(await token.balanceOf(addr1.address)).to.equal(0);
+    });
+
+    it("Should track balances correctly", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      await token.transfer(addr1.address, ethers.parseUnits("100", 18));
+      expect(await token.balanceOf(owner.address)).to.equal(
+        ethers.parseUnits("900", 18)
+      );
+      expect(await token.balanceOf(addr1.address)).to.equal(
+        ethers.parseUnits("100", 18)
+      );
+    });
+
+    it("Should return correct metadata", async function () {
+      const { token } = await loadFixture(deployTokenFixture);
+      expect(await token.name()).to.equal("MyToken");
+      expect(await token.symbol()).to.equal("MTK");
+      expect(await token.decimals()).to.equal(18);
+    });
+  });
+
+  // ==========================================
+  // 2. TRANSFER TESTS (Successful)
+  // ==========================================
+  describe("2. Transfer Tests (Successful)", function () {
+    it("Should transfer tokens between accounts", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      await expect(
+        token.transfer(addr1.address, ethers.parseUnits("50", 18))
+      ).to.changeTokenBalances(
+        token,
+        [owner, addr1],
+        [ethers.parseUnits("-50", 18), ethers.parseUnits("50", 18)]
+      );
+    });
+
+    it("Should allow multiple transfers", async function () {
+      const { token, owner, addr1, addr2 } = await loadFixture(
+        deployTokenFixture
+      );
+      await token.transfer(addr1.address, ethers.parseUnits("100", 18));
+      await token.transfer(addr2.address, ethers.parseUnits("200", 18));
+      expect(await token.balanceOf(addr1.address)).to.equal(
+        ethers.parseUnits("100", 18)
+      );
+      expect(await token.balanceOf(addr2.address)).to.equal(
+        ethers.parseUnits("200", 18)
+      );
+    });
+
+    it("Should allow transfer of all tokens", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      const totalSupply = await token.totalSupply();
+      await token.transfer(addr1.address, totalSupply);
+      expect(await token.balanceOf(owner.address)).to.equal(0);
+      expect(await token.balanceOf(addr1.address)).to.equal(totalSupply);
+    });
+
+    it("Should allow chain transfers", async function () {
+      const { token, owner, addr1, addr2 } = await loadFixture(
+        deployTokenFixture
+      );
+      await token.transfer(addr1.address, ethers.parseUnits("100", 18));
+      await token
+        .connect(addr1)
+        .transfer(addr2.address, ethers.parseUnits("50", 18));
+      expect(await token.balanceOf(addr1.address)).to.equal(
+        ethers.parseUnits("50", 18)
+      );
+      expect(await token.balanceOf(addr2.address)).to.equal(
+        ethers.parseUnits("50", 18)
+      );
+    });
+  });
+
+  // ==========================================
+  // 3. FAILING TRANSFER TESTS
+  // ==========================================
+  describe("3. Failing Transfer Tests", function () {
+    it("Should fail when insufficient balance", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      await expect(
+        token.connect(addr1).transfer(owner.address, ethers.parseUnits("1", 18))
+      ).to.be.revertedWith("Insufficient balance");
+    });
+
+    it("Should fail when transferring more than balance", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      await expect(
+        token.transfer(addr1.address, ethers.parseUnits("1001", 18))
+      ).to.be.revertedWith("Insufficient balance");
+    });
+
+    it("Should fail when transferring to zero address", async function () {
+      const { token } = await loadFixture(deployTokenFixture);
+      await expect(
+        token.transfer(ethers.ZeroAddress, ethers.parseUnits("1", 18))
+      ).to.be.revertedWith("Cannot transfer to zero address");
+    });
+
+    it("Should fail when transferring zero amount", async function () {
+      const { token, addr1 } = await loadFixture(deployTokenFixture);
+      await expect(token.transfer(addr1.address, 0)).to.be.revertedWith(
+        "Transfer amount must be greater than zero"
+      );
+    });
+
+    it("Should fail after balance is exhausted", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      await token.transfer(addr1.address, await token.balanceOf(owner.address));
+      await expect(token.transfer(addr1.address, 1)).to.be.revertedWith(
+        "Insufficient balance"
+      );
+    });
+  });
+
+  // ==========================================
+  // 4. EDGE CASE: Transferring to Yourself
+  // ==========================================
+  describe("4. Edge Case: Transferring to Yourself", function () {
+    it("Should allow transfer to self", async function () {
+      const { token, owner } = await loadFixture(deployTokenFixture);
+      const initialBalance = await token.balanceOf(owner.address);
+      await token.transfer(owner.address, ethers.parseUnits("100", 18));
+      expect(await token.balanceOf(owner.address)).to.equal(initialBalance);
+    });
+
+    it("Should emit event when transferring to self", async function () {
+      const { token, owner } = await loadFixture(deployTokenFixture);
+      await expect(token.transfer(owner.address, ethers.parseUnits("100", 18)))
+        .to.emit(token, "Transfer")
+        .withArgs(owner.address, owner.address, ethers.parseUnits("100", 18));
+    });
+
+    it("Should maintain total supply on self-transfer", async function () {
+      const { token, owner } = await loadFixture(deployTokenFixture);
+      const initialSupply = await token.totalSupply();
+      await token.transfer(owner.address, ethers.parseUnits("500", 18));
+      expect(await token.totalSupply()).to.equal(initialSupply);
+    });
+  });
+
+  // ==========================================
+  // 5. GAS ESTIMATION TESTS
+  // ==========================================
+  describe("5. Gas Estimation Tests", function () {
+    it("Should estimate gas for transfer", async function () {
+      const { token, addr1 } = await loadFixture(deployTokenFixture);
+      const gasEstimate = await token.transfer.estimateGas(
+        addr1.address,
+        ethers.parseUnits("10", 18)
+      );
+      expect(gasEstimate).to.be.gt(0);
+      console.log(`      Gas estimate for transfer: ${gasEstimate.toString()}`);
+    });
+
+    it("Should track actual gas used for transfer", async function () {
+      const { token, addr1 } = await loadFixture(deployTokenFixture);
+      const tx = await token.transfer(
+        addr1.address,
+        ethers.parseUnits("10", 18)
+      );
+      const receipt = await tx.wait();
+      console.log(`      Actual gas used: ${receipt.gasUsed.toString()}`);
+      expect(receipt.gasUsed).to.be.gt(0);
+    });
+
+    it("Should compare gas for different transfer amounts", async function () {
+      const { token, addr1, addr2 } = await loadFixture(deployTokenFixture);
+      const tx1 = await token.transfer(
+        addr1.address,
+        ethers.parseUnits("1", 18)
+      );
+      const receipt1 = await tx1.wait();
+      const tx2 = await token.transfer(
+        addr2.address,
+        ethers.parseUnits("999", 18)
+      );
+      const receipt2 = await tx2.wait();
+      console.log(`      Gas for 1 token: ${receipt1.gasUsed.toString()}`);
+      console.log(`      Gas for 999 tokens: ${receipt2.gasUsed.toString()}`);
+    });
+
+    it("Should estimate gas for approve", async function () {
+      const { token, addr1 } = await loadFixture(deployTokenFixture);
+      const gasEstimate = await token.approve.estimateGas(
+        addr1.address,
+        ethers.parseUnits("100", 18)
+      );
+      console.log(`      Gas estimate for approve: ${gasEstimate.toString()}`);
+      expect(gasEstimate).to.be.gt(0);
+    });
+  });
+
+  // ==========================================
+  // 6. EVENT EMISSION TESTS
+  // ==========================================
+  describe("6. Event Emission Tests", function () {
+    it("Should emit Transfer event on deployment", async function () {
+      const [owner] = await ethers.getSigners();
+      const SimpleToken = await ethers.getContractFactory("SimpleToken");
+      const token = await SimpleToken.deploy(
+        "Test",
+        "TST",
+        18,
+        ethers.parseUnits("100", 18)
+      );
+
+      // Wait for deployment and check event in deployment transaction
+      const deployTx = token.deploymentTransaction();
+      await expect(deployTx)
+        .to.emit(token, "Transfer")
+        .withArgs(
+          ethers.ZeroAddress,
+          owner.address,
+          ethers.parseUnits("100", 18)
+        );
+    });
+
+    it("Should emit Transfer event with correct parameters", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      await expect(token.transfer(addr1.address, ethers.parseUnits("50", 18)))
+        .to.emit(token, "Transfer")
+        .withArgs(owner.address, addr1.address, ethers.parseUnits("50", 18));
+    });
+
+    it("Should emit Approval event", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      await expect(token.approve(addr1.address, ethers.parseUnits("100", 18)))
+        .to.emit(token, "Approval")
+        .withArgs(owner.address, addr1.address, ethers.parseUnits("100", 18));
+    });
+
+    it("Should emit multiple Transfer events", async function () {
+      const { token, owner, addr1, addr2 } = await loadFixture(
+        deployTokenFixture
+      );
+      await expect(
+        token.transfer(addr1.address, ethers.parseUnits("10", 18))
+      ).to.emit(token, "Transfer");
+      await expect(
+        token.transfer(addr2.address, ethers.parseUnits("20", 18))
+      ).to.emit(token, "Transfer");
+    });
+
+    it("Should emit Transfer on transferFrom", async function () {
+      const { token, owner, addr1, addr2 } = await loadFixture(
+        deployTokenFixture
+      );
+      await token.approve(addr1.address, ethers.parseUnits("100", 18));
+      await expect(
+        token
+          .connect(addr1)
+          .transferFrom(
+            owner.address,
+            addr2.address,
+            ethers.parseUnits("50", 18)
+          )
+      )
+        .to.emit(token, "Transfer")
+        .withArgs(owner.address, addr2.address, ethers.parseUnits("50", 18));
+    });
+
+    it("Should emit Transfer on mint", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      await expect(token.mint(addr1.address, ethers.parseUnits("100", 18)))
+        .to.emit(token, "Transfer")
+        .withArgs(
+          ethers.ZeroAddress,
+          addr1.address,
+          ethers.parseUnits("100", 18)
+        );
+    });
+
+    it("Should emit Transfer on burn", async function () {
+      const { token, owner } = await loadFixture(deployTokenFixture);
+      await expect(token.burn(ethers.parseUnits("10", 18)))
+        .to.emit(token, "Transfer")
+        .withArgs(
+          owner.address,
+          ethers.ZeroAddress,
+          ethers.parseUnits("10", 18)
+        );
+    });
+  });
+
+  // ==========================================
+  // 7. STORAGE VERIFICATION
+  // ==========================================
+  describe("7. Storage Verification", function () {
+    it("Should store name correctly", async function () {
+      const { token } = await loadFixture(deployTokenFixture);
+      expect(await token.name()).to.equal("MyToken");
+    });
+
+    it("Should store symbol correctly", async function () {
+      const { token } = await loadFixture(deployTokenFixture);
+      expect(await token.symbol()).to.equal("MTK");
+    });
+
+    it("Should store decimals correctly", async function () {
+      const { token } = await loadFixture(deployTokenFixture);
+      expect(await token.decimals()).to.equal(18);
+    });
+
+    it("Should store totalSupply correctly", async function () {
+      const { token } = await loadFixture(deployTokenFixture);
+      expect(await token.totalSupply()).to.equal(ethers.parseUnits("1000", 18));
+    });
+
+    it("Should store owner correctly", async function () {
+      const { token, owner } = await loadFixture(deployTokenFixture);
+      expect(await token.owner()).to.equal(owner.address);
+    });
+
+    it("Should update balances in storage", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      await token.transfer(addr1.address, ethers.parseUnits("100", 18));
+      expect(await token.balanceOf(owner.address)).to.equal(
+        ethers.parseUnits("900", 18)
+      );
+      expect(await token.balanceOf(addr1.address)).to.equal(
+        ethers.parseUnits("100", 18)
+      );
+    });
+
+    it("Should update allowances in storage", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      await token.approve(addr1.address, ethers.parseUnits("200", 18));
+      expect(await token.allowance(owner.address, addr1.address)).to.equal(
+        ethers.parseUnits("200", 18)
+      );
+    });
+
+    it("Should update totalSupply after mint", async function () {
+      const { token, addr1 } = await loadFixture(deployTokenFixture);
+      const initialSupply = await token.totalSupply();
+      await token.mint(addr1.address, ethers.parseUnits("500", 18));
+      expect(await token.totalSupply()).to.equal(
+        initialSupply + ethers.parseUnits("500", 18)
+      );
+    });
+
+    it("Should update totalSupply after burn", async function () {
+      const { token } = await loadFixture(deployTokenFixture);
+      const initialSupply = await token.totalSupply();
+      await token.burn(ethers.parseUnits("100", 18));
+      expect(await token.totalSupply()).to.equal(
+        initialSupply - ethers.parseUnits("100", 18)
+      );
+    });
+  });
+
+  // ==========================================
+  // 8. NEGATIVE TESTS (Reverts & Edge Cases)
+  // ==========================================
+  describe("8. Negative Tests", function () {
+    describe("8.1 Transfer Negative Tests", function () {
+      it("Should revert on zero address transfer", async function () {
+        const { token } = await loadFixture(deployTokenFixture);
+        await expect(token.transfer(ethers.ZeroAddress, 1)).to.be.revertedWith(
+          "Cannot transfer to zero address"
+        );
+      });
+
+      it("Should revert on zero amount transfer", async function () {
+        const { token, addr1 } = await loadFixture(deployTokenFixture);
+        await expect(token.transfer(addr1.address, 0)).to.be.revertedWith(
+          "Transfer amount must be greater than zero"
+        );
+      });
+
+      it("Should revert on insufficient balance", async function () {
+        const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+        const balance = await token.balanceOf(owner.address);
+        await expect(
+          token.transfer(addr1.address, balance + 1n)
+        ).to.be.revertedWith("Insufficient balance");
+      });
+    });
+
+    describe("8.2 Approve Negative Tests", function () {
+      it("Should revert approve to zero address", async function () {
+        const { token } = await loadFixture(deployTokenFixture);
+        await expect(token.approve(ethers.ZeroAddress, 100)).to.be.revertedWith(
+          "Cannot approve zero address"
+        );
+      });
+    });
+
+    describe("8.3 TransferFrom Negative Tests", function () {
+      it("Should revert on insufficient allowance", async function () {
+        const { token, owner, addr1, addr2 } = await loadFixture(
+          deployTokenFixture
+        );
+        await expect(
+          token.connect(addr1).transferFrom(owner.address, addr2.address, 1)
+        ).to.be.revertedWith("Insufficient allowance");
+      });
+
+      it("Should revert when transferring from zero address", async function () {
+        const { token, addr1 } = await loadFixture(deployTokenFixture);
+        await expect(
+          token.transferFrom(ethers.ZeroAddress, addr1.address, 1)
+        ).to.be.revertedWith("Cannot transfer from zero address");
+      });
+
+      it("Should revert when transferring to zero address", async function () {
+        const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+        await token.approve(addr1.address, 100);
+        await expect(
+          token
+            .connect(addr1)
+            .transferFrom(owner.address, ethers.ZeroAddress, 1)
+        ).to.be.revertedWith("Cannot transfer to zero address");
+      });
+
+      it("Should revert on zero amount transferFrom", async function () {
+        const { token, owner, addr1, addr2 } = await loadFixture(
+          deployTokenFixture
+        );
+        await token.approve(addr1.address, 100);
+        await expect(
+          token.connect(addr1).transferFrom(owner.address, addr2.address, 0)
+        ).to.be.revertedWith("Transfer amount must be greater than zero");
+      });
+    });
+
+    describe("8.4 Mint Negative Tests", function () {
+      it("Should revert mint by non-owner", async function () {
+        const { token, addr1, addr2 } = await loadFixture(deployTokenFixture);
+        await expect(
+          token.connect(addr1).mint(addr2.address, 100)
+        ).to.be.revertedWith("Only owner can mint tokens");
+      });
+
+      it("Should revert mint to zero address", async function () {
+        const { token } = await loadFixture(deployTokenFixture);
+        await expect(token.mint(ethers.ZeroAddress, 100)).to.be.revertedWith(
+          "Cannot mint to zero address"
+        );
+      });
+
+      it("Should revert mint zero amount", async function () {
+        const { token, addr1 } = await loadFixture(deployTokenFixture);
+        await expect(token.mint(addr1.address, 0)).to.be.revertedWith(
+          "Mint amount must be greater than zero"
+        );
+      });
+    });
+
+    describe("8.5 Burn Negative Tests", function () {
+      it("Should revert burn with insufficient balance", async function () {
+        const { token, addr1 } = await loadFixture(deployTokenFixture);
+        await expect(token.connect(addr1).burn(1)).to.be.revertedWith(
+          "Insufficient balance to burn"
+        );
+      });
+
+      it("Should revert burn zero amount", async function () {
+        const { token } = await loadFixture(deployTokenFixture);
+        await expect(token.burn(0)).to.be.revertedWith(
+          "Burn amount must be greater than zero"
+        );
+      });
+
+      it("Should revert burn more than balance", async function () {
+        const { token, owner } = await loadFixture(deployTokenFixture);
+        const balance = await token.balanceOf(owner.address);
+        await expect(token.burn(balance + 1n)).to.be.revertedWith(
+          "Insufficient balance to burn"
+        );
+      });
+    });
+
+    describe("8.6 Edge Cases with Large Numbers", function () {
+      it("Should handle maximum uint256 approval", async function () {
+        const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+        const maxUint256 = ethers.MaxUint256;
+        await token.approve(addr1.address, maxUint256);
+        expect(await token.allowance(owner.address, addr1.address)).to.equal(
+          maxUint256
+        );
+      });
+
+      it("Should handle large token transfers", async function () {
+        const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+        const largeAmount = ethers.parseUnits("500", 18);
+        await token.transfer(addr1.address, largeAmount);
+        expect(await token.balanceOf(addr1.address)).to.equal(largeAmount);
+      });
+
+      it("Should revert on transfers exceeding balance", async function () {
+        const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+        const balance = await token.balanceOf(owner.address);
+        await expect(
+          token.transfer(addr1.address, balance + ethers.parseUnits("1", 18))
+        ).to.be.revertedWith("Insufficient balance");
+      });
+    });
+  });
+
+  // ==========================================
+  // BONUS: Additional Advanced Tests
+  // ==========================================
+  describe("9. Advanced Integration Tests", function () {
+    it("Should handle complex transfer scenario", async function () {
+      const { token, owner, addr1, addr2, addr3 } = await loadFixture(
+        deployTokenFixture
+      );
+
+      await token.transfer(addr1.address, ethers.parseUnits("100", 18));
+      await token.transfer(addr2.address, ethers.parseUnits("200", 18));
+      await token
+        .connect(addr1)
+        .transfer(addr3.address, ethers.parseUnits("50", 18));
+
+      expect(await token.balanceOf(owner.address)).to.equal(
+        ethers.parseUnits("700", 18)
+      );
+      expect(await token.balanceOf(addr1.address)).to.equal(
+        ethers.parseUnits("50", 18)
+      );
+      expect(await token.balanceOf(addr2.address)).to.equal(
+        ethers.parseUnits("200", 18)
+      );
+      expect(await token.balanceOf(addr3.address)).to.equal(
+        ethers.parseUnits("50", 18)
+      );
+    });
+
+    it("Should handle approve and transferFrom workflow", async function () {
+      const { token, owner, addr1, addr2 } = await loadFixture(
+        deployTokenFixture
+      );
+
+      await token.approve(addr1.address, ethers.parseUnits("300", 18));
+      await token
+        .connect(addr1)
+        .transferFrom(
+          owner.address,
+          addr2.address,
+          ethers.parseUnits("100", 18)
+        );
+
+      expect(await token.balanceOf(addr2.address)).to.equal(
+        ethers.parseUnits("100", 18)
+      );
+      expect(await token.allowance(owner.address, addr1.address)).to.equal(
+        ethers.parseUnits("200", 18)
+      );
+    });
+
+    it("Should handle mint and burn operations", async function () {
+      const { token, owner, addr1 } = await loadFixture(deployTokenFixture);
+      const initialSupply = await token.totalSupply();
+
+      await token.mint(addr1.address, ethers.parseUnits("500", 18));
+      expect(await token.totalSupply()).to.equal(
+        initialSupply + ethers.parseUnits("500", 18)
+      );
+
+      await token.burn(ethers.parseUnits("100", 18));
+      expect(await token.totalSupply()).to.equal(
+        initialSupply + ethers.parseUnits("400", 18)
+      );
+    });
+  });
+});

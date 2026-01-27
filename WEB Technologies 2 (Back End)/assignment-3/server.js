@@ -56,11 +56,11 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`\n🚀 Server is running on port ${PORT}`);
-  console.log(`📱 Frontend: http://localhost:${PORT}`);
-  console.log(`🔌 API: http://localhost:${PORT}/api`);
-  console.log(`🗄️  MongoDB UI: http://localhost:8081`);
-  console.log(`⚙️  Environment: ${process.env.NODE_ENV || "development"}\n`);
+  console.log(`\n Server is running on port ${PORT}`);
+  console.log(`Frontend: http://localhost:${PORT}`);
+  console.log(`API: http://localhost:${PORT}/api`);
+  console.log(`MongoDB UI: http://localhost:8081`);
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}\n`);
 });
 
 process.on("unhandledRejection", (err) => {
