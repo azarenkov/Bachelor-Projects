@@ -2,7 +2,7 @@
 
 A comprehensive analytical platform built with Node.js, Express, MongoDB, and Chart.js for retrieving, analyzing, and visualizing time-series data.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Features](#features)
 - [Technologies Used](#technologies-used)
@@ -16,7 +16,7 @@ A comprehensive analytical platform built with Node.js, Express, MongoDB, and Ch
 - [Usage Guide](#usage-guide)
 - [Troubleshooting](#troubleshooting)
 
-## ✨ Features
+## Features
 
 - **Time-Series Data Retrieval**: Filter data by date range and specific fields
 - **Statistical Metrics**: Calculate average, minimum, maximum, and standard deviation
@@ -26,7 +26,7 @@ A comprehensive analytical platform built with Node.js, Express, MongoDB, and Ch
 - **Error Handling**: Robust validation and error messages
 - **Sample Data**: Automated seed script with realistic time-series data
 
-## 🛠 Technologies Used
+## Technologies Used
 
 ### Backend
 - **Node.js**: JavaScript runtime
@@ -39,7 +39,7 @@ A comprehensive analytical platform built with Node.js, Express, MongoDB, and Ch
 - **JavaScript (ES6+)**: Client-side functionality
 - **Chart.js**: Data visualization library
 
-## 📦 Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
@@ -54,7 +54,7 @@ npm --version
 mongod --version
 ```
 
-## 🚀 Installation
+## Installation
 
 ### 1. Clone or Navigate to Project Directory
 
