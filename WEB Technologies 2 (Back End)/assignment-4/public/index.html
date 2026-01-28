@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytical Platform - Time Series Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/index.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>📊 Analytical Platform</h1>
+            <p class="subtitle">Time-Series Data Visualization & Analytics</p>
+        </header>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="card">
+                <h2>🎛️ Data Controls</h2>
+
+                <div class="form-group">
+                    <label for="fieldSelect">Select Field:</label>
+                    <select id="fieldSelect" class="input-field">
+                        <option value="field1">Field 1 (Temperature °C)</option>
+                        <option value="field2">Field 2 (Humidity %)</option>
+                        <option value="field3">Field 3 (CO2 ppm)</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" id="startDate" class="input-field">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endDate">End Date:</label>
+                        <input type="date" id="endDate" class="input-field">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="loadDataBtn" class="btn btn-primary">📈 Load Data</button>
+                    <button id="loadMetricsBtn" class="btn btn-secondary">📊 Load Metrics</button>
+                    <button id="loadAllFieldsBtn" class="btn btn-info">🔄 Load All Fields</button>
+                    <button id="clearBtn" class="btn btn-danger">🗑️ Clear</button>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="successMessage" class="success-message" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Statistics Panel -->
+        <div class="stats-panel" id="statsPanel" style="display: none;">
+            <div class="card">
+                <h2>📈 Statistical Metrics</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Field</div>
+                        <div class="stat-value" id="statField">-</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Count</div>
+                        <div class="stat-value" id="statCount">-</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Average</div>
+                        <div class="stat-value" id="statAvg">-</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Minimum</div>
+                        <div class="stat-value" id="statMin">-</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Maximum</div>
+                        <div class="stat-value" id="statMax">-</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Std. Deviation</div>
+                        <div class="stat-value" id="statStdDev">-</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Range</div>
+                        <div class="stat-value" id="statRange">-</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Date Range</div>
+                        <div class="stat-value" id="statDateRange">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Panel -->
+        <div class="chart-panel" id="chartPanel" style="display: none;">
+            <div class="card">
+                <h2>📉 Time Series Visualization</h2>
+                <div class="chart-container">
+                    <canvas id="timeSeriesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Multiple Fields Chart Panel -->
+        <div class="chart-panel" id="allFieldsChartPanel" style="display: none;">
+            <div class="card">
+                <h2>📊 All Fields Comparison</h2>
+                <div class="chart-container">
+                    <canvas id="allFieldsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading data...</p>
+        </div>
+
+        <!-- Data Info -->
+        <div class="info-panel" id="infoPanel" style="display: none;">
+            <div class="card">
+                <h3>ℹ️ Data Information</h3>
+                <div id="dataInfo"></div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+</h3>
