@@ -2,32 +2,26 @@ const mongoose = require("mongoose");
 const config = require("./config");
 const Measurement = require("./models/Measurement");
 
-// Generate sample data
 function generateSampleData(numDays = 30, recordsPerDay = 24) {
   const data = [];
   const now = new Date();
 
-  // Generate data for the past 'numDays' days
   for (let day = numDays; day >= 0; day--) {
     for (let hour = 0; hour < recordsPerDay; hour++) {
       const timestamp = new Date(now);
       timestamp.setDate(timestamp.getDate() - day);
       timestamp.setHours(hour, 0, 0, 0);
 
-      // Generate realistic time-series data with trends and noise
-      // field1: Temperature (°C) - range 18-30 with daily cycle
       const field1 =
         22 +
         Math.sin((hour / 24) * Math.PI * 2) * 4 +
         (Math.random() - 0.5) * 2;
 
-      // field2: Humidity (%) - range 40-80 inverse to temperature
       const field2 =
         60 -
         Math.sin((hour / 24) * Math.PI * 2) * 10 +
         (Math.random() - 0.5) * 5;
 
-      // field3: CO2 levels (ppm) - range 400-800 with some variation
       const field3 =
         500 +
         Math.sin((hour / 12) * Math.PI) * 100 +
@@ -45,7 +39,6 @@ function generateSampleData(numDays = 30, recordsPerDay = 24) {
   return data;
 }
 
-// Seed the database
 async function seedDatabase() {
   try {
     console.log("🌱 Starting database seeding...\n");
@@ -67,7 +60,6 @@ async function seedDatabase() {
     const insertResult = await Measurement.insertMany(sampleData);
     console.log(`✓ Successfully inserted ${insertResult.length} records`);
 
-    // Display statistics
     console.log("\n📈 Database Statistics:");
     const count = await Measurement.countDocuments();
     console.log(`   Total records: ${count}`);
@@ -85,7 +77,6 @@ async function seedDatabase() {
       );
     }
 
-    // Calculate some sample statistics
     const stats = await Measurement.aggregate([
       {
         $group: {
@@ -118,5 +109,4 @@ async function seedDatabase() {
   }
 }
 
-// Run the seed function
 seedDatabase();
