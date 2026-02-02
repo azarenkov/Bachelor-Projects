@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ERC-721 NFT Interface</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .section h2 {
+        color: #f5576c;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+      }
+
+      .info-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #f5576c;
+        margin-bottom: 10px;
+      }
+
+      .info-label {
+        color: #666;
+        font-size: 0.9em;
+        margin-bottom: 5px;
+      }
+
+      .info-value {
+        color: #333;
+        font-size: 1.1em;
+        font-weight: 600;
+        word-break: break-all;
+      }
+
+      button {
+        background: #f5576c;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      button:hover {
+        background: #e04455;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+      }
+
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .nft-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .nft-card {
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+      }
+
+      .nft-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .nft-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3em;
+        margin-bottom: 10px;
+      }
+
+      .nft-info {
+        margin-top: 10px;
+      }
+
+      .nft-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .nft-detail {
+        font-size: 0.9em;
+        color: #666;
+        margin-bottom: 3px;
+      }
+
+      .status {
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        display: none;
+      }
+
+      .status.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .status.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .status.info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>ERC-721 NFT Interface</h1>
+      <p class="subtitle">View and Manage Your NFTs</p>
+
+      <div class="section">
+        <h2>Connection</h2>
+        <button id="connectBtn" onclick="connectWallet()">
+          Connect MetaMask
+        </button>
+        <div id="walletInfo" style="margin-top: 15px; display: none">
+          <div class="info-card">
+            <div class="info-label">Connected Wallet</div>
+            <div class="info-value" id="walletAddress"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="collectionInfoSection" style="display: none">
+        <h2>Collection Information</h2>
+        <div class="info-card">
+          <div class="info-label">Collection Name</div>
+          <div class="info-value" id="collectionName">-</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Symbol</div>
+          <div class="info-value" id="collectionSymbol">-</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Your NFT Balance</div>
+          <div class="info-value" id="nftBalance">-</div>
+        </div>
+        <button onclick="loadNFTInfo()">Refresh Info</button>
+      </div>
+
+      <div class="section" id="nftListSection" style="display: none">
+        <h2>Your NFTs</h2>
+        <div id="nftList" class="nft-grid">
+          <div class="empty-state">Loading NFTs...</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

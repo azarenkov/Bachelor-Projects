@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ERC-20 Token Interface</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .section h2 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .info-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+
+      .info-label {
+        color: #666;
+        font-size: 0.9em;
+        margin-bottom: 5px;
+      }
+
+      .info-value {
+        color: #333;
+        font-size: 1.1em;
+        font-weight: 600;
+        word-break: break-all;
+      }
+
+      button {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      button:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1em;
+        margin-bottom: 10px;
+        transition: border 0.3s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .status {
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        display: none;
+      }
+
+      .status.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .status.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .status.info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>ERC-20 Token Interface</h1>
+      <p class="subtitle">Interact with MyToken (MTK)</p>
+
+      <div class="section">
+        <h2>Connection</h2>
+        <button id="connectBtn" onclick="connectWallet()">
+          Connect MetaMask
+        </button>
+        <div id="walletInfo" style="margin-top: 15px; display: none">
+          <div class="info-card">
+            <div class="info-label">Connected Wallet</div>
+            <div class="info-value" id="walletAddress"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="tokenInfoSection" style="display: none">
+        <h2>Token Information</h2>
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-label">Token Name</div>
+            <div class="info-value" id="tokenName">-</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Token Symbol</div>
+            <div class="info-value" id="tokenSymbol">-</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Your Balance</div>
+            <div class="info-value" id="tokenBalance">-</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Total Supply</div>
+            <div class="info-value" id="totalSupply">-</div>
+          </div>
+        </div>
+        <button onclick="loadTokenInfo()">Refresh Info</button>
+      </div>
+
+      <div class="section" id="transferSection" style="display: none">
+        <h2>Transfer Tokens</h2>
+        <input
+          type="text"
+          id="recipientAddress"
+          placeholder="Recipient Address (0x...)"
+        />
+        <input
+          type="text"
+          id="transferAmount"
+          placeholder="Amount (e.g., 100)"
+        />
+        <button onclick="transferTokens()">Send Tokens</button>
+        <div id="transferStatus" class="status"></div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

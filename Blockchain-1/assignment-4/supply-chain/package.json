@@ -1,0 +1,19 @@
+{
+  "name": "supply-chain",
+  "version": "1.0.0",
+  "description": "Supply Chain Tracking System",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile"
+  },
+  "keywords": ["supply-chain", "blockchain", "hardhat"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
+    "hardhat": "^2.19.0",
+    "chai": "^4.3.7",
+    "ethers": "^6.4.0"
+  }
+}
