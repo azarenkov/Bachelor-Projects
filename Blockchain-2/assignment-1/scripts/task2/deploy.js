@@ -25,7 +25,10 @@ async function main() {
   // ── Upgrade to LogicV2 ──
   console.log("\nUpgrading to V2...");
   const LogicV2 = await ethers.getContractFactory("LogicV2");
-  const proxyV2 = await upgrades.upgradeProxy(proxy, LogicV2, { kind: "uups" });
+  const proxyV2 = await upgrades.upgradeProxy(proxy, LogicV2, {
+    kind: "uups",
+    call: { fn: "initializeV2" },
+  });
   await proxyV2.waitForDeployment();
 
   console.log("Proxy still at:", await proxyV2.getAddress());
