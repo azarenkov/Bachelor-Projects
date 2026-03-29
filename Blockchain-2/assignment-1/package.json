@@ -1,0 +1,31 @@
+{
+  "name": "blockchain2-assignment1",
+  "version": "1.0.0",
+  "description": "Advanced Solidity Patterns & Security Fundamentals",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:gas": "REPORT_GAS=true hardhat test",
+    "node": "hardhat node",
+    "deploy:task1": "hardhat run scripts/task1/deploy.js --network localhost",
+    "interact:task1": "hardhat run scripts/task1/interact.js --network localhost",
+    "deploy:task2": "hardhat run scripts/task2/deploy.js --network localhost",
+    "interact:task2": "hardhat run scripts/task2/interact.js --network localhost",
+    "deploy:task3": "hardhat run scripts/task3/deploy.js --network localhost",
+    "interact:task3": "hardhat run scripts/task3/interact.js --network localhost",
+    "deploy:task4": "hardhat run scripts/task4/deploy.js --network localhost",
+    "interact:task4": "hardhat run scripts/task4/interact.js --network localhost",
+    "deploy:task5": "hardhat run scripts/task5/deploy.js --network localhost",
+    "interact:task5": "hardhat run scripts/task5/interact.js --network localhost"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.22.0",
+    "hardhat-gas-reporter": "^1.0.10"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^5.0.0",
+    "@openzeppelin/hardhat-upgrades": "^3.9.1"
+  }
+}
