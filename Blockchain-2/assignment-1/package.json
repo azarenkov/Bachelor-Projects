@@ -1,0 +1,23 @@
+{
+  "name": "blockchain2-assignment1",
+  "version": "1.0.0",
+  "description": "Advanced Solidity Patterns & Security Fundamentals",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:gas": "REPORT_GAS=true hardhat test",
+    "deploy:task1": "hardhat run scripts/task1/deploy.js --network localhost",
+    "deploy:task2": "hardhat run scripts/task2/deploy.js --network localhost",
+    "node": "hardhat node"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.22.0",
+    "hardhat-gas-reporter": "^1.0.10"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^5.0.0",
+    "@openzeppelin/hardhat-upgrades": "^3.9.1"
+  }
+}
