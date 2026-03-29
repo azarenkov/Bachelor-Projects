@@ -1,0 +1,32 @@
+{
+  "name": "assignment-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test",
+    "test:factory": "hardhat test test/Factory.test.js",
+    "test:proxy": "hardhat test test/Proxy.test.js",
+    "test:gas": "hardhat test test/GasOptimization.test.js",
+    "test:assembly": "hardhat test test/Assembly.test.js",
+    "test:security": "hardhat test test/Security.test.js",
+    "compile": "hardhat compile",
+    "clean": "hardhat clean",
+    "deploy:all": "hardhat run scripts/deploy-all.js",
+    "deploy:factory": "hardhat run scripts/deploy-factory.js",
+    "deploy:proxy": "hardhat run scripts/deploy-proxy.js",
+    "deploy:gas": "hardhat run scripts/deploy-gas-optimization.js",
+    "node": "hardhat node"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.2",
+    "@openzeppelin/contracts": "^4.9.3",
+    "@openzeppelin/contracts-upgradeable": "^4.9.3",
+    "hardhat": "^2.28.6",
+    "hardhat-gas-reporter": "^2.3.0"
+  }
+}
