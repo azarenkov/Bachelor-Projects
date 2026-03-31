@@ -1,0 +1,47 @@
+groups:
+  - name: api_alerts
+    rules:
+
+      # Fire when the error rate (5xx responses) exceeds 5 % for 5 minutes
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(http_requests_total{status_code=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total[5m]))
+          ) * 100 > 5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High HTTP error rate detected"
+          description: >
+            The error rate is {{ printf "%.1f" $value }}% — above the 5% threshold
+            for more than 5 minutes. Investigate the /api/orders or other endpoints
+            for elevated 5xx responses.
+
+      # Fire when P95 latency exceeds 1 s for 5 minutes
+      - alert: HighLatency
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le, route)
+          ) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High P95 latency detected"
+          description: >
+            P95 latency for route {{ $labels.route }} is
+            {{ printf "%.2f" $value }}s — above the 1 s threshold for 5 minutes.
+
+      # Fire when request rate drops to zero (service down / no traffic)
+      - alert: NoTraffic
+        expr: sum(rate(http_requests_total[5m])) == 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "No traffic received"
+          description: "The API has received zero requests for the last 2 minutes."
