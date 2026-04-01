@@ -1,0 +1,68 @@
+services:
+
+  # ── Databases ──────────────────────────────────────────────────────────────
+
+  order-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: order_user
+      POSTGRES_PASSWORD: order_pass
+    volumes:
+      - order-db-data:/var/lib/postgresql/data
+      - ./order-service/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U order_user -d order_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  payment-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: payment_user
+      POSTGRES_PASSWORD: payment_pass
+    volumes:
+      - payment-db-data:/var/lib/postgresql/data
+      - ./payment-service/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U payment_user -d payment_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Services ───────────────────────────────────────────────────────────────
+
+  payment-service:
+    build:
+      context: ./payment-service
+      dockerfile: Dockerfile
+    environment:
+      PAYMENT_DB_DSN: "host=payment-db port=5432 user=payment_user password=payment_pass dbname=payment_db sslmode=disable"
+      PAYMENT_PORT: "8081"
+    ports:
+      - "8081:8081"
+    depends_on:
+      payment-db:
+        condition: service_healthy
+
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    environment:
+      ORDER_DB_DSN: "host=order-db port=5432 user=order_user password=order_pass dbname=order_db sslmode=disable"
+      ORDER_PORT: "8080"
+      PAYMENT_BASE_URL: "http://payment-service:8081"
+    ports:
+      - "8080:8080"
+    depends_on:
+      order-db:
+        condition: service_healthy
+      payment-service:
+        condition: service_started
+
+volumes:
+  order-db-data:
+  payment-db-data:
