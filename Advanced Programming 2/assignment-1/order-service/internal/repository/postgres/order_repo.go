@@ -96,3 +96,28 @@ func (r *OrderRepository) FindByIdempotencyKey(ctx context.Context, key string) 
 	}
 	return r.FindByID(ctx, orderID)
 }
+
+func (r *OrderRepository) FindRecent(ctx context.Context, limit int) ([]*domain.Order, error) {
+	rows, err := r.db.QueryContext(ctx, `
+		SELECT id, customer_id, item_name, amount, status, created_at
+		FROM orders
+		ORDER BY created_at DESC
+		LIMIT $1`, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var orders []*domain.Order
+	for rows.Next() {
+		var o domain.Order
+		if err := rows.Scan(&o.ID, &o.CustomerID, &o.ItemName, &o.Amount, &o.Status, &o.CreatedAt); err != nil {
+			return nil, err
+		}
+		orders = append(orders, &o)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return orders, nil
+}

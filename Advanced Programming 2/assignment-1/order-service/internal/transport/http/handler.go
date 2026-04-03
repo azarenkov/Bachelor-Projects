@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -16,6 +17,7 @@ type orderUseCase interface {
 	CreateOrder(ctx context.Context, customerID, itemName string, amount int64, idempotencyKey string) (*domain.Order, error)
 	GetOrder(ctx context.Context, id string) (*domain.Order, error)
 	CancelOrder(ctx context.Context, id string) (*domain.Order, error)
+	GetRecentOrders(ctx context.Context, limit int) ([]*domain.Order, error)
 }
 
 // Handler holds the HTTP handlers for the Order Service.
@@ -31,6 +33,7 @@ func New(uc orderUseCase) *Handler {
 // RegisterRoutes registers all Order Service routes on the given router.
 func (h *Handler) RegisterRoutes(r *gin.Engine) {
 	r.POST("/orders", h.createOrder)
+	r.GET("/orders/recent", h.getRecentOrders)
 	r.GET("/orders/:id", h.getOrder)
 	r.PATCH("/orders/:id/cancel", h.cancelOrder)
 }
@@ -100,6 +103,37 @@ func (h *Handler) getOrder(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, toResponse(order))
+}
+
+func (h *Handler) getRecentOrders(c *gin.Context) {
+	raw, exists := c.GetQuery("limit")
+	if !exists || raw == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "limit query parameter is required"})
+		return
+	}
+
+	limit, err := strconv.Atoi(raw)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "limit must be a number"})
+		return
+	}
+
+	if limit < 1 || limit > 100 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "limit must be between 1 and 100"})
+		return
+	}
+
+	orders, err := h.uc.GetRecentOrders(c.Request.Context(), limit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	resp := make([]orderResponse, 0, len(orders))
+	for _, o := range orders {
+		resp = append(resp, toResponse(o))
+	}
+	c.JSON(http.StatusOK, resp)
 }
 
 // cancelOrder handles PATCH /orders/:id/cancel.

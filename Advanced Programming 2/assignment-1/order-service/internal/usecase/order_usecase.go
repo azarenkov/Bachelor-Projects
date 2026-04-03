@@ -14,6 +14,7 @@ type OrderRepository interface {
 	UpdateStatus(ctx context.Context, id, status string) error
 	FindByIdempotencyKey(ctx context.Context, key string) (*domain.Order, error)
 	SaveWithIdempotencyKey(ctx context.Context, o *domain.Order, key string) error
+	FindRecent(ctx context.Context, limit int) ([]*domain.Order, error)
 }
 
 // PaymentResult carries what the Payment Service returned.
@@ -105,6 +106,10 @@ func (uc *OrderUseCase) GetOrder(ctx context.Context, id string) (*domain.Order,
 		return nil, domain.ErrOrderNotFound
 	}
 	return o, nil
+}
+
+func (uc *OrderUseCase) GetRecentOrders(ctx context.Context, limit int) ([]*domain.Order, error) {
+	return uc.repo.FindRecent(ctx, limit)
 }
 
 // CancelOrder cancels an order if it is still Pending.
