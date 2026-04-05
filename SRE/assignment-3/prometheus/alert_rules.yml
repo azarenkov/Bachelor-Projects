@@ -1,0 +1,98 @@
+groups:
+  - name: node_alerts
+    interval: 30s
+    rules:
+
+      # ── CPU ──────────────────────────────────────────────────────────────
+      - alert: HighCpuUsageWarning
+        expr: |
+          100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 75
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ printf \"%.1f\" $value }}% (threshold: 75%) for more than 2 minutes."
+
+      - alert: HighCpuUsageCritical
+        expr: |
+          100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ printf \"%.1f\" $value }}% (threshold: 90%) for more than 1 minute."
+
+      # ── Memory ───────────────────────────────────────────────────────────
+      - alert: HighMemoryUsageWarning
+        expr: |
+          instance:node_memory_usage_percent:ratio * 100 > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ printf \"%.1f\" $value }}% (threshold: 80%) for more than 2 minutes."
+
+      - alert: HighMemoryUsageCritical
+        expr: |
+          instance:node_memory_usage_percent:ratio * 100 > 95
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ printf \"%.1f\" $value }}% (threshold: 95%) for more than 1 minute."
+
+      # ── Disk ─────────────────────────────────────────────────────────────
+      - alert: DiskSpaceWarning
+        expr: |
+          (1 - (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"})) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }} ({{ $labels.mountpoint }})"
+          description: "Disk usage is {{ printf \"%.1f\" $value }}% (threshold: 80%)."
+
+      - alert: DiskSpaceCritical
+        expr: |
+          (1 - (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"})) * 100 > 95
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical disk space on {{ $labels.instance }} ({{ $labels.mountpoint }})"
+          description: "Disk usage is {{ printf \"%.1f\" $value }}% (threshold: 95%)."
+
+      # ── Network errors ────────────────────────────────────────────────────
+      - alert: NetworkReceiveErrorsWarning
+        expr: |
+          rate(node_network_receive_errs_total[5m]) > 10
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Network receive errors on {{ $labels.instance }} ({{ $labels.device }})"
+          description: "Receiving {{ printf \"%.0f\" $value }} errors/s on {{ $labels.device }}."
+
+      - alert: NetworkReceiveErrorsCritical
+        expr: |
+          rate(node_network_receive_errs_total[5m]) > 100
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical network errors on {{ $labels.instance }} ({{ $labels.device }})"
+          description: "Receiving {{ printf \"%.0f\" $value }} errors/s on {{ $labels.device }}."
+
+      # ── Instance down ─────────────────────────────────────────────────────
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} is down"
+          description: "Scrape target {{ $labels.job }}/{{ $labels.instance }} has been unreachable for more than 1 minute."

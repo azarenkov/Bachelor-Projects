@@ -1,0 +1,37 @@
+groups:
+  - name: node_recording_rules
+    interval: 30s
+    rules:
+
+      # Memory usage percentage per instance
+      # Formula: (total - available) / total
+      - record: instance:node_memory_usage_percent:ratio
+        expr: |
+          (
+            node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes
+          ) / node_memory_MemTotal_bytes
+
+      # CPU usage percentage per instance (5-minute rolling average)
+      - record: instance:node_cpu_utilisation:rate5m
+        expr: |
+          1 - avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))
+
+      # Disk read throughput per instance (bytes/s)
+      - record: instance:node_disk_read_bytes:rate5m
+        expr: |
+          sum by(instance) (rate(node_disk_read_bytes_total[5m]))
+
+      # Disk write throughput per instance (bytes/s)
+      - record: instance:node_disk_written_bytes:rate5m
+        expr: |
+          sum by(instance) (rate(node_disk_written_bytes_total[5m]))
+
+      # Network receive throughput per instance (bytes/s)
+      - record: instance:node_network_receive_bytes:rate5m
+        expr: |
+          sum by(instance) (rate(node_network_receive_bytes_total{device!="lo"}[5m]))
+
+      # Network transmit throughput per instance (bytes/s)
+      - record: instance:node_network_transmit_bytes:rate5m
+        expr: |
+          sum by(instance) (rate(node_network_transmit_bytes_total{device!="lo"}[5m]))

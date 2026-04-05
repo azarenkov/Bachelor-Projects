@@ -1,0 +1,47 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by:
+    - alertname
+    - instance
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: default
+  routes:
+    - matchers:
+        - severity = critical
+      receiver: critical_receiver
+      group_wait: 10s
+      repeat_interval: 1h
+    - matchers:
+        - severity = warning
+      receiver: warning_receiver
+      group_wait: 30s
+      repeat_interval: 4h
+
+receivers:
+  - name: default
+    webhook_configs:
+      - url: http://localhost:5001/
+        send_resolved: true
+
+  - name: warning_receiver
+    webhook_configs:
+      - url: http://localhost:5001/
+        send_resolved: true
+
+  - name: critical_receiver
+    webhook_configs:
+      - url: http://localhost:5001/
+        send_resolved: true
+
+inhibit_rules:
+  - source_matchers:
+      - severity = critical
+    target_matchers:
+      - severity = warning
+    equal:
+      - alertname
+      - instance
