@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -L https://foundry.paradigm.xyz)",
+      "Bash(bash)",
+      "Bash(export PATH=\"$HOME/.foundry/bin:$PATH\")",
+      "Bash(forge --version)",
+      "Bash(mkdir -p /Users/azarenkovalexey/Projects/Bachelor/Blockchain-2/assignment-2)",
+      "Bash(forge init:*)",
+      "Bash(forge install:*)",
+      "Bash(forge build:*)",
+      "Bash(forge test:*)",
+      "Bash(forge inspect:*)",
+      "Bash(wc -l /Users/azarenkovalexey/Projects/Bachelor/Blockchain-2/assignment-2/docs/*.md)",
+      "Bash(anvil --version)",
+      "Bash(anvil --block-time 1)",
+      "Read(//tmp/**)",
+      "Bash(forge script:*)"
+    ]
+  }
+}

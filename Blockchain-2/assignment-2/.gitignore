@@ -1,0 +1,17 @@
+# Foundry build artifacts
+out/
+cache/
+
+# Coverage
+lcov.info
+coverage/
+
+# Gas snapshots
+.gas-snapshot
+
+# Environment
+.env
+
+# macOS
+.DS_Store
+lib
