@@ -1,0 +1,135 @@
+groups:
+  - name: analytical_platform_alerts
+    interval: 30s
+    rules:
+
+      # ── SLO: Availability ──────────────────────────────────────────────────
+      # SLO: 99.5% of all HTTP requests must succeed (non-5xx).
+      # Warning fires when error rate exceeds 0.5% (SLO threshold).
+      # Critical fires when error rate exceeds 5% (severe degradation).
+
+      - alert: HighApiErrorRateWarning
+        expr: |
+          (
+            sum(rate(http_requests_total{job="analytical-platform", status_code=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total{job="analytical-platform"}[5m]))
+          ) * 100 > 0.5
+        for: 2m
+        labels:
+          severity: warning
+          slo: availability
+        annotations:
+          summary: "Analytical Platform API error rate exceeds SLO threshold"
+          description: >-
+            HTTP 5xx error rate is {{ printf "%.2f" $value }}%
+            (SLO threshold: 0.5%). The 99.5% availability SLO is at risk.
+
+      - alert: HighApiErrorRateCritical
+        expr: |
+          (
+            sum(rate(http_requests_total{job="analytical-platform", status_code=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total{job="analytical-platform"}[5m]))
+          ) * 100 > 5
+        for: 1m
+        labels:
+          severity: critical
+          slo: availability
+        annotations:
+          summary: "Critical: Analytical Platform API error rate is very high"
+          description: >-
+            HTTP 5xx error rate is {{ printf "%.2f" $value }}%
+            (critical threshold: 5%). Immediate investigation required.
+
+      # ── SLO: Latency ──────────────────────────────────────────────────────
+      # SLO: 95% of requests must complete within 500 ms.
+      # Warning fires when p95 latency exceeds 500 ms.
+      # Critical fires when p95 latency exceeds 1 s.
+
+      - alert: HighApiLatencyWarning
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum(rate(http_request_duration_seconds_bucket{job="analytical-platform"}[5m])) by (le)
+          ) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+          slo: latency
+        annotations:
+          summary: "Analytical Platform p95 latency exceeds 500 ms SLO"
+          description: >-
+            p95 request latency is {{ printf "%.3f" $value }}s
+            (SLO threshold: 0.5s). Latency SLO is at risk.
+
+      - alert: HighApiLatencyCritical
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum(rate(http_request_duration_seconds_bucket{job="analytical-platform"}[5m])) by (le)
+          ) > 1.0
+        for: 1m
+        labels:
+          severity: critical
+          slo: latency
+        annotations:
+          summary: "Critical: Analytical Platform p95 latency exceeds 1 s"
+          description: >-
+            p95 request latency is {{ printf "%.3f" $value }}s
+            (critical threshold: 1.0s). Immediate investigation required.
+
+      # ── Service availability ───────────────────────────────────────────────
+
+      - alert: AnalyticalPlatformDown
+        expr: up{job="analytical-platform"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Analytical Platform backend is unreachable"
+          description: >-
+            Prometheus cannot scrape the backend at {{ $labels.instance }}.
+            The service has been down for more than 1 minute.
+
+      # ── Host-level alerts ──────────────────────────────────────────────────
+
+      - alert: HighCpuUsageWarning
+        expr: |
+          100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 75
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ printf \"%.1f\" $value }}% (threshold: 75%)."
+
+      - alert: HighCpuUsageCritical
+        expr: |
+          100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ printf \"%.1f\" $value }}% (threshold: 90%)."
+
+      - alert: HighMemoryUsageWarning
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ printf \"%.1f\" $value }}% (threshold: 80%)."
+
+      - alert: HighMemoryUsageCritical
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 95
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ printf \"%.1f\" $value }}% (threshold: 95%)."
