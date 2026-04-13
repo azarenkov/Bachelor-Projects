@@ -24,7 +24,7 @@ jobs:
           version: stable
 
       - name: Install Forge dependencies
-        run: forge install foundry-rs/forge-std OpenZeppelin/openzeppelin-contracts --no-commit
+        run: forge install foundry-rs/forge-std OpenZeppelin/openzeppelin-contracts --no-git
         working-directory: Blockchain-2/assignment-2
 
       - name: Compile contracts
@@ -66,7 +66,7 @@ jobs:
           version: stable
 
       - name: Install Forge dependencies
-        run: forge install foundry-rs/forge-std OpenZeppelin/openzeppelin-contracts --no-commit
+        run: forge install foundry-rs/forge-std OpenZeppelin/openzeppelin-contracts --no-git
         working-directory: Blockchain-2/assignment-2
 
       - name: Generate coverage report (lcov)
@@ -100,7 +100,7 @@ jobs:
         run: pip3 install slither-analyzer
 
       - name: Install Forge dependencies
-        run: forge install foundry-rs/forge-std OpenZeppelin/openzeppelin-contracts --no-commit
+        run: forge install foundry-rs/forge-std OpenZeppelin/openzeppelin-contracts --no-git
         working-directory: Blockchain-2/assignment-2
 
       - name: Compile contracts for Slither
