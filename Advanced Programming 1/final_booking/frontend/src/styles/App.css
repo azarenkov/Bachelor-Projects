@@ -1,0 +1,105 @@
+/* App Layout */
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--neutral-50);
+}
+
+.main-content {
+    flex: 1;
+    width: 100%;
+    position: relative;
+}
+
+/* Error Container */
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    padding: var(--spacing-3xl) var(--spacing-xl);
+    text-align: center;
+}
+
+.error-container h2 {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.error-container p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    font-size: var(--text-base);
+}
+
+/* No Results */
+.no-results {
+    text-align: center;
+    padding: var(--spacing-3xl) var(--spacing-xl);
+    background-color: var(--surface);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border);
+}
+
+.no-results h3 {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--text-xl);
+    font-weight: 700;
+}
+
+.no-results p {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    margin: 0;
+}
+
+/* Page Transitions */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-enter {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive Containers */
+@media (max-width: 768px) {
+    .error-container {
+        padding: var(--spacing-2xl) var(--spacing-lg);
+    }
+
+    .error-container h2 {
+        font-size: var(--text-xl);
+    }
+
+    .no-results {
+        padding: var(--spacing-2xl) var(--spacing-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .error-container {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .error-container h2 {
+        font-size: var(--text-lg);
+    }
+
+    .no-results {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+}

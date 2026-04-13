@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<<<<<<< HEAD
+<head>
+=======
+  <head>
+>>>>>>> origin/main
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blockchain Crowdfunding DApp</title>
+    <link rel="stylesheet" href="styles.css" />
+<<<<<<< HEAD
+</head>
+<body>
+
+    <div class="header">
+        <h1>Crowdfunding DApp</h1>
+        <button id="connectWallet" class="btn-primary">Connect MetaMask</button>
+
+        <div id="walletInfo" style="display:none;">
+            <p><strong>Address:</strong> <span id="userAddress"></span></p>
+            <p><strong>ETH Balance:</strong> <span id="ethBalance"></span> ETH</p>
+            <p><strong>Reward Tokens:</strong> <span id="tokenBalance"></span> RWD</p>
+        </div>
+    </div>
+
+    <section class="create-campaign">
+        <h2>Create New Campaign</h2>
+
+        <div class="form-group">
+            <input
+                type="text"
+                id="campaignTitle"
+                placeholder="Campaign title"
+                maxlength="50"
+            />
+
+            <textarea
+                id="campaignDescription"
+                placeholder="Campaign description"
+                maxlength="300"
+            ></textarea>
+
+            <input
+                type="number"
+                id="campaignGoal"
+                placeholder="Goal (ETH)"
+                step="0.01"
+                min="0.01"
+            />
+
+            <input
+                type="number"
+                id="campaignDuration"
+                placeholder="Duration (days)"
+                min="1"
+            />
+
+            <button id="createBtn" class="btn-primary">
+                Create Campaign
+            </button>
+        </div>
+    </section>
+
+    <section class="campaigns">
+        <h2>Campaigns</h2>
+        <div id="campaignList">
+            <p class="loading">Connect wallet to see campaigns...</p>
+        </div>
+=======
+  </head>
+  <body>
+    <div class="header">
+      <h1>Crowdfunding DApp</h1>
+      <button id="connectWallet" class="btn-primary">Connect MetaMask</button>
+      <div id="walletInfo" style="display: none">
+        <p><strong>Address:</strong> <span id="userAddress"></span></p>
+        <p><strong>ETH Balance:</strong> <span id="ethBalance"></span> ETH</p>
+        <p>
+          <strong>Reward Tokens:</strong> <span id="tokenBalance"></span> RWD
+        </p>
+      </div>
+    </div>
+
+    <section class="create-campaign">
+      <h2>Create New Campaign</h2>
+      <div class="form-group">
+        <input
+          type="number"
+          id="campaignGoal"
+          placeholder="Goal (ETH)"
+          step="0.01"
+          min="0.01"
+        />
+        <input
+          type="number"
+          id="campaignDuration"
+          placeholder="Duration (minutes)"
+          min="1"
+        />
+        <button id="createBtn" class="btn-primary">Create Campaign</button>
+      </div>
+    </section>
+
+    <section class="campaigns">
+      <h2>Active Campaigns</h2>
+      <div id="campaignList">
+        <p class="loading">Connect wallet to see campaigns...</p>
+      </div>
+>>>>>>> origin/main
+    </section>
+
+    <div id="txStatus"></div>
+
+    <script type="module" src="app.js"></script>
+<<<<<<< HEAD
+
+</body>
+=======
+  </body>
+>>>>>>> origin/main
+</html>

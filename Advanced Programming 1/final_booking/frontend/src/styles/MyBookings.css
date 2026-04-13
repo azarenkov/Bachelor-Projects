@@ -1,0 +1,403 @@
+/* My Bookings Container */
+.my-bookings-container {
+    background-color: var(--neutral-50);
+    min-height: calc(100vh - 200px);
+    padding: var(--spacing-3xl) 0;
+}
+
+/* Bookings Header */
+.bookings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-3xl);
+}
+
+.bookings-header h1 {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+/* Bookings Section */
+.bookings-section {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.section-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border);
+    letter-spacing: -0.01em;
+}
+
+/* Bookings List */
+.bookings-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+/* Booking Card */
+.booking-card {
+    background-color: var(--surface);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary-color);
+}
+
+.booking-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.booking-card.booking-past {
+    border-left-color: var(--neutral-400);
+    opacity: 0.9;
+}
+
+/* Booking Header */
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border);
+}
+
+.booking-status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+/* Status Badge */
+.status-badge {
+    padding: 0.375rem 0.875rem;
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.status-confirmed {
+    background-color: var(--success-light);
+    color: var(--success-dark);
+}
+
+.status-pending {
+    background-color: var(--warning-light);
+    color: var(--warning-dark);
+}
+
+.status-cancelled {
+    background-color: var(--error-light);
+    color: var(--error-dark);
+}
+
+.status-completed {
+    background-color: var(--info-light);
+    color: var(--info-dark);
+}
+
+.booking-id {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    font-weight: 500;
+}
+
+.booking-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+/* Booking Details */
+.booking-details {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.hotel-info h3 {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: -0.01em;
+}
+
+.hotel-location {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    margin-bottom: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.room-info {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+/* Booking Dates */
+.booking-dates {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background-color: var(--neutral-100);
+    border-radius: var(--radius-md);
+    flex-wrap: wrap;
+}
+
+.date-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.date-label {
+    color: var(--text-tertiary);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.date-value {
+    color: var(--text-primary);
+    font-size: var(--text-base);
+    font-weight: 600;
+}
+
+.date-separator {
+    color: var(--text-secondary);
+    font-size: var(--text-xl);
+    font-weight: 300;
+}
+
+/* Booking Summary */
+.booking-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background-color: var(--neutral-100);
+    border-radius: var(--radius-md);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-label {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    font-weight: 500;
+}
+
+.summary-value {
+    color: var(--text-primary);
+    font-size: var(--text-sm);
+    font-weight: 600;
+}
+
+.summary-value.total-price {
+    color: var(--primary-color);
+    font-size: var(--text-xl);
+    font-weight: 700;
+}
+
+/* Booking Footer */
+.booking-footer {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border);
+}
+
+.booking-date {
+    color: var(--text-tertiary);
+    font-size: var(--text-xs);
+}
+
+/* No Bookings */
+.no-bookings {
+    background-color: var(--surface);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-3xl);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+
+.no-bookings-icon {
+    font-size: 80px;
+    margin-bottom: var(--spacing-xl);
+    opacity: 0.3;
+}
+
+.no-bookings h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    letter-spacing: -0.01em;
+}
+
+.no-bookings p {
+    color: var(--text-secondary);
+    font-size: var(--text-base);
+    margin-bottom: var(--spacing-2xl);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Loading State */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: var(--spacing-lg);
+}
+
+.loading-container p {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    margin: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .my-bookings-container {
+        padding: var(--spacing-xl) 0;
+    }
+
+    .bookings-header {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        align-items: flex-start;
+    }
+
+    .bookings-header h1 {
+        font-size: var(--text-3xl);
+    }
+
+    .bookings-header .btn {
+        width: 100%;
+    }
+
+    .section-title {
+        font-size: var(--text-xl);
+    }
+
+    .booking-card {
+        padding: var(--spacing-lg);
+    }
+
+    .booking-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .booking-actions {
+        width: 100%;
+    }
+
+    .booking-actions .btn {
+        flex: 1;
+    }
+
+    .booking-dates {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: flex-start;
+    }
+
+    .date-separator {
+        display: none;
+    }
+
+    .booking-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .hotel-info h3 {
+        font-size: var(--text-lg);
+    }
+
+    .no-bookings {
+        padding: var(--spacing-2xl);
+    }
+
+    .no-bookings-icon {
+        font-size: 60px;
+    }
+
+    .no-bookings h2 {
+        font-size: var(--text-2xl);
+    }
+
+    .no-bookings p {
+        font-size: var(--text-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .bookings-header h1 {
+        font-size: var(--text-2xl);
+    }
+
+    .booking-card {
+        padding: var(--spacing-md);
+        border-radius: var(--radius-lg);
+    }
+
+    .hotel-info h3 {
+        font-size: var(--text-base);
+    }
+
+    .date-value {
+        font-size: var(--text-sm);
+    }
+
+    .summary-value.total-price {
+        font-size: var(--text-lg);
+    }
+
+    .booking-dates {
+        padding: var(--spacing-md);
+    }
+
+    .booking-summary {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Empty State Icons */
+.no-bookings-empty-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--spacing-xl);
+    opacity: 0.3;
+}

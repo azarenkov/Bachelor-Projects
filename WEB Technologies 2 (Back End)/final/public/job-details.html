@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details - JobConnect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="jobs.html">
+                <i class="bi bi-briefcase-fill"></i> JobConnect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="jobs.html">Find Jobs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="applications.html">My Applications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="saved-jobs.html">Saved Jobs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body" id="jobDetails">
+                        <!-- Job details will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Quick Actions</h5>
+                        <button class="btn btn-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#applyModal">
+                            <i class="bi bi-file-earmark-text"></i> Apply Now
+                        </button>
+                        <button class="btn btn-outline-primary w-100" id="saveJobBtn">
+                            <i class="bi bi-heart"></i> Save Job
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm" id="companyCard">
+                    <!-- Company info will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Apply Modal -->
+    <div class="modal fade" id="applyModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Apply for Position</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="applyAlert" class="alert d-none"></div>
+                    <form id="applyForm">
+                        <div class="mb-3">
+                            <label for="resumeUrl" class="form-label">Resume URL</label>
+                            <input type="url" class="form-control" id="resumeUrl" placeholder="https://example.com/resume.pdf">
+                        </div>
+                        <div class="mb-3">
+                            <label for="coverLetter" class="form-label">Cover Letter</label>
+                            <textarea class="form-control" id="coverLetter" rows="6" maxlength="2000" placeholder="Tell us why you're a great fit..."></textarea>
+                            <div class="form-text">Max 2000 characters</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Submit Application</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/job-details.js"></script>
+</body>
+</html>

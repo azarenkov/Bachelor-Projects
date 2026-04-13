@@ -1,0 +1,517 @@
+.my-hotels-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.my-hotels-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.my-hotels-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.no-hotels {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.no-hotels svg {
+    width: 80px;
+    height: 80px;
+    color: var(--text-tertiary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.no-hotels p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.hotels-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.hotel-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease;
+    border: 1px solid var(--border);
+}
+
+.hotel-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.hotel-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-md);
+}
+
+.hotel-info h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.hotel-location {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--neutral-700);
+    font-size: 0.9375rem;
+    margin: var(--spacing-xs) 0;
+}
+
+.hotel-location svg {
+    width: 16px;
+    height: 16px;
+}
+
+.hotel-rating {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: #f59e0b;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    margin-top: var(--spacing-xs);
+}
+
+.hotel-rating svg {
+    width: 16px;
+    height: 16px;
+    fill: #f59e0b;
+}
+
+.hotel-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.hotel-description {
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Rooms Section */
+.rooms-section {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border);
+}
+
+.rooms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.rooms-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.rooms-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.room-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+}
+
+.room-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.room-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.room-number {
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 80px;
+}
+
+.room-type {
+    color: var(--text-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--neutral-100);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.room-capacity {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--neutral-700);
+    font-size: 0.875rem;
+}
+
+.room-capacity svg {
+    width: 16px;
+    height: 16px;
+}
+
+.room-price {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.room-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.no-rooms {
+    text-align: center;
+    color: var(--neutral-600);
+    padding: var(--spacing-lg);
+    font-style: italic;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--spacing-lg);
+}
+
+.modal-content {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: var(--text-primary);
+}
+
+.modal-close svg {
+    width: 24px;
+    height: 24px;
+}
+
+.modal-content form {
+    padding: var(--spacing-lg);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-family: inherit;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    background: var(--background);
+    color: var(--text-primary);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border);
+}
+
+/* Button Styles */
+.btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    white-space: nowrap;
+}
+
+.btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--background);
+    border-color: var(--text-tertiary);
+}
+
+.btn-icon {
+    padding: var(--spacing-sm);
+    background: white;
+    color: var(--neutral-600);
+    border: 1px solid var(--neutral-300);
+    min-width: 40px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    background: var(--primary-50);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-icon svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    flex-shrink: 0;
+}
+
+.btn-icon.btn-danger {
+    background: #ef4444 !important;
+    color: white !important;
+    border-color: #ef4444 !important;
+}
+
+.btn-icon.btn-danger svg {
+    color: white !important;
+    stroke: white !important;
+    fill: none !important;
+}
+
+.btn-icon.btn-danger:hover {
+    background: #dc2626 !important;
+    border-color: #dc2626 !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3) !important;
+}
+
+.btn-icon.btn-danger:hover svg {
+    color: white !important;
+    stroke: white !important;
+    fill: none !important;
+}
+
+.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.875rem;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.btn-sm svg {
+    width: 16px;
+    height: 16px;
+}
+
+.btn-icon.btn-sm {
+    min-width: 32px;
+    min-height: 32px;
+    padding: var(--spacing-xs);
+}
+
+/* Loading and Error States */
+.loading {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+}
+
+.error-message {
+    background: var(--error-light);
+    color: var(--error-dark);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-lg);
+    border-left: 4px solid var(--error);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .my-hotels-container {
+        padding: var(--spacing-lg);
+    }
+
+    .my-hotels-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .my-hotels-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .hotel-card-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .hotel-actions {
+        align-self: flex-end;
+    }
+
+    .room-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .room-info {
+        width: 100%;
+        gap: var(--spacing-sm);
+    }
+
+    .room-actions {
+        align-self: flex-end;
+    }
+
+    .modal-overlay {
+        padding: var(--spacing-sm);
+    }
+
+    .modal-content {
+        max-height: 95vh;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .hotel-info h2 {
+        font-size: 1.25rem;
+    }
+
+    .room-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

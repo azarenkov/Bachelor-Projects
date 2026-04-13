@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Booking Platform - Find Your Perfect Stay</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <rect
+                            x="4"
+                            y="8"
+                            width="24"
+                            height="20"
+                            rx="2"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        />
+                        <path
+                            d="M4 14H28"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        />
+                        <circle cx="12" cy="20" r="1.5" fill="currentColor" />
+                        <circle cx="20" cy="20" r="1.5" fill="currentColor" />
+                    </svg>
+                    <span>BookingHub</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="#" class="nav-link active" data-page="home"
+                        >Home</a
+                    >
+                    <a href="#" class="nav-link" data-page="hotels">Hotels</a>
+                    <a
+                        href="#"
+                        class="nav-link"
+                        data-page="bookings"
+                        id="myBookingsLink"
+                        style="display: none"
+                        >My Bookings</a
+                    >
+                    <a
+                        href="#"
+                        class="nav-link"
+                        data-page="owner"
+                        id="ownerDashboardLink"
+                        style="display: none"
+                        >Dashboard</a
+                    >
+                </div>
+                <div class="nav-auth" id="navAuth">
+                    <button class="btn btn-outline" id="loginBtn">Login</button>
+                    <button class="btn btn-primary" id="registerBtn">
+                        Sign Up
+                    </button>
+                </div>
+                <div class="nav-user" id="navUser" style="display: none">
+                    <span id="userName"></span>
+                    <button class="btn btn-outline btn-sm" id="logoutBtn">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main id="mainContent">
+            <section id="homePage" class="page active">
+                <div class="hero">
+                    <div class="container">
+                        <h1 class="hero-title">Find Your Perfect Stay</h1>
+                        <p class="hero-subtitle">
+                            Discover amazing hotels and book your dream vacation
+                        </p>
+
+                        <div class="search-box">
+                            <div class="search-field">
+                                <label>City</label>
+                                <input
+                                    type="text"
+                                    id="searchCity"
+                                    placeholder="Where are you going?"
+                                />
+                            </div>
+                            <div class="search-field">
+                                <label>Check-in</label>
+                                <input type="date" id="searchCheckIn" />
+                            </div>
+                            <div class="search-field">
+                                <label>Check-out</label>
+                                <input type="date" id="searchCheckOut" />
+                            </div>
+                            <button
+                                class="btn btn-primary btn-lg"
+                                id="searchBtn"
+                            >
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <section class="section">
+                        <h2>Popular Destinations</h2>
+                        <div class="destinations-grid">
+                            <div class="destination-card" data-city="New York">
+                                <div
+                                    class="destination-image"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            #667eea 0%,
+                                            #764ba2 100%
+                                        );
+                                    "
+                                >
+                                    <div class="destination-name">New York</div>
+                                </div>
+                            </div>
+                            <div class="destination-card" data-city="London">
+                                <div
+                                    class="destination-image"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            #f093fb 0%,
+                                            #f5576c 100%
+                                        );
+                                    "
+                                >
+                                    <div class="destination-name">London</div>
+                                </div>
+                            </div>
+                            <div class="destination-card" data-city="Paris">
+                                <div
+                                    class="destination-image"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            #4facfe 0%,
+                                            #00f2fe 100%
+                                        );
+                                    "
+                                >
+                                    <div class="destination-name">Paris</div>
+                                </div>
+                            </div>
+                            <div class="destination-card" data-city="Tokyo">
+                                <div
+                                    class="destination-image"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            #43e97b 0%,
+                                            #38f9d7 100%
+                                        );
+                                    "
+                                >
+                                    <div class="destination-name">Tokyo</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2>Featured Hotels</h2>
+                        <div id="featuredHotels" class="hotels-grid">
+                            <div class="loading">Loading hotels...</div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <section id="hotelsPage" class="page">
+                <div class="container">
+                    <div class="page-header">
+                        <h1>Available Hotels</h1>
+                        <div class="filters">
+                            <input
+                                type="text"
+                                id="filterCity"
+                                placeholder="Filter by city"
+                            />
+                            <select id="filterRating">
+                                <option value="">All Ratings</option>
+                                <option value="4">4+ Stars</option>
+                                <option value="4.5">4.5+ Stars</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="hotelsList" class="hotels-grid">
+                        <div class="loading">Loading hotels...</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="hotelDetailsPage" class="page">
+                <div class="container">
+                    <button class="btn btn-outline btn-back" id="backToHotels">
+                        ← Back to Hotels
+                    </button>
+                    <div id="hotelDetails">
+                        <div class="loading">Loading hotel details...</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="bookingsPage" class="page">
+                <div class="container">
+                    <h1>My Bookings</h1>
+                    <div id="bookingsList">
+                        <div class="loading">Loading your bookings...</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ownerPage" class="page">
+                <div class="container">
+                    <div class="dashboard-header">
+                        <h1>Hotel Owner Dashboard</h1>
+                        <button class="btn btn-primary" id="addHotelBtn">
+                            + Add Hotel
+                        </button>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="myHotels">
+                            My Hotels
+                        </button>
+                        <button class="tab-btn" data-tab="hotelBookings">
+                            Bookings
+                        </button>
+                    </div>
+
+                    <div class="tab-content active" id="myHotelsTab">
+                        <div id="ownerHotelsList">
+                            <div class="loading">Loading your hotels...</div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="hotelBookingsTab">
+                        <div id="hotelBookingsList">
+                            <div class="loading">Loading bookings...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="authModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <div id="loginForm" class="auth-form active">
+                    <h2>Welcome Back</h2>
+                    <p class="form-subtitle">Login to your account</p>
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" name="password" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            Login
+                        </button>
+                    </form>
+                    <p class="form-switch">
+                        Don't have an account?
+                        <a href="#" id="showRegister">Sign up</a>
+                    </p>
+                </div>
+
+                <div id="registerForm" class="auth-form">
+                    <h2>Create Account</h2>
+                    <p class="form-subtitle">Join us today</p>
+                    <form id="registerFormElement">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" name="name" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                required
+                                minlength="6"
+                            />
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            Sign Up
+                        </button>
+                    </form>
+                    <p class="form-switch">
+                        Already have an account?
+                        <a href="#" id="showLogin">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="hotelModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <h2 id="hotelModalTitle">Add Hotel</h2>
+                <form id="hotelForm">
+                    <input type="hidden" name="hotelId" />
+                    <div class="form-group">
+                        <label>Hotel Name</label>
+                        <input type="text" name="name" required />
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" name="city" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" name="address" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Save Hotel
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="roomModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <h2 id="roomModalTitle">Add Room</h2>
+                <form id="roomForm">
+                    <input type="hidden" name="roomId" />
+                    <input type="hidden" name="hotelId" />
+                    <div class="form-group">
+                        <label>Room Number</label>
+                        <input type="text" name="room_number" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Room Type</label>
+                        <input type="text" name="type" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Price Per Day ($)</label>
+                        <input
+                            type="number"
+                            name="price_per_day"
+                            required
+                            min="1"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label>Capacity</label>
+                        <input type="number" name="capacity" required min="1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="available" checked />
+                            Available for booking
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Save Room
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="bookingModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <h2>Book Room</h2>
+                <form id="bookingForm">
+                    <input type="hidden" name="hotel_id" />
+                    <input type="hidden" name="room_id" />
+                    <div id="bookingSummary"></div>
+                    <div class="form-group">
+                        <label>Check-in Date</label>
+                        <input type="date" name="check_in" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Check-out Date</label>
+                        <input type="date" name="check_out" required />
+                    </div>
+                    <div id="priceEstimate" class="price-estimate"></div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Confirm Booking
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="toast" class="toast"></div>
+
+        <script src="js/api.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/hotels.js"></script>
+        <script src="js/bookings.js"></script>
+        <script src="js/owner.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>
