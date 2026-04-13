@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"sync"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -30,7 +29,6 @@ type Config struct {
 type App struct {
 	httpServer *http.Server
 	grpcServer *grpc.Server
-	grpcPort   string
 }
 
 // New builds and wires the entire application.
@@ -68,35 +66,34 @@ func New(cfg Config) (*App, error) {
 			Handler: router,
 		},
 		grpcServer: grpcSrv,
-		grpcPort:   cfg.GRPCPort,
 	}, nil
 }
 
 // Run starts both the HTTP and gRPC servers (blocking).
+// It returns the first error encountered; both servers are stopped when that happens.
 func (a *App) Run(httpPort, grpcPort string) error {
 	grpcLis, err := net.Listen("tcp", ":"+grpcPort)
 	if err != nil {
 		return fmt.Errorf("listen gRPC: %w", err)
 	}
 
-	var wg sync.WaitGroup
 	errCh := make(chan error, 2)
 
-	wg.Add(1)
 	go func() {
-		defer wg.Done()
 		if err := a.grpcServer.Serve(grpcLis); err != nil {
 			errCh <- fmt.Errorf("gRPC server: %w", err)
 		}
 	}()
 
-	wg.Add(1)
 	go func() {
-		defer wg.Done()
 		if err := a.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			errCh <- fmt.Errorf("HTTP server: %w", err)
 		}
 	}()
 
-	return <-errCh
+	// Block until one of the servers fails; then stop both.
+	firstErr := <-errCh
+	a.grpcServer.GracefulStop()
+	_ = a.httpServer.Close()
+	return firstErr
 }
