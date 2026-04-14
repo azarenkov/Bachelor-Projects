@@ -12,7 +12,6 @@ import (
 	"order-service/internal/usecase"
 )
 
-// orderUseCase is the interface the handler depends on.
 type orderUseCase interface {
 	CreateOrder(ctx context.Context, customerID, itemName string, amount int64, idempotencyKey string) (*domain.Order, error)
 	GetOrder(ctx context.Context, id string) (*domain.Order, error)
@@ -20,17 +19,14 @@ type orderUseCase interface {
 	GetRecentOrders(ctx context.Context, limit int) ([]*domain.Order, error)
 }
 
-// Handler holds the HTTP handlers for the Order Service.
 type Handler struct {
 	uc orderUseCase
 }
 
-// New creates a Handler with its dependencies injected.
 func New(uc orderUseCase) *Handler {
 	return &Handler{uc: uc}
 }
 
-// RegisterRoutes registers all Order Service routes on the given router.
 func (h *Handler) RegisterRoutes(r *gin.Engine) {
 	r.POST("/orders", h.createOrder)
 	r.GET("/orders/recent", h.getRecentOrders)
@@ -64,7 +60,6 @@ func toResponse(o *domain.Order) orderResponse {
 	}
 }
 
-// createOrder handles POST /orders.
 func (h *Handler) createOrder(c *gin.Context) {
 	var req createOrderRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -91,7 +86,6 @@ func (h *Handler) createOrder(c *gin.Context) {
 	c.JSON(http.StatusCreated, toResponse(order))
 }
 
-// getOrder handles GET /orders/:id.
 func (h *Handler) getOrder(c *gin.Context) {
 	order, err := h.uc.GetOrder(c.Request.Context(), c.Param("id"))
 	if err != nil {
@@ -136,7 +130,6 @@ func (h *Handler) getRecentOrders(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-// cancelOrder handles PATCH /orders/:id/cancel.
 func (h *Handler) cancelOrder(c *gin.Context) {
 	order, err := h.uc.CancelOrder(c.Request.Context(), c.Param("id"))
 	if err != nil {

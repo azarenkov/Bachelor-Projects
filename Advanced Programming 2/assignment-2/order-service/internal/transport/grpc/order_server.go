@@ -12,19 +12,15 @@ import (
 	"order-service/internal/usecase"
 )
 
-// OrderServer implements the gRPC OrderService server (server-side streaming).
 type OrderServer struct {
 	orderv1.UnimplementedOrderServiceServer
 	uc *usecase.OrderUseCase
 }
 
-// NewOrderServer creates an OrderServer.
 func NewOrderServer(uc *usecase.OrderUseCase) *OrderServer {
 	return &OrderServer{uc: uc}
 }
 
-// SubscribeToOrderUpdates streams order status updates to the client.
-// It polls the database every 500ms and pushes status changes.
 func (s *OrderServer) SubscribeToOrderUpdates(req *orderv1.OrderRequest, stream orderv1.OrderService_SubscribeToOrderUpdatesServer) error {
 	ctx := stream.Context()
 	orderID := req.OrderId
@@ -32,7 +28,6 @@ func (s *OrderServer) SubscribeToOrderUpdates(req *orderv1.OrderRequest, stream 
 		return status.Error(codes.InvalidArgument, "order_id is required")
 	}
 
-	// Verify the order exists and send initial status.
 	order, err := s.uc.GetOrder(ctx, orderID)
 	if err != nil {
 		return status.Errorf(codes.NotFound, "order not found: %v", err)
@@ -47,14 +42,12 @@ func (s *OrderServer) SubscribeToOrderUpdates(req *orderv1.OrderRequest, stream 
 		return err
 	}
 
-	// Terminal statuses need no polling.
 	if lastStatus == domain.StatusPaid ||
 		lastStatus == domain.StatusFailed ||
 		lastStatus == domain.StatusCancelled {
 		return nil
 	}
 
-	// Poll for status changes; terminal statuses end the stream.
 	ticker := time.NewTicker(500 * time.Millisecond)
 	defer ticker.Stop()
 

@@ -15,19 +15,16 @@ import (
 	"payment-service/internal/usecase"
 )
 
-// Config holds the application configuration.
 type Config struct {
 	DSN      string
 	GRPCPort string
 }
 
-// App wires all dependencies together (Composition Root).
 type App struct {
 	grpcServer *grpc.Server
 	listener   net.Listener
 }
 
-// New builds and wires the entire application.
 func New(cfg Config) (*App, error) {
 	db, err := sql.Open("postgres", cfg.DSN)
 	if err != nil {
@@ -43,7 +40,6 @@ func New(cfg Config) (*App, error) {
 
 	paymentServer := transportgrpc.New(uc)
 
-	// gRPC server with logging interceptor.
 	grpcSrv := grpc.NewServer(
 		grpc.UnaryInterceptor(transportgrpc.LoggingInterceptor),
 	)
@@ -61,7 +57,6 @@ func New(cfg Config) (*App, error) {
 	}, nil
 }
 
-// Run starts the gRPC server (blocking).
 func (a *App) Run() error {
 	return a.grpcServer.Serve(a.listener)
 }

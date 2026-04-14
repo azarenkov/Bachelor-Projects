@@ -18,7 +18,6 @@ import (
 	"order-service/internal/usecase"
 )
 
-// Config holds the application configuration.
 type Config struct {
 	DSN             string
 	Port            string
@@ -26,13 +25,11 @@ type Config struct {
 	PaymentGRPCAddr string
 }
 
-// App wires all dependencies together (Composition Root).
 type App struct {
 	httpServer *http.Server
 	grpcServer *grpc.Server
 }
 
-// New builds and wires the entire application.
 func New(cfg Config) (*App, error) {
 	db, err := sql.Open("postgres", cfg.DSN)
 	if err != nil {
@@ -51,12 +48,10 @@ func New(cfg Config) (*App, error) {
 	ids := &uuidGenerator{}
 	uc := usecase.New(repo, paymentClient, ids)
 
-	// HTTP server (Gin) — REST API for external clients.
 	h := transporthttp.New(uc)
 	router := gin.Default()
 	h.RegisterRoutes(router)
 
-	// gRPC server — streaming order updates.
 	orderServer := transportgrpc.NewOrderServer(uc)
 	grpcSrv := grpc.NewServer()
 	orderv1.RegisterOrderServiceServer(grpcSrv, orderServer)
@@ -71,8 +66,6 @@ func New(cfg Config) (*App, error) {
 	}, nil
 }
 
-// Run starts both the HTTP and gRPC servers (blocking).
-// It returns the first error encountered; both servers are stopped when that happens.
 func (a *App) Run(httpPort, grpcPort string) error {
 	grpcLis, err := net.Listen("tcp", ":"+grpcPort)
 	if err != nil {
@@ -93,7 +86,6 @@ func (a *App) Run(httpPort, grpcPort string) error {
 		}
 	}()
 
-	// Block until one of the servers fails; then stop both.
 	firstErr := <-errCh
 	a.grpcServer.GracefulStop()
 	_ = a.httpServer.Close()

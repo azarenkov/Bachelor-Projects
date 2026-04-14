@@ -14,18 +14,15 @@ import (
 	"payment-service/internal/usecase"
 )
 
-// PaymentServer implements the gRPC PaymentService server.
 type PaymentServer struct {
 	paymentv1.UnimplementedPaymentServiceServer
 	uc *usecase.PaymentUseCase
 }
 
-// New creates a PaymentServer.
 func New(uc *usecase.PaymentUseCase) *PaymentServer {
 	return &PaymentServer{uc: uc}
 }
 
-// ProcessPayment handles a payment authorization request.
 func (s *PaymentServer) ProcessPayment(ctx context.Context, req *paymentv1.PaymentRequest) (*paymentv1.PaymentResponse, error) {
 	if req.OrderId == "" {
 		return nil, status.Error(codes.InvalidArgument, "order_id is required")
@@ -46,7 +43,6 @@ func (s *PaymentServer) ProcessPayment(ctx context.Context, req *paymentv1.Payme
 	}, nil
 }
 
-// LoggingInterceptor is a gRPC unary server interceptor that logs method name and duration.
 func LoggingInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 	start := time.Now()
 	resp, err := handler(ctx, req)

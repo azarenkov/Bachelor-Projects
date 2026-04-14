@@ -9,17 +9,14 @@ import (
 	"payment-service/internal/domain"
 )
 
-// PaymentRepository is a PostgreSQL-backed implementation of the usecase.PaymentRepository port.
 type PaymentRepository struct {
 	db *sql.DB
 }
 
-// New creates a PaymentRepository backed by the given *sql.DB.
 func New(db *sql.DB) *PaymentRepository {
 	return &PaymentRepository{db: db}
 }
 
-// Save inserts a new payment record into the database.
 func (r *PaymentRepository) Save(ctx context.Context, p *domain.Payment) error {
 	query := `
 		INSERT INTO payments (id, order_id, transaction_id, amount, status, created_at)
@@ -31,7 +28,6 @@ func (r *PaymentRepository) Save(ctx context.Context, p *domain.Payment) error {
 	return err
 }
 
-// FindByOrderID retrieves a payment by its associated order ID.
 func (r *PaymentRepository) FindByOrderID(ctx context.Context, orderID string) (*domain.Payment, error) {
 	query := `
 		SELECT id, order_id, transaction_id, amount, status, created_at
