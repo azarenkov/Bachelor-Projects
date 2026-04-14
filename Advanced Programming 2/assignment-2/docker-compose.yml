@@ -25,7 +25,9 @@ services:
       - ./payment-service/migrations/001_create_payments.sql:/docker-entrypoint-initdb.d/001_create_payments.sql
 
   payment-service:
-    build: ./payment-service
+    build:
+      context: .
+      dockerfile: payment-service/Dockerfile
     environment:
       PAYMENT_DB_DSN: postgres://postgres:postgres@payment-db:5432/payment_db?sslmode=disable
       PAYMENT_GRPC_PORT: "9091"
@@ -35,7 +37,9 @@ services:
       - payment-db
 
   order-service:
-    build: ./order-service
+    build:
+      context: .
+      dockerfile: order-service/Dockerfile
     environment:
       ORDER_DB_DSN: postgres://postgres:postgres@order-db:5432/order_db?sslmode=disable
       ORDER_PORT: "8080"
