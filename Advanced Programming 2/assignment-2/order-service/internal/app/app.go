@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
 	orderv1 "github.com/azarenkov/ap2-gen/order/v1"
 	"order-service/internal/repository/postgres"
@@ -59,6 +60,7 @@ func New(cfg Config) (*App, error) {
 	orderServer := transportgrpc.NewOrderServer(uc)
 	grpcSrv := grpc.NewServer()
 	orderv1.RegisterOrderServiceServer(grpcSrv, orderServer)
+	reflection.Register(grpcSrv)
 
 	return &App{
 		httpServer: &http.Server{

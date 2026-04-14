@@ -7,6 +7,7 @@ import (
 
 	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
 	paymentv1 "github.com/azarenkov/ap2-gen/payment/v1"
 	"payment-service/internal/repository/postgres"
@@ -47,6 +48,7 @@ func New(cfg Config) (*App, error) {
 		grpc.UnaryInterceptor(transportgrpc.LoggingInterceptor),
 	)
 	paymentv1.RegisterPaymentServiceServer(grpcSrv, paymentServer)
+	reflection.Register(grpcSrv)
 
 	lis, err := net.Listen("tcp", ":"+cfg.GRPCPort)
 	if err != nil {
