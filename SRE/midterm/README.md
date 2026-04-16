@@ -224,7 +224,24 @@ docker compose stop mongodb
 
 ---
 
-## BONUS – Docker Swarm deployment
+## Step 5 – Docker Swarm Deployment
+
+The same stack can be deployed to a Docker Swarm cluster using the dedicated
+`docker-stack.yml` file. Unlike `docker-compose.yml`, it uses Swarm-native
+primitives: `deploy.replicas`, `restart_policy`, rolling `update_config`,
+resource limits, an overlay network, and `node_exporter` running in
+`mode: global` (one task per node).
+
+### Differences from the Compose file
+
+| Concern | `docker-compose.yml` | `docker-stack.yml` |
+|---|---|---|
+| Image source | `build:` | pre-built `image:` (built via `docker compose build`) |
+| Network driver | `bridge` | `overlay` (multi-host capable) |
+| Restart | `restart: unless-stopped` | `deploy.restart_policy` |
+| Replicas | always 1 | `frontend=2`, `backend=3`, `node_exporter=global` |
+| Updates | manual recreate | rolling, `start-first`, automatic rollback on failure |
+| Prometheus scrape | static `backend:3000` | DNS-SRV `tasks.backend` (every replica is scraped) |
 
 ### Initialise a single-node swarm
 
@@ -232,10 +249,16 @@ docker compose stop mongodb
 docker swarm init
 ```
 
-### Deploy the stack
+### Build images and deploy the stack
+
+`docker stack deploy` ignores `build:` directives, so images must exist locally
+(or in a registry) beforehand. The Compose file tags them as
+`analytical-platform-frontend:latest` / `analytical-platform-backend:latest`,
+which is exactly what the stack file references.
 
 ```bash
-docker stack deploy -c docker-compose.yml analytical-platform
+docker compose build
+docker stack deploy -c docker-stack.yml analytical-platform
 ```
 
 ### Verify services
@@ -245,10 +268,34 @@ docker stack services analytical-platform
 docker stack ps analytical-platform
 ```
 
-### Scale the backend
+Expected output: `frontend` (2/2), `backend` (3/3), `mongodb` (1/1),
+`prometheus` (1/1), `grafana` (1/1), `alertmanager` (1/1), `node_exporter`
+(1/1 global).
+
+### Seed the database
 
 ```bash
-docker service scale analytical-platform_backend=3
+BACKEND_TASK=$(docker ps --filter label=com.docker.swarm.service.name=analytical-platform_backend -q | head -n1)
+docker exec "$BACKEND_TASK" node seed.js
+```
+
+### Scale services
+
+```bash
+docker service scale analytical-platform_backend=5
+docker service scale analytical-platform_frontend=3
+```
+
+Prometheus picks up new backend tasks automatically through the
+`tasks.backend` DNS-SRV scrape job — no config reload required.
+
+### Trigger a rolling update
+
+```bash
+# Rebuild the backend with a change
+docker compose build backend
+# Roll it out one task at a time (start-first, automatic rollback on failure)
+docker service update --force analytical-platform_backend
 ```
 
 ### Remove the stack
@@ -276,7 +323,8 @@ SRE/midterm/
 │   ├── Dockerfile               # nginx image
 │   └── nginx.conf               # Static files + /api proxy
 ├── prometheus/
-│   ├── prometheus.yml
+│   ├── prometheus.yml          # Compose-mode scrape config
+│   ├── prometheus-swarm.yml    # Swarm-mode scrape config (DNS-SRV)
 │   └── alert_rules.yml
 ├── grafana/
 │   └── provisioning/
@@ -286,6 +334,7 @@ SRE/midterm/
 │           └── golden_signals.json
 ├── alertmanager/
 │   └── alertmanager.yml
-├── docker-compose.yml
+├── docker-compose.yml          # local dev (single-node, build:)
+├── docker-stack.yml            # Docker Swarm deployment
 └── README.md
 ```

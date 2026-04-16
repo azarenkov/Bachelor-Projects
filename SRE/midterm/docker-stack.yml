@@ -1,0 +1,189 @@
+# Docker Swarm stack file for the Analytical Platform.
+#
+# Workflow (single-node swarm):
+#   docker swarm init
+#   docker compose build                                       # produce local images
+#   docker stack deploy -c docker-stack.yml analytical-platform
+#
+# `build:`, `container_name`, `restart`, `depends_on.condition` are silently
+# ignored by `docker stack deploy`, so this file uses the Swarm-native
+# equivalents (`image:`, `deploy.restart_policy`, etc.) instead.
+
+services:
+
+  # ── Application ────────────────────────────────────────────────────────────
+  frontend:
+    image: analytical-platform-frontend:latest
+    ports:
+      - target: 80
+        published: 80
+        mode: ingress
+    networks:
+      - app-network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 128M
+
+  backend:
+    image: analytical-platform-backend:latest
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    environment:
+      PORT: "3000"
+      MONGO_URI: "mongodb://admin:admin123@mongodb:27017/analytical_platform?authSource=admin"
+      NODE_ENV: production
+    networks:
+      - app-network
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+
+  mongodb:
+    image: mongo:7
+    ports:
+      - target: 27017
+        published: 27017
+        mode: ingress
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: analytical_platform
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+      placement:
+        constraints:
+          - node.role == manager
+
+  # ── Observability Stack ────────────────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    ports:
+      - target: 9090
+        published: 9090
+        mode: ingress
+    volumes:
+      - ./prometheus/prometheus-swarm.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-admin-api"
+      - "--web.enable-lifecycle"
+    networks:
+      - app-network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    ports:
+      - target: 3000
+        published: 3001
+        mode: ingress
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - app-network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+  node_exporter:
+    image: prom/node-exporter:v1.7.0
+    pid: host
+    ports:
+      - target: 9100
+        published: 9100
+        mode: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/rootfs"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    networks:
+      - app-network
+    deploy:
+      mode: global
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    ports:
+      - target: 9093
+        published: 9093
+        mode: ingress
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager_data:/alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    networks:
+      - app-network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+volumes:
+  mongodb_data:
+  prometheus_data:
+  grafana_data:
+  alertmanager_data:
+
+networks:
+  app-network:
+    driver: overlay
+    attachable: true
