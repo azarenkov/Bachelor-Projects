@@ -1,0 +1,17 @@
+{
+  "name": "assignment-3-subgraph",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ assignment-3",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 assignment-3-local",
+    "create-local": "graph create --node http://localhost:8020/ assignment-3-local",
+    "abis:copy": "mkdir -p abis && cp ../out/GameItems.sol/GameItems.json abis/GameItems.json && cp ../out/Vault.sol/Vault.json abis/Vault.json"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.80.0",
+    "@graphprotocol/graph-ts": "^0.34.0"
+  }
+}

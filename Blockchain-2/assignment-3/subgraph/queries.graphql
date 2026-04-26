@@ -1,0 +1,87 @@
+# Sample GraphQL queries for the assignment-3 subgraph.
+
+# ──────────────────────────────────────────────────────────────────────────
+# Q1 — Get all crafting events (recent first), with player and item
+# ──────────────────────────────────────────────────────────────────────────
+query GetAllCrafts {
+  craftEvents(first: 100, orderBy: blockTimestamp, orderDirection: desc) {
+    id
+    itemId
+    blockTimestamp
+    txHash
+    player {
+      id
+    }
+  }
+}
+
+# Sample expected response:
+# {
+#   "data": {
+#     "craftEvents": [
+#       {
+#         "id": "0xabc...-7",
+#         "itemId": "100",
+#         "blockTimestamp": "1714500000",
+#         "txHash": "0xabc...",
+#         "player": { "id": "0x1234..." }
+#       }
+#     ]
+#   }
+# }
+
+# ──────────────────────────────────────────────────────────────────────────
+# Q2 — All vault deposits by a specific user, ordered chronologically
+# ──────────────────────────────────────────────────────────────────────────
+query GetUserDeposits($user: ID!) {
+  user(id: $user) {
+    id
+    totalShares
+    totalAssetsDeposited
+    deposits(orderBy: blockTimestamp, orderDirection: asc) {
+      assets
+      shares
+      blockTimestamp
+      txHash
+    }
+  }
+}
+
+# Variables:
+#   { "user": "0x1234..." }
+
+# ──────────────────────────────────────────────────────────────────────────
+# Q3 — Total liquidity over time (snapshot history) plus harvest events
+# ──────────────────────────────────────────────────────────────────────────
+query LiquidityOverTime {
+  liquiditySnapshots(orderBy: blockTimestamp, orderDirection: asc, first: 1000) {
+    blockTimestamp
+    totalAssets
+    totalShares
+  }
+  harvestEvents(orderBy: blockTimestamp, orderDirection: asc) {
+    yield_
+    totalAssetsAfter
+    blockTimestamp
+  }
+  globalStats(id: "global") {
+    totalDeposits
+    totalWithdrawals
+    totalCrafts
+  }
+}
+
+# ──────────────────────────────────────────────────────────────────────────
+# Q4 (bonus) — Top resource holders by token id
+# ──────────────────────────────────────────────────────────────────────────
+query TopGoldHolders {
+  tokenBalances(
+    where: { token: "0", amount_gt: "0" }
+    orderBy: amount
+    orderDirection: desc
+    first: 10
+  ) {
+    account { id }
+    amount
+  }
+}

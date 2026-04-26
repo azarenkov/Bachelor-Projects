@@ -1,0 +1,108 @@
+# --- ERC-1155 GameItems ---
+
+type Account @entity {
+  id: ID!                                # the account address
+  balances: [TokenBalance!]! @derivedFrom(field: "account")
+  craftedItems: [CraftEvent!]! @derivedFrom(field: "player")
+}
+
+type Token @entity {
+  id: ID!                                # token id, e.g. "0", "100"
+  totalSupply: BigInt!
+  balances: [TokenBalance!]! @derivedFrom(field: "token")
+}
+
+type TokenBalance @entity {
+  id: ID!                                # `${account}-${token}`
+  account: Account!
+  token: Token!
+  amount: BigInt!
+}
+
+type TransferSingle @entity(immutable: true) {
+  id: ID!                                # `${tx}-${logIndex}`
+  operator: Bytes!
+  from: Account!
+  to: Account!
+  token: Token!
+  amount: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  txHash: Bytes!
+}
+
+type TransferBatch @entity(immutable: true) {
+  id: ID!
+  operator: Bytes!
+  from: Account!
+  to: Account!
+  tokenIds: [BigInt!]!
+  amounts: [BigInt!]!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  txHash: Bytes!
+}
+
+type CraftEvent @entity(immutable: true) {
+  id: ID!
+  player: Account!
+  itemId: BigInt!
+  blockTimestamp: BigInt!
+  txHash: Bytes!
+}
+
+# --- ERC-4626 Vault ---
+
+type User @entity {
+  id: ID!                                # the user address
+  deposits: [VaultDeposit!]! @derivedFrom(field: "owner")
+  withdrawals: [VaultWithdrawal!]! @derivedFrom(field: "owner")
+  totalShares: BigInt!
+  totalAssetsDeposited: BigInt!
+}
+
+type VaultDeposit @entity(immutable: true) {
+  id: ID!
+  caller: Bytes!
+  owner: User!
+  assets: BigInt!
+  shares: BigInt!
+  blockTimestamp: BigInt!
+  txHash: Bytes!
+}
+
+type VaultWithdrawal @entity(immutable: true) {
+  id: ID!
+  caller: Bytes!
+  receiver: Bytes!
+  owner: User!
+  assets: BigInt!
+  shares: BigInt!
+  blockTimestamp: BigInt!
+  txHash: Bytes!
+}
+
+type HarvestEvent @entity(immutable: true) {
+  id: ID!
+  yield_: BigInt!
+  totalAssetsAfter: BigInt!
+  blockTimestamp: BigInt!
+  txHash: Bytes!
+}
+
+type LiquiditySnapshot @entity {
+  id: ID!                                # block timestamp
+  totalAssets: BigInt!
+  totalShares: BigInt!
+  blockTimestamp: BigInt!
+}
+
+# --- Aggregate ---
+
+type GlobalStats @entity {
+  id: ID!                                # always "global"
+  totalSwaps: BigInt!                    # placeholder, AMM not in this subgraph
+  totalCrafts: BigInt!
+  totalDeposits: BigInt!
+  totalWithdrawals: BigInt!
+}
