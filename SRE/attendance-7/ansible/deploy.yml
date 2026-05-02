@@ -1,0 +1,6 @@
+- name: Scale containers
+  hosts: localhost
+  tasks:
+    - name: Run multiple containers
+      loop: [8084, 8085, 8086]
+      command: docker run -d -p {{ item }}:80 nginx
