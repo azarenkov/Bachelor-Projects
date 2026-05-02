@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azarenkov/ap2-gen/payment/v1;paymentv1";
+
+service PaymentService {
+  rpc ProcessPayment(PaymentRequest) returns (PaymentResponse);
+}
+
+message PaymentRequest {
+  string order_id       = 1;
+  int64  amount         = 2;
+  string customer_email = 3;
+}
+
+message PaymentResponse {
+  string                    transaction_id = 1;
+  string                    status         = 2;
+  google.protobuf.Timestamp created_at     = 3;
+}
