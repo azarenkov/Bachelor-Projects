@@ -65,7 +65,7 @@ The expected log output of the consumer:
 
 ## Reliability & delivery guarantees
 
-### Manual ACKs (Lecture 5 / Lecture 6)
+### Manual ACKs
 
 - The consumer calls `channel.Consume(..., autoAck=false, ...)`.
 - It only `d.Ack(false)` after the notifier returned `nil`.
