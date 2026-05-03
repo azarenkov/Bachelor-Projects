@@ -1,0 +1,49 @@
+---
+- name: Configure web server (nginx) on the Terraform-provisioned container
+  hosts: web
+  gather_facts: true
+  become: false
+  vars:
+    site_root: /var/www/html
+    site_index: "{{ site_root }}/index.html"
+
+  tasks:
+    - name: Refresh apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Ensure web root exists
+      ansible.builtin.file:
+        path: "{{ site_root }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Deploy custom index.html
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: "{{ site_index }}"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Reload nginx
+
+    - name: Check if nginx is already running
+      ansible.builtin.shell: pgrep -x nginx
+      register: nginx_status
+      changed_when: false
+      failed_when: false
+
+    - name: Start nginx (no systemd inside the container)
+      ansible.builtin.command: nginx
+      when: nginx_status.rc != 0
+
+  handlers:
+    - name: Reload nginx
+      ansible.builtin.command: nginx -s reload
