@@ -1,0 +1,20 @@
+{
+  "name": "blockchain2-assignment4",
+  "version": "1.0.0",
+  "description": "DAO & On-chain Governance System",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "node": "hardhat node",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "demo:local": "hardhat run scripts/demo_proposal.js --network localhost",
+    "frontend": "npx http-server frontend -p 5173 -c-1"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.22.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2"
+  }
+}

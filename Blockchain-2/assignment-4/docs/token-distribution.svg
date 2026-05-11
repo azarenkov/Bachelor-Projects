@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360" viewBox="0 0 600 360">
+  <rect width="600" height="360" fill="#0f172a"/>
+  <text x="300" y="30" fill="#e2e8f0" font-family="sans-serif" font-size="18" font-weight="700" text-anchor="middle">GOV — Initial Token Distribution (1,000,000 GOV)</text>
+  <path d="M 180 180 L 180 50 A 130 130 0 0 1 256.4120827980215 285.1722092687432 Z" fill="#2563eb" stroke="#0f172a" stroke-width="2"/>
+          <text x="260.36427562694047" y="153.88806397531695" fill="white" font-family="sans-serif" font-size="14" font-weight="600" text-anchor="middle" dominant-baseline="middle">40%</text>
+  <path d="M 180 180 L 256.4120827980215 285.1722092687432 A 130 130 0 0 1 56.36265288163004 220.1722092687432 Z" fill="#16a34a" stroke="#0f172a" stroke-width="2"/>
+          <text x="153.88806397531695" y="260.36427562694047" fill="white" font-family="sans-serif" font-size="14" font-weight="600" text-anchor="middle" dominant-baseline="middle">30%</text>
+  <path d="M 180 180 L 56.36265288163004 220.1722092687432 A 130 130 0 0 1 103.58791720197848 74.82779073125684 Z" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/>
+          <text x="99.63572437305953" y="153.88806397531692" fill="white" font-family="sans-serif" font-size="14" font-weight="600" text-anchor="middle" dominant-baseline="middle">20%</text>
+  <path d="M 180 180 L 103.58791720197848 74.82779073125684 A 130 130 0 0 1 179.99999999999997 50 Z" fill="#dc2626" stroke="#0f172a" stroke-width="2"/>
+          <text x="153.88806397531692" y="99.63572437305953" fill="white" font-family="sans-serif" font-size="14" font-weight="600" text-anchor="middle" dominant-baseline="middle">10%</text>
+  
+    <rect x="370" y="70" width="18" height="18" fill="#2563eb" rx="3"/>
+    <text x="396" y="84" fill="#e2e8f0" font-family="sans-serif" font-size="14">Team (vested 12mo)</text>
+  
+  
+    <rect x="370" y="102" width="18" height="18" fill="#16a34a" rx="3"/>
+    <text x="396" y="116" fill="#e2e8f0" font-family="sans-serif" font-size="14">Treasury</text>
+  
+  
+    <rect x="370" y="134" width="18" height="18" fill="#f59e0b" rx="3"/>
+    <text x="396" y="148" fill="#e2e8f0" font-family="sans-serif" font-size="14">Community Airdrop</text>
+  
+  
+    <rect x="370" y="166" width="18" height="18" fill="#dc2626" rx="3"/>
+    <text x="396" y="180" fill="#e2e8f0" font-family="sans-serif" font-size="14">Liquidity</text>
+  
+</svg>

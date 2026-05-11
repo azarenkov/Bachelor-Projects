@@ -1,0 +1,9 @@
+node_modules/
+artifacts/
+cache/
+deployed.json
+frontend/deployed.json
+typechain-types/
+coverage/
+coverage.json
+*.log
