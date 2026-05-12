@@ -1,0 +1,135 @@
+services:
+  order-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - order_db_data:/var/lib/postgresql/data
+      - ./order-service/migrations/001_create_orders.sql:/docker-entrypoint-initdb.d/001_create_orders.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d order_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  payment-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5433:5432"
+    volumes:
+      - payment_db_data:/var/lib/postgresql/data
+      - ./payment-service/migrations/001_create_payments.sql:/docker-entrypoint-initdb.d/001_create_payments.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d payment_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: payment-service/Dockerfile
+    environment:
+      PAYMENT_DB_DSN: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@payment-db:5432/payment_db?sslmode=disable
+      PAYMENT_GRPC_PORT: "9091"
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+    ports:
+      - "9091:9091"
+    depends_on:
+      payment-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  order-service:
+    build:
+      context: .
+      dockerfile: order-service/Dockerfile
+    environment:
+      ORDER_DB_DSN: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@order-db:5432/order_db?sslmode=disable
+      ORDER_PORT: "8080"
+      ORDER_GRPC_PORT: "9090"
+      PAYMENT_GRPC_ADDR: payment-service:9091
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      ORDER_CACHE_TTL: ${ORDER_CACHE_TTL:-5m}
+      ORDER_RATE_LIMIT: ${ORDER_RATE_LIMIT:-30}
+      ORDER_RATE_LIMIT_WINDOW: ${ORDER_RATE_LIMIT_WINDOW:-1m}
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    depends_on:
+      order-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      payment-service:
+        condition: service_started
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      PROVIDER_MODE: ${PROVIDER_MODE:-SIMULATED}
+      NOTIFY_FAIL_DOMAIN: ${NOTIFY_FAIL_DOMAIN:-}
+      NOTIFY_FAILURE_RATE: ${NOTIFY_FAILURE_RATE:-0}
+      NOTIFY_IDEMPOTENCY_TTL: ${NOTIFY_IDEMPOTENCY_TTL:-24h}
+      NOTIFY_JOB_TIMEOUT: ${NOTIFY_JOB_TIMEOUT:-60s}
+      RETRY_MAX_ATTEMPTS: ${RETRY_MAX_ATTEMPTS:-3}
+      RETRY_INITIAL_BACKOFF: ${RETRY_INITIAL_BACKOFF:-2s}
+      RETRY_MAX_BACKOFF: ${RETRY_MAX_BACKOFF:-30s}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  order_db_data:
+  payment_db_data:
+  rabbitmq_data:
+  redis_data:

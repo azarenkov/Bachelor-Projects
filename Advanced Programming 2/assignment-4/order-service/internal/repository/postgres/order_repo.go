@@ -1,0 +1,116 @@
+package postgres
+
+import (
+	"context"
+	"database/sql"
+	"errors"
+	"time"
+
+	"order-service/internal/domain"
+)
+
+type OrderRepository struct {
+	db *sql.DB
+}
+
+func New(db *sql.DB) *OrderRepository {
+	return &OrderRepository{db: db}
+}
+
+func (r *OrderRepository) Save(ctx context.Context, o *domain.Order) error {
+	o.CreatedAt = time.Now().UTC()
+	_, err := r.db.ExecContext(ctx, `
+		INSERT INTO orders (id, customer_id, item_name, amount, customer_email, status, created_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		o.ID, o.CustomerID, o.ItemName, o.Amount, o.CustomerEmail, o.Status, o.CreatedAt,
+	)
+	return err
+}
+
+func (r *OrderRepository) SaveWithIdempotencyKey(ctx context.Context, o *domain.Order, key string) error {
+	o.CreatedAt = time.Now().UTC()
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback() }()
+
+	_, err = tx.ExecContext(ctx, `
+		INSERT INTO orders (id, customer_id, item_name, amount, customer_email, status, created_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		o.ID, o.CustomerID, o.ItemName, o.Amount, o.CustomerEmail, o.Status, o.CreatedAt,
+	)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(ctx, `
+		INSERT INTO idempotency_keys (key, order_id)
+		VALUES ($1, $2)`,
+		key, o.ID,
+	)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+func (r *OrderRepository) FindByID(ctx context.Context, id string) (*domain.Order, error) {
+	row := r.db.QueryRowContext(ctx, `
+		SELECT id, customer_id, item_name, amount, customer_email, status, created_at
+		FROM orders WHERE id = $1`, id)
+
+	var o domain.Order
+	err := row.Scan(&o.ID, &o.CustomerID, &o.ItemName, &o.Amount, &o.CustomerEmail, &o.Status, &o.CreatedAt)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &o, nil
+}
+
+func (r *OrderRepository) UpdateStatus(ctx context.Context, id, status string) error {
+	_, err := r.db.ExecContext(ctx, `UPDATE orders SET status = $1 WHERE id = $2`, status, id)
+	return err
+}
+
+func (r *OrderRepository) FindByIdempotencyKey(ctx context.Context, key string) (*domain.Order, error) {
+	var orderID string
+	err := r.db.QueryRowContext(ctx, `
+		SELECT order_id FROM idempotency_keys WHERE key = $1`, key).Scan(&orderID)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return r.FindByID(ctx, orderID)
+}
+
+func (r *OrderRepository) FindRecent(ctx context.Context, limit int) ([]*domain.Order, error) {
+	rows, err := r.db.QueryContext(ctx, `
+		SELECT id, customer_id, item_name, amount, customer_email, status, created_at
+		FROM orders
+		ORDER BY created_at DESC
+		LIMIT $1`, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var orders []*domain.Order
+	for rows.Next() {
+		var o domain.Order
+		if err := rows.Scan(&o.ID, &o.CustomerID, &o.ItemName, &o.Amount, &o.CustomerEmail, &o.Status, &o.CreatedAt); err != nil {
+			return nil, err
+		}
+		orders = append(orders, &o)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return orders, nil
+}
