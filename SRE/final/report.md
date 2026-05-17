@@ -166,10 +166,6 @@ terraform apply -auto-approve
 `terraform apply` is idempotent — re-running it after a manifest edit only
 diffs the affected `kubectl_manifest` resource, not the whole cluster.
 
-### 5.6 Screenshot
-
-![terraform apply](images/01_terraform_apply.png)
-
 ---
 
 ## 6. Step 2 — CI/CD (GitHub Actions → GHCR → cluster)
@@ -257,12 +253,6 @@ ENTRYPOINT ["/shop-api"]
 
 A multi-stage build keeps the runtime image at ~15 MB. The container runs as
 non-root (`uid=10001`) which is a baseline PodSecurity admission expectation.
-
-### 6.4 Screenshot
-
-**Successful pipeline run** — green build → publish → deploy stages.
-
-![github actions success](images/02_github_actions.png)
 
 ---
 
@@ -356,28 +346,35 @@ Critical alerts go to the `oncall` receiver immediately; warnings get folded
 into a slower channel. The inhibit rule suppresses warning-level noise when
 the same alert is already firing critical — useful during incidents.
 
-### 7.5 Grafana dashboard
+### 7.5 Prometheus — service discovery
+
+Prometheus discovered every `shop-api` pod in the `shop` namespace via the
+`prometheus.io/scrape=true` annotation; all targets are `UP`.
+
+![prometheus targets](images/05_prometheus_targets.png)
+
+### 7.6 Grafana dashboard
 
 The provisioned dashboard (`observability/grafana/shop-api-dashboard.json`)
 has four stat tiles (RPS, error %, p95 on `/work`, replica count) and four
 timeseries panels (RPS per route, p50/p95/p99 latency, CPU per pod, in-flight
-requests).
+requests). The screenshot is taken mid-load run — RPS, p95, CPU and replica
+count all move together; the autoscaler kicks in once CPU breaches 80 %.
 
-**Dashboard at rest**
+![grafana dashboard](images/07_grafana_dashboard.png)
 
-![grafana baseline](images/03_grafana_baseline.png)
+### 7.7 Alerts firing
 
-**Dashboard under load** — RPS, p95, CPU and replica count all moving
-together; the autoscaler kicks in once CPU breaches 80 %.
+`ShopApiHighErrorRate` evaluates against the recording rule
+`shop_api:error_rate5m`. Prometheus shows the alert moving into the `FIRING`
+state once the 5xx ratio crosses 5 % for 2 minutes.
 
-![grafana under load](images/04_grafana_under_load.png)
+![prometheus alert](images/06_prometheus_alert.png)
 
-### 7.6 Alerts firing
+Alertmanager then receives, deduplicates and routes the alert; the screenshot
+below shows the active alert in the Alertmanager UI.
 
-`ShopApiHighErrorRate` fires after the Locust `/error` route pushes the 5xx
-ratio above 5 % for 2 minutes.
-
-![alertmanager firing](images/05_alertmanager_firing.png)
+![alertmanager firing](images/04_alert_firing.png)
 
 ---
 
@@ -472,23 +469,18 @@ watch -n 2 'kubectl -n shop get hpa,deploy,pod'
 
 **Baseline** — 2 replicas, CPU ~ 1 %, HPA holding at min.
 
-![hpa baseline](images/06_hpa_baseline.png)
+![k8s baseline](images/01_k8s_baseline.png)
 
 **Under load** — Locust ramped to 60 users; CPU climbed past 250 % of
-request, HPA fired four scale-up events back-to-back, replicas hit the
+request, HPA fired several scale-up events back-to-back, replicas hit the
 ceiling of 8 within ~45 s.
 
-![hpa scaled](images/07_hpa_scaled.png)
+![hpa scaled](images/02_hpa_scaled.png)
 
 **Locust summary** — aggregate throughput, p95 latency, 5xx ratio. The
 critical 5xx alert fires roughly 2 minutes into the run.
 
-![locust summary](images/08_locust_summary.png)
-
-**Scale-down** — load stops, CPU returns to 1 %, HPA halves replicas every
-60 s back to the floor of 2.
-
-![hpa scaledown](images/09_hpa_scaledown.png)
+![locust summary](images/03_locust_summary.png)
 
 ### 8.6 What the screenshots prove
 
