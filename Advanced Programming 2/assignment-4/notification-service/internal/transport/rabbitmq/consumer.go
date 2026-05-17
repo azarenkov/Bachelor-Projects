@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sync"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -18,13 +19,14 @@ import (
 )
 
 type Consumer struct {
-	conn     *amqp.Connection
-	channel  *amqp.Channel
-	queue    string
-	sender   provider.EmailSender
-	idem     idempotency.Store
-	retry    retry.Policy
+	conn       *amqp.Connection
+	channel    *amqp.Channel
+	queue      string
+	sender     provider.EmailSender
+	idem       idempotency.Store
+	retry      retry.Policy
 	jobTimeout time.Duration
+	workers    int
 }
 
 type Config struct {
@@ -33,6 +35,7 @@ type Config struct {
 	Idempotency idempotency.Store
 	Retry       retry.Policy
 	JobTimeout  time.Duration
+	Workers     int
 }
 
 func NewConsumer(cfg Config) (*Consumer, error) {
@@ -52,7 +55,14 @@ func NewConsumer(cfg Config) (*Consumer, error) {
 		return nil, err
 	}
 
-	if err := ch.Qos(8, 0, false); err != nil {
+	if cfg.Workers < 1 {
+		cfg.Workers = 4
+	}
+	prefetch := cfg.Workers
+	if prefetch < 1 {
+		prefetch = 1
+	}
+	if err := ch.Qos(prefetch, 0, false); err != nil {
 		_ = ch.Close()
 		_ = conn.Close()
 		return nil, fmt.Errorf("set qos: %w", err)
@@ -70,6 +80,7 @@ func NewConsumer(cfg Config) (*Consumer, error) {
 		idem:       cfg.Idempotency,
 		retry:      cfg.Retry,
 		jobTimeout: cfg.JobTimeout,
+		workers:    cfg.Workers,
 	}, nil
 }
 
@@ -104,17 +115,34 @@ func (c *Consumer) Run(ctx context.Context) error {
 		return fmt.Errorf("consume: %w", err)
 	}
 
-	log.Printf("notification-service consuming from queue=%s provider=%s", c.queue, c.sender.Name())
+	log.Printf("notification-service consuming from queue=%s provider=%s workers=%d",
+		c.queue, c.sender.Name(), c.workers)
+
+	sem := make(chan struct{}, c.workers)
+	var wg sync.WaitGroup
 
 	for {
 		select {
 		case <-ctx.Done():
+			wg.Wait()
 			return ctx.Err()
 		case d, ok := <-deliveries:
 			if !ok {
+				wg.Wait()
 				return fmt.Errorf("delivery channel closed")
 			}
-			c.handle(ctx, d)
+			select {
+			case sem <- struct{}{}:
+			case <-ctx.Done():
+				wg.Wait()
+				return ctx.Err()
+			}
+			wg.Add(1)
+			go func(msg amqp.Delivery) {
+				defer wg.Done()
+				defer func() { <-sem }()
+				c.handle(ctx, msg)
+			}(d)
 		}
 	}
 }

@@ -27,6 +27,7 @@ type Config struct {
 	RetryInitial      time.Duration
 	RetryMaxBackoff   time.Duration
 	JobTimeout        time.Duration
+	Workers           int
 	SMTPHost          string
 	SMTPPort          string
 	SMTPUsername      string
@@ -66,6 +67,7 @@ func New(cfg Config) (*App, error) {
 		Idempotency: store,
 		Retry:       policy,
 		JobTimeout:  cfg.JobTimeout,
+		Workers:     cfg.Workers,
 	})
 	if err != nil {
 		_ = rdb.Close()

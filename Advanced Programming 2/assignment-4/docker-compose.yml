@@ -11,7 +11,8 @@ services:
       - order_db_data:/var/lib/postgresql/data
       - ./order-service/migrations/001_create_orders.sql:/docker-entrypoint-initdb.d/001_create_orders.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d order_db"]
+      test:
+        ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d order_db"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -28,7 +29,8 @@ services:
       - payment_db_data:/var/lib/postgresql/data
       - ./payment-service/migrations/001_create_payments.sql:/docker-entrypoint-initdb.d/001_create_payments.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d payment_db"]
+      test:
+        ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d payment_db"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -114,6 +116,7 @@ services:
       NOTIFY_FAILURE_RATE: ${NOTIFY_FAILURE_RATE:-0}
       NOTIFY_IDEMPOTENCY_TTL: ${NOTIFY_IDEMPOTENCY_TTL:-24h}
       NOTIFY_JOB_TIMEOUT: ${NOTIFY_JOB_TIMEOUT:-60s}
+      NOTIFY_WORKERS: ${NOTIFY_WORKERS:-0.8}
       RETRY_MAX_ATTEMPTS: ${RETRY_MAX_ATTEMPTS:-3}
       RETRY_INITIAL_BACKOFF: ${RETRY_INITIAL_BACKOFF:-2s}
       RETRY_MAX_BACKOFF: ${RETRY_MAX_BACKOFF:-30s}
