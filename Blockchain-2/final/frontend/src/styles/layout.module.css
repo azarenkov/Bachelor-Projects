@@ -1,0 +1,194 @@
+/* App shell. */
+.shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.header {
+    border-bottom: 1px solid var(--border-default);
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.headerInner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: var(--space-4) var(--space-5);
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+}
+
+.brand {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+}
+
+.brandMark {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.brandMark em {
+    font-style: italic;
+    font-weight: 200;
+    font-variation-settings: "SOFT" 100;
+}
+
+.brandTag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    padding: 2px 6px;
+    border: 1px solid var(--border-default);
+    border-radius: 2px;
+}
+
+.nav {
+    display: flex;
+    gap: var(--space-5);
+    margin-left: var(--space-4);
+}
+
+.navLink {
+    font-size: 13px;
+    color: var(--text-secondary);
+    transition: color 0.15s var(--ease-out);
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.navLink:hover,
+.navLinkActive {
+    color: var(--text-primary);
+}
+
+.navLinkActive::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 -19px 0;
+    height: 1px;
+    background: var(--accent);
+}
+
+.headerRight {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.liveBlock {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.liveDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.main {
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+    padding: var(--space-7) var(--space-5) var(--space-8);
+}
+
+.footer {
+    border-top: 1px solid var(--border-subtle);
+    padding: var(--space-5);
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-tertiary);
+}
+
+.footer a {
+    color: var(--text-secondary);
+}
+
+.footer a:hover {
+    color: var(--accent);
+}
+
+/* Page header pattern: eyebrow + display heading + lede paragraph. */
+.pageHeader {
+    margin-bottom: var(--space-7);
+    max-width: 720px;
+    animation: fade-up 0.6s var(--ease-out) both;
+}
+
+.pageEyebrow {
+    margin-bottom: var(--space-4);
+}
+
+.pageTitle {
+    font-family: var(--font-display);
+    font-weight: 200;
+    font-size: clamp(40px, 6vw, 64px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin: 0;
+}
+
+.pageTitle em {
+    font-style: italic;
+    font-variation-settings: "SOFT" 100;
+}
+
+.pageLede {
+    margin-top: var(--space-4);
+    color: var(--text-secondary);
+    font-size: 15px;
+    max-width: 560px;
+}
+
+/* Network/connection guard frame. */
+.guard {
+    border: 1px dashed var(--border-default);
+    padding: var(--space-7);
+    text-align: center;
+    margin: var(--space-7) auto;
+    max-width: 520px;
+    border-radius: 4px;
+    animation: fade-up 0.6s var(--ease-out) both;
+}
+
+.guardTitle {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1.1;
+    margin: 0 0 var(--space-3) 0;
+}
+
+.guardBody {
+    color: var(--text-secondary);
+    margin: 0 0 var(--space-5) 0;
+}

@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Protocol — DeFi Super-App · Capstone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,200..900,0..100,0..1&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg-1: #111111;
+  --bg-2: #161616;
+  --bg-3: #1c1c1c;
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.14);
+  --text: #ededed;
+  --text-2: #9a9a9a;
+  --text-3: #5b5b5b;
+  --text-4: #3a3a3a;
+  --accent: #b8f57a;
+  --accent-dim: #7fad53;
+  --warn: #f5b674;
+  --danger: #f57474;
+  --info: #74c8f5;
+  --font-d: "Fraunces", serif;
+  --font-b: "Manrope", sans-serif;
+  --font-m: "JetBrains Mono", monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-b);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.025) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+.slide {
+  width: 100vw;
+  min-height: 100vh;
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  page-break-after: always;
+  break-after: page;
+  overflow: hidden;
+}
+.slide::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.slide-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 40px; }
+.brand { font-family: var(--font-d); font-weight: 300; font-size: 18px; letter-spacing: -0.01em; }
+.brand em { font-style: italic; font-weight: 200; }
+.slide-num { font-family: var(--font-m); font-size: 11px; color: var(--text-3); letter-spacing: 0.1em; }
+.slide-tag { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); padding: 3px 8px; border: 1px solid var(--border); border-radius: 2px; }
+
+.eyebrow { font-family: var(--font-m); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-3); margin-bottom: 16px; }
+.title { font-family: var(--font-d); font-weight: 200; font-size: 88px; line-height: 0.95; letter-spacing: -0.03em; margin-bottom: 32px; }
+.title em { font-style: italic; font-variation-settings: "SOFT" 100; }
+.title-sm { font-family: var(--font-d); font-weight: 200; font-size: 56px; line-height: 1; letter-spacing: -0.02em; margin-bottom: 24px; }
+.title-sm em { font-style: italic; font-variation-settings: "SOFT" 100; }
+.lede { font-size: 16px; color: var(--text-2); max-width: 680px; margin-bottom: 32px; }
+.mono { font-family: var(--font-m); }
+.accent { color: var(--accent); }
+
+.divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+/* Cover slide */
+.cover {
+  justify-content: center;
+  background: var(--bg);
+  position: relative;
+}
+.cover::after {
+  content: "";
+  position: absolute;
+  top: 12%;
+  right: -120px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.08;
+  pointer-events: none;
+}
+.cover-eyebrow {
+  display: flex; gap: 16px; align-items: center;
+  font-family: var(--font-m); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3);
+  margin-bottom: 40px;
+}
+.cover-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px rgba(184,245,122,0.5); }
+.cover-title {
+  font-family: var(--font-d);
+  font-weight: 200;
+  font-size: 160px;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin-bottom: 60px;
+}
+.cover-title em { font-style: italic; font-variation-settings: "SOFT" 100; }
+.cover-meta { display: flex; gap: 80px; font-family: var(--font-m); font-size: 13px; color: var(--text-2); }
+.cover-meta strong { color: var(--text); font-weight: 500; display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+
+/* Grid layouts */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+/* Cards */
+.card { border: 1px solid var(--border); background: linear-gradient(180deg, var(--bg-1), var(--bg)); padding: 24px; border-radius: 4px; position: relative; }
+.card::after { content: ""; position: absolute; top: 0; left: 0; width: 28px; height: 1px; background: var(--accent); }
+.card-label { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; }
+.card-value { font-family: var(--font-d); font-weight: 200; font-size: 40px; line-height: 1; letter-spacing: -0.02em; }
+.card-sub { margin-top: 8px; font-family: var(--font-m); font-size: 11px; color: var(--text-2); }
+.card-body { color: var(--text-2); font-size: 14px; line-height: 1.6; }
+.card-body strong { color: var(--text); font-weight: 500; }
+
+/* Tables */
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th { text-align: left; padding: 12px 14px; font-family: var(--font-m); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); border-bottom: 1px solid var(--border); }
+.table td { padding: 14px; border-bottom: 1px solid var(--border); font-family: var(--font-b); color: var(--text-2); }
+.table td:first-child { color: var(--text); font-weight: 500; }
+.table .mono { font-family: var(--font-m); font-size: 11px; color: var(--text-2); }
+.table tbody tr:last-child td { border-bottom: 0; }
+
+/* Code block */
+.code {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 20px 24px;
+  font-family: var(--font-m);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text);
+  border-radius: 2px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+.code .c { color: var(--text-3); font-style: italic; }
+.code .k { color: var(--accent); }
+.code .s { color: var(--warn); }
+
+/* Badges */
+.badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-m); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 8px; border-radius: 2px; border: 1px solid currentColor; }
+.badge::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+.badge-ok { color: var(--accent); }
+.badge-warn { color: var(--warn); }
+.badge-danger { color: var(--danger); }
+.badge-info { color: var(--info); }
+
+/* Mockup chrome */
+.mock {
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--bg);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.mock-bar { height: 32px; background: var(--bg-2); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 12px; gap: 6px; }
+.mock-bar .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--bg-3); }
+.mock-bar .url { font-family: var(--font-m); font-size: 11px; color: var(--text-3); margin-left: 16px; }
+.mock-content { padding: 0; }
+
+/* dApp components for mock */
+.app-header { display: flex; align-items: center; gap: 24px; padding: 14px 24px; border-bottom: 1px solid var(--border); background: var(--bg); }
+.app-brand { font-family: var(--font-d); font-weight: 300; font-size: 16px; letter-spacing: -0.01em; }
+.app-brand em { font-style: italic; font-weight: 200; }
+.app-tag { font-family: var(--font-m); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); padding: 2px 6px; border: 1px solid var(--border); border-radius: 2px; }
+.app-nav { display: flex; gap: 16px; margin-left: 16px; }
+.app-nav a { font-size: 12px; color: var(--text-2); text-decoration: none; padding-bottom: 4px; }
+.app-nav .active { color: var(--text); border-bottom: 1px solid var(--accent); }
+.app-right { margin-left: auto; display: flex; align-items: center; gap: 16px; font-family: var(--font-m); font-size: 10px; color: var(--text-2); }
+.app-right .live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px rgba(184,245,122,0.5); display: inline-block; margin-right: 4px; }
+.app-right .wallet { padding: 6px 10px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 2px; font-family: var(--font-m); font-size: 10px; }
+.app-main { padding: 32px; }
+.app-eyebrow { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; }
+.app-h1 { font-family: var(--font-d); font-weight: 200; font-size: 38px; line-height: 1; letter-spacing: -0.02em; margin-bottom: 16px; }
+.app-h1 em { font-style: italic; font-variation-settings: "SOFT" 100; }
+.app-lede { color: var(--text-2); font-size: 13px; margin-bottom: 28px; max-width: 520px; }
+
+.app-stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.app-stat { border: 1px solid var(--border); background: var(--bg-1); padding: 16px 18px; border-radius: 3px; position: relative; }
+.app-stat::after { content: ""; position: absolute; top: 0; left: 0; width: 20px; height: 1px; background: var(--accent); }
+.app-stat-label { font-family: var(--font-m); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-3); margin-bottom: 10px; }
+.app-stat-value { font-family: var(--font-d); font-weight: 200; font-size: 26px; line-height: 1; letter-spacing: -0.02em; }
+.app-stat-sub { margin-top: 6px; font-family: var(--font-m); font-size: 10px; color: var(--text-2); }
+
+.app-section-header { display: flex; justify-content: space-between; align-items: baseline; margin: 32px 0 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.app-section-title { font-family: var(--font-d); font-weight: 300; font-size: 20px; letter-spacing: -0.01em; }
+.app-section-title em { font-style: italic; color: var(--text-2); }
+.app-chip { font-family: var(--font-m); font-size: 10px; padding: 2px 6px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 2px; color: var(--text-2); }
+
+.app-tokenbox { border: 1px solid var(--border); background: var(--bg-1); border-radius: 4px; padding: 16px 20px; }
+.app-tokenbox-row { display: flex; align-items: center; justify-content: space-between; }
+.app-tokenbox-amount { font-family: var(--font-d); font-weight: 200; font-size: 34px; color: var(--text); }
+.app-tokenbox-amount.muted { color: var(--text-2); }
+.app-tokenbox-select { background: var(--bg-2); border: 1px solid var(--border); border-radius: 2px; padding: 8px 12px; font-family: var(--font-m); font-size: 12px; }
+.app-tokenbox-meta { margin-top: 12px; display: flex; justify-content: space-between; font-family: var(--font-m); font-size: 10px; color: var(--text-3); }
+.app-swap-arrow { display: flex; justify-content: center; margin: -8px 0; position: relative; z-index: 2; }
+.app-swap-arrow-inner { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; color: var(--text-2); }
+
+.app-btn { display: inline-block; border: 1px solid var(--accent-dim); background: var(--accent); color: #0a0a0a; padding: 12px 20px; font-family: var(--font-m); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 2px; }
+.app-btn-block { width: 100%; text-align: center; margin-top: 20px; }
+.app-btn-ghost { background: transparent; border-color: var(--border); color: var(--text-2); }
+
+.app-twocol { display: grid; grid-template-columns: 1fr 280px; gap: 24px; }
+.app-card { border: 1px solid var(--border); background: linear-gradient(180deg, var(--bg-1), var(--bg)); padding: 20px; border-radius: 4px; }
+.app-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.app-aside { border: 1px solid var(--border); background: var(--bg-1); padding: 16px; border-radius: 4px; display: grid; gap: 10px; height: fit-content; }
+.app-aside-row { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.app-aside-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.app-aside-key { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+.app-aside-value { font-family: var(--font-m); font-size: 11px; color: var(--text); }
+
+.app-proposal { border: 1px solid var(--border); background: var(--bg-1); padding: 18px 20px; border-radius: 4px; margin-bottom: 12px; }
+.app-proposal-id { font-family: var(--font-m); font-size: 10px; color: var(--text-3); margin-bottom: 4px; }
+.app-proposal-desc { font-family: var(--font-d); font-weight: 300; font-size: 17px; line-height: 1.25; margin-bottom: 12px; }
+.app-votebars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.app-votebar { border: 1px solid var(--border); padding: 8px 10px; border-radius: 2px; background: var(--bg-2); }
+.app-votebar-label { font-family: var(--font-m); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 2px; }
+.app-votebar-value { font-family: var(--font-m); font-size: 12px; color: var(--text); }
+
+/* ASCII diagram */
+.diagram {
+  font-family: var(--font-m);
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.5;
+  padding: 24px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 4;
+}
+.diagram .accent { color: var(--accent); }
+
+/* Pure connect screenshot framing */
+.shot { width: 100%; border: 1px solid var(--border-strong); border-radius: 4px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+
+/* Bullet list */
+.bullets { list-style: none; padding: 0; }
+.bullets li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+.bullets li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--accent);
+}
+.bullets li strong { color: var(--text); font-weight: 500; }
+.bullets li code {
+  font-family: var(--font-m);
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg-1);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+/* Footer of each slide */
+.slide-footer { margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-family: var(--font-m); font-size: 10px; color: var(--text-3); letter-spacing: 0.08em; }
+
+/* Print styles — explicit mm dimensions + global compaction so every slide fits one A4 page. */
+@page { size: 297mm 210mm; margin: 0; }
+@media print {
+  html, body {
+    background: var(--bg);
+    width: 297mm;
+    height: 210mm;
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+  }
+  body::before,
+  body::after,
+  .slide::before { display: none !important; }
+  .slide {
+    width: 297mm;
+    height: 210mm;
+    min-height: 210mm;
+    max-height: 210mm;
+    overflow: hidden;
+    padding: 9mm 14mm;
+    page-break-after: always;
+    page-break-inside: avoid;
+    break-after: page;
+    break-inside: avoid;
+    display: flex;
+    flex-direction: column;
+  }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+
+  /* Typography */
+  .cover-title { font-size: 96px; margin-bottom: 24px; line-height: 0.9; }
+  .title { font-size: 44px; line-height: 0.95; margin-bottom: 14px; }
+  .title-sm { font-size: 32px; line-height: 1; margin-bottom: 12px; }
+  .lede { font-size: 11px; margin-bottom: 14px; max-width: 560px; }
+  .eyebrow { font-size: 9px; margin-bottom: 8px; }
+  .cover-eyebrow { margin-bottom: 24px; font-size: 10px; }
+  .cover-meta { gap: 50px; font-size: 11px; }
+
+  /* Compact header / footer */
+  .slide-header { margin-bottom: 16px; }
+  .slide-footer { padding-top: 10px; font-size: 9px; }
+
+  /* Cards & stats — denser */
+  .grid-2, .grid-3, .grid-4 { gap: 16px; }
+  .card { padding: 14px 16px; }
+  .card-label { font-size: 9px; margin-bottom: 8px; }
+  .card-value { font-size: 26px; }
+  .card-body { font-size: 11px; line-height: 1.45; }
+  .card-sub { font-size: 9px; }
+
+  /* Tables — tighter */
+  .table th, .table td { padding: 7px 10px; }
+  .table { font-size: 11px; }
+  .table th { font-size: 8.5px; }
+  .table .mono { font-size: 9.5px; }
+
+  /* Code blocks */
+  .code { padding: 12px 16px; font-size: 10.5px; line-height: 1.5; }
+
+  /* Diagrams */
+  .diagram { padding: 14px; font-size: 9.5px; line-height: 1.45; }
+
+  /* Bullets */
+  .bullets li { font-size: 11px; margin-bottom: 8px; line-height: 1.4; }
+  .bullets li code { font-size: 10px; }
+
+  /* Mockups — cap height so the chrome+inner page never overflow */
+  .mock { max-height: 158mm; }
+  .mock-bar { height: 22px; }
+  .mock-bar .url { font-size: 9px; }
+  .app-header { padding: 8px 16px; }
+  .app-brand { font-size: 13px; }
+  .app-nav a { font-size: 10px; }
+  .app-right { font-size: 9px; }
+  .app-main { padding: 14px 18px; }
+  .app-eyebrow { font-size: 9px; margin-bottom: 8px; }
+  .app-h1 { font-size: 26px; margin-bottom: 8px; }
+  .app-lede { font-size: 11px; margin-bottom: 14px; }
+  .app-stat-row { gap: 10px; margin-bottom: 12px; }
+  .app-stat { padding: 10px 12px; }
+  .app-stat-label { font-size: 8px; margin-bottom: 6px; }
+  .app-stat-value { font-size: 18px; }
+  .app-stat-sub { font-size: 8.5px; }
+  .app-section-header { margin: 16px 0 10px; padding-bottom: 6px; }
+  .app-section-title { font-size: 15px; }
+  .app-tokenbox { padding: 10px 14px; }
+  .app-tokenbox-amount { font-size: 24px; }
+  .app-tokenbox-meta { font-size: 8.5px; }
+  .app-btn { padding: 8px 14px; font-size: 9px; }
+  .app-twocol { gap: 12px; }
+  .app-card, .app-aside { padding: 12px 14px; }
+  .app-proposal { padding: 10px 14px; margin-bottom: 8px; }
+  .app-proposal-desc { font-size: 13px; }
+  .app-votebar { padding: 5px 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 1. COVER -->
+<section class="slide cover">
+  <div class="cover-eyebrow">
+    <span class="dot"></span>
+    Final Project · Blockchain Technologies 2
+    <span>·</span>
+    <span>Live on Arbitrum Sepolia</span>
+  </div>
+  <h1 class="cover-title">Protocol<em>°</em></h1>
+  <p style="font-family: var(--font-d); font-size: 28px; font-weight: 200; font-style: italic; color: var(--text-2); margin-bottom: 60px; max-width: 800px;">A full-stack DeFi super-app: AMM, ERC-4626 vault, Chainlink oracle, UUPS-upgradeable treasury, and a DAO with a 2-day timelock.</p>
+  <div class="cover-meta">
+    <div><strong>Author</strong>Alexey Azarenkov</div>
+    <div><strong>Network</strong>Arbitrum Sepolia · 421614</div>
+    <div><strong>Contracts</strong>12 deployed · all verified</div>
+    <div><strong>Tests</strong>104 passing · 91.72% lines</div>
+  </div>
+  <div class="slide-footer"><span>01 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 2. SCENARIO -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">Scenario A · DeFi Super-App</span>
+  </div>
+  <div class="eyebrow">What is this protocol</div>
+  <h2 class="title">A miniature <em>Aave + Uniswap + MakerDAO</em>, glued by a DAO.</h2>
+  <div class="grid-3" style="margin-top: 40px;">
+    <div class="card">
+      <div class="card-label">Trade</div>
+      <div class="card-value">SimpleAMM</div>
+      <p class="card-body" style="margin-top: 12px;">Constant-product (x·y=k) pair with a 0.3% fee. LPs deposit liquidity, traders pay the spread. <strong>Built from scratch</strong>, not forked.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Earn</div>
+      <div class="card-value">YieldVault</div>
+      <p class="card-body" style="margin-top: 12px;">ERC-4626 share vault. Deposit dUSDC → receive vdUSDC. 10% performance fee skim to the DAO Treasury on profit.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Govern</div>
+      <div class="card-value">DAO</div>
+      <p class="card-body" style="margin-top: 12px;">OpenZeppelin Governor + 2-day Timelock + ERC20Votes token. Every parameter change is on-chain, voted, time-locked.</p>
+    </div>
+  </div>
+  <p class="lede" style="margin-top: 40px;">Every required component from the syllabus is implemented as a first-class concern, wired together end-to-end and demonstrable live on a public L2.</p>
+  <div class="slide-footer"><span>02 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 3. ARCHITECTURE -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">Architecture · C4 Level 2</span>
+  </div>
+  <div class="eyebrow">How the contracts talk</div>
+  <h2 class="title-sm">Every privileged role <em>routes through the Timelock</em>.</h2>
+  <div class="diagram" style="margin-top: 24px;">
+<span class="accent">┌─ Governance plane ─────────────────────────────────────────┐</span>
+│                                                            │
+│  Holder ──delegates──▶ GovToken (ERC20Votes + Permit)      │
+│                              │                             │
+│  Holder ──propose──▶ <span class="accent">Governor</span> (4% quorum · 1d · 1w · 1%) │
+│                              │ queueOperations()           │
+│                              ▼                             │
+│                        <span class="accent">Timelock</span> (2-day delay)              │
+│                              │ executeBatch()              │
+<span class="accent">└──────────────────────────────┼─────────────────────────────┘</span>
+                               │
+<span class="accent">┌─ Protocol plane ─────────────┼─────────────────────────────┐</span>
+│                              ▼                             │
+│  PriceOracle ◀──admin── <span class="accent">[Timelock]</span> ──admin──▶ SimpleAMM   │
+│       │                      │ upgrader                    │
+│   Chainlink                  ▼                             │
+│   ETH/USD              <span class="accent">TreasuryProxy</span> ──delegatecall──▶ V1│
+│                              │                       (V2 staged)│
+│                              ▼                             │
+│                        VaultFactory ──CREATE2──▶ YieldVault │
+<span class="accent">└────────────────────────────────────────────────────────────┘</span>
+  </div>
+  <div class="slide-footer"><span>03 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 4. CONTRACTS TABLE -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">12 contracts</span>
+  </div>
+  <h2 class="title-sm">The full <em>surface area</em>.</h2>
+  <table class="table" style="margin-top: 24px;">
+    <thead>
+      <tr>
+        <th>Contract</th>
+        <th>Role</th>
+        <th>Patterns</th>
+        <th>Address</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>GovToken</td><td>ERC20Votes + Permit governance token</td><td>RBAC, supply cap</td><td class="mono">0xf3F1C6…F908</td></tr>
+      <tr><td>ProtocolGovernor</td><td>OZ Governor (1d / 1w / 4% / 1%)</td><td>Governance state-machine</td><td class="mono">0xe4aD60…f732</td></tr>
+      <tr><td>ProtocolTimelock</td><td>2-day delay between approval and execution</td><td>Timelock</td><td class="mono">0x1B83B6…17A2</td></tr>
+      <tr><td>TreasuryProxy (UUPS)</td><td>Holds protocol fees; upgradeable</td><td>UUPS proxy, storage gap</td><td class="mono">0xeCFda9…02AD</td></tr>
+      <tr><td>TreasuryV1 / V2</td><td>V2 adds per-token spend caps</td><td>UUPS upgrade path</td><td class="mono">0x73A452… / 0xe1C20d…</td></tr>
+      <tr><td>PriceOracle</td><td>Chainlink adapter, staleness guard</td><td>Oracle adapter</td><td class="mono">0x997fc0…160B</td></tr>
+      <tr><td>SimpleAMM</td><td>x·y=k pair, 0.3% fee, LP tokens</td><td>CEI, ReentrancyGuard, Pausable</td><td class="mono">0xD66bEa…dEe3</td></tr>
+      <tr><td>YieldVault</td><td>ERC-4626 + perf fee + offset 6</td><td>ERC-4626 rounding</td><td class="mono">0xEaDA38…2D18</td></tr>
+      <tr><td>VaultFactory</td><td>Deploys vaults via CREATE / CREATE2</td><td>Factory</td><td class="mono">0x953FeC…60CA</td></tr>
+      <tr><td>YulMath (library)</td><td>512-bit mulDiv in inline assembly</td><td>Yul benchmark</td><td class="mono">linked</td></tr>
+    </tbody>
+  </table>
+  <div class="slide-footer"><span>04 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 5. CONNECT SCREENSHOT -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">Live dApp · first impression</span>
+  </div>
+  <h2 class="title-sm">A connected wallet is <em>required</em>.</h2>
+  <p class="lede">React + Wagmi v2 + RainbowKit. Dark theme matched to the design system below. Built-in NetworkGuard prompts the user to switch to Arbitrum Sepolia if they're on the wrong chain.</p>
+  <div style="margin-top: 24px;">
+    <img class="shot" src="assets/01-connect.png" alt="Connect wallet screen" />
+  </div>
+  <div class="slide-footer"><span>05 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 6. DASHBOARD MOCKUP -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">Page · Overview</span>
+  </div>
+  <h2 class="title-sm">Position <em>at a glance</em>.</h2>
+  <div class="mock" style="margin-top: 16px;">
+    <div class="mock-bar">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="url">localhost:5173/</span>
+    </div>
+    <div class="mock-content">
+      <div class="app-header">
+        <span class="app-brand">Protocol<em>°</em></span>
+        <span class="app-tag">Arb · Sepolia</span>
+        <span class="app-nav">
+          <span class="active">Overview</span><span>Swap</span><span>Vault</span><span>Proposals</span>
+        </span>
+        <span class="app-right">
+          <span><span class="live-dot"></span>BLOCK 269211665</span>
+          <span class="wallet">0x64b2…Ebb8</span>
+        </span>
+      </div>
+      <div class="app-main">
+        <div class="app-eyebrow">Overview / 421614</div>
+        <h1 class="app-h1">Position <em>at a glance</em></h1>
+        <p class="app-lede">A live snapshot of your governance position, AMM reserves, and vault holdings — refreshed every 12 seconds.</p>
+        <div class="app-stat-row">
+          <div class="app-stat"><div class="app-stat-label">PGOV Balance</div><div class="app-stat-value">10,000,000.00</div><div class="app-stat-sub">Voting power · 10,000,000</div></div>
+          <div class="app-stat"><div class="app-stat-label">Delegate</div><div class="app-stat-value" style="font-family: var(--font-m); font-size: 18px;">0x64b2…Ebb8</div><div class="app-stat-sub">Self-delegated</div></div>
+          <div class="app-stat"><div class="app-stat-label">Demo USDC</div><div class="app-stat-value">900,000.00</div><div class="app-stat-sub">dUSDC on Arb Sepolia</div></div>
+          <div class="app-stat"><div class="app-stat-label">Vault Shares</div><div class="app-stat-value">0.00</div><div class="app-stat-sub">vdUSDC ERC-4626</div></div>
+        </div>
+        <div class="app-section-header">
+          <span class="app-section-title">AMM <em>pool reserves</em></span>
+          <span class="app-chip">pair · 0xD66b…dEe3</span>
+        </div>
+        <div class="app-stat-row" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="app-stat"><div class="app-stat-label">Reserve · dUSDC</div><div class="app-stat-value">100,000.00</div><div class="app-stat-sub">x·y=k</div></div>
+          <div class="app-stat"><div class="app-stat-label">Reserve · dWETH</div><div class="app-stat-value">50.0000</div><div class="app-stat-sub">0.3% fee</div></div>
+          <div class="app-stat"><div class="app-stat-label">Mid Price</div><div class="app-stat-value">2,000</div><div class="app-stat-sub">dUSDC / dWETH</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>06 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 7. SWAP MOCKUP -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">Page · Swap</span>
+  </div>
+  <h2 class="title-sm">Swap <em>tokens</em> through a constant-product AMM.</h2>
+  <div class="mock" style="margin-top: 16px;">
+    <div class="mock-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">localhost:5173/swap</span></div>
+    <div class="mock-content">
+      <div class="app-header">
+        <span class="app-brand">Protocol<em>°</em></span><span class="app-tag">Arb · Sepolia</span>
+        <span class="app-nav"><span>Overview</span><span class="active">Swap</span><span>Vault</span><span>Proposals</span></span>
+        <span class="app-right"><span><span class="live-dot"></span>BLOCK 269211665</span><span class="wallet">0x64b2…Ebb8</span></span>
+      </div>
+      <div class="app-main">
+        <div class="app-eyebrow">AMM · x · y = k</div>
+        <h1 class="app-h1">Swap <em>tokens</em></h1>
+        <div class="app-twocol" style="margin-top: 24px;">
+          <div class="app-card">
+            <div class="app-card-header">
+              <span class="app-aside-key">Swap interface</span>
+              <span style="font-family: var(--font-m); font-size: 10px; color: var(--text-3);">slippage · <span class="accent">0.5%</span></span>
+            </div>
+            <div class="app-tokenbox">
+              <div class="app-tokenbox-row">
+                <div class="app-tokenbox-amount">1,000</div>
+                <span class="app-tokenbox-select">dUSDC</span>
+              </div>
+              <div class="app-tokenbox-meta"><span>Pay</span><span>Balance · 900,000 <span class="accent">MAX</span></span></div>
+            </div>
+            <div class="app-swap-arrow"><span class="app-swap-arrow-inner">↓</span></div>
+            <div class="app-tokenbox">
+              <div class="app-tokenbox-row">
+                <div class="app-tokenbox-amount muted">0.49236</div>
+                <span class="app-tokenbox-select">dWETH</span>
+              </div>
+              <div class="app-tokenbox-meta"><span>Receive (estimated)</span><span>Min · 0.48990</span></div>
+            </div>
+            <a class="app-btn app-btn-block">Swap dUSDC → dWETH</a>
+          </div>
+          <aside class="app-aside">
+            <div class="app-aside-row"><span class="app-aside-key">Pair</span><span class="app-aside-value">0xD66b…dEe3</span></div>
+            <div class="app-aside-row"><span class="app-aside-key">Fee</span><span class="app-aside-value">0.30%</span></div>
+            <div class="app-aside-row"><span class="app-aside-key">Quote</span><span class="app-aside-value">0.49236 dWETH</span></div>
+            <div class="app-aside-row"><span class="app-aside-key">Min received</span><span class="app-aside-value">0.48990 dWETH</span></div>
+            <div class="app-aside-row"><span class="app-aside-key">Approval</span><span class="app-aside-value">✓ Granted</span></div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>07 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 8. VAULT MOCKUP -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">Page · Vault</span>
+  </div>
+  <h2 class="title-sm">ERC-4626 vault, <em>tokenized share</em>.</h2>
+  <div class="mock" style="margin-top: 16px;">
+    <div class="mock-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">localhost:5173/vault</span></div>
+    <div class="mock-content">
+      <div class="app-header">
+        <span class="app-brand">Protocol<em>°</em></span><span class="app-tag">Arb · Sepolia</span>
+        <span class="app-nav"><span>Overview</span><span>Swap</span><span class="active">Vault</span><span>Proposals</span></span>
+        <span class="app-right"><span><span class="live-dot"></span>BLOCK 269211665</span><span class="wallet">0x64b2…Ebb8</span></span>
+      </div>
+      <div class="app-main">
+        <div class="app-eyebrow">ERC-4626 yield vault</div>
+        <h1 class="app-h1">Vault <em>vdUSDC</em></h1>
+        <div class="app-stat-row">
+          <div class="app-stat"><div class="app-stat-label">Total Assets</div><div class="app-stat-value">10,000</div><div class="app-stat-sub">dUSDC held</div></div>
+          <div class="app-stat"><div class="app-stat-label">Total Shares</div><div class="app-stat-value">10,000,000</div><div class="app-stat-sub">Outstanding vdUSDC</div></div>
+          <div class="app-stat"><div class="app-stat-label">Your Shares</div><div class="app-stat-value">100,000</div><div class="app-stat-sub">vdUSDC</div></div>
+          <div class="app-stat"><div class="app-stat-label">Price / Share</div><div class="app-stat-value">0.001000</div><div class="app-stat-sub">convertToAssets</div></div>
+        </div>
+        <div class="app-twocol">
+          <div class="app-card">
+            <div class="app-card-header"><span class="app-aside-key">Position management</span><span style="font-family: var(--font-m); font-size: 10px; color: var(--text-3);">DEPOSIT</span></div>
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+              <span class="app-btn">Deposit</span>
+              <span class="app-btn app-btn-ghost">Withdraw</span>
+            </div>
+            <div class="app-tokenbox">
+              <div class="app-tokenbox-row"><div class="app-tokenbox-amount">100</div><span class="app-tokenbox-select">dUSDC</span></div>
+              <div class="app-tokenbox-meta"><span>Wallet balance</span><span>900,000 <span class="accent">MAX</span></span></div>
+            </div>
+            <a class="app-btn app-btn-block">Deposit dUSDC</a>
+          </div>
+          <aside class="app-aside">
+            <div class="app-aside-row"><span class="app-aside-key">Vault</span><span class="app-aside-value">0xEaDA…2D18</span></div>
+            <div class="app-aside-row"><span class="app-aside-key">Asset</span><span class="app-aside-value">0xD17b…1851</span></div>
+            <div class="app-aside-row"><span class="app-aside-key">Performance fee</span><span class="app-aside-value">10.00%</span></div>
+            <div class="app-aside-row"><span class="app-aside-key">Decimal offset</span><span class="app-aside-value">6</span></div>
+            <div class="app-aside-row"><span class="app-aside-key">Approval</span><span class="app-aside-value">✓ Granted</span></div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>08 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 9. PROPOSALS MOCKUP -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">Page · Proposals</span>
+  </div>
+  <h2 class="title-sm">Live proposals <em>via subgraph</em>.</h2>
+  <div class="mock" style="margin-top: 16px;">
+    <div class="mock-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">localhost:5173/proposals</span></div>
+    <div class="mock-content">
+      <div class="app-header">
+        <span class="app-brand">Protocol<em>°</em></span><span class="app-tag">Arb · Sepolia</span>
+        <span class="app-nav"><span>Overview</span><span>Swap</span><span>Vault</span><span class="active">Proposals</span></span>
+        <span class="app-right"><span><span class="live-dot"></span>BLOCK 269211665</span><span class="wallet">0x64b2…Ebb8</span></span>
+      </div>
+      <div class="app-main">
+        <div class="app-eyebrow">Governor · 1d delay · 1w voting · 4% quorum</div>
+        <h1 class="app-h1">Live <em>proposals</em></h1>
+        <p class="app-lede">Indexed via Goldsky. Each proposal flows Pending → Active → Succeeded → Queued → Executed, with a 2-day timelock between approval and execution.</p>
+        <div class="app-proposal">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 12px;">
+            <div>
+              <div class="app-proposal-id">PROPOSAL #0xabc123…</div>
+              <div class="app-proposal-desc">Increase Vault performance fee from 10% to 12%</div>
+            </div>
+            <span class="badge badge-ok">Active</span>
+          </div>
+          <div class="app-votebars">
+            <div class="app-votebar"><div class="app-votebar-label">For</div><div class="app-votebar-value">4,500,000</div></div>
+            <div class="app-votebar"><div class="app-votebar-label">Against</div><div class="app-votebar-value">200,000</div></div>
+            <div class="app-votebar"><div class="app-votebar-label">Abstain</div><div class="app-votebar-value">50,000</div></div>
+          </div>
+        </div>
+        <div class="app-proposal">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 12px;">
+            <div>
+              <div class="app-proposal-id">PROPOSAL #0xdef456…</div>
+              <div class="app-proposal-desc">Upgrade Treasury implementation V1 → V2 (per-token caps)</div>
+            </div>
+            <span class="badge badge-warn">Queued</span>
+          </div>
+          <div class="app-votebars">
+            <div class="app-votebar"><div class="app-votebar-label">For</div><div class="app-votebar-value">7,200,000</div></div>
+            <div class="app-votebar"><div class="app-votebar-label">Against</div><div class="app-votebar-value">120,000</div></div>
+            <div class="app-votebar"><div class="app-votebar-label">Abstain</div><div class="app-votebar-value">0</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>09 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 10. AMM MATH -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">Math · AMM</span>
+  </div>
+  <h2 class="title-sm">x · y = k, <em>nothing more</em>.</h2>
+  <div class="grid-2" style="margin-top: 24px;">
+    <div>
+      <div class="eyebrow">Spot pricing</div>
+      <div class="code"><span class="c">// reserveOut * amountInWithFee / (reserveIn + amountInWithFee)</span>
+<span class="k">function</span> _getAmountOut(
+    uint256 amountIn,
+    uint112 reserveIn,
+    uint112 reserveOut
+) internal pure returns (uint256) {
+    uint256 fee = amountIn * <span class="s">997</span>;            <span class="c">// 0.3% pool fee</span>
+    uint256 num = fee * reserveOut;
+    uint256 den = reserveIn * <span class="s">1000</span> + fee;
+    <span class="k">return</span> num / den;
+}</div>
+    </div>
+    <div>
+      <div class="eyebrow">k-invariant test</div>
+      <div class="code"><span class="k">function</span> testFuzz_swap_kNeverDecreases(
+    uint96 amountIn,
+    bool zeroForOne
+) public {
+    (uint112 r0a, uint112 r1a, ) = amm.getReserves();
+    uint256 kBefore = uint256(r0a) * uint256(r1a);
+
+    amm.swapExactIn(tokenIn, amountIn, 0, alice);
+
+    (uint112 r0b, uint112 r1b, ) = amm.getReserves();
+    <span class="k">assertGe</span>(uint256(r0b) * uint256(r1b), kBefore);
+}</div>
+      <p style="margin-top: 16px; color: var(--text-2); font-size: 13px;">Property tested with <strong style="color: var(--text);">256 random inputs per run</strong>. Augmented by a stateful invariant that asserts reserves match the contract's ERC-20 balances after any sequence of add/remove/swap calls.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>10 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 11. SECURITY -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">Security · Slither + audit</span>
+  </div>
+  <h2 class="title-sm">Slither: <em>0 results</em>.</h2>
+  <div class="grid-2" style="margin-top: 24px;">
+    <div>
+      <div class="code" style="border-left-color: var(--accent);">$ slither . --filter-paths "lib|test|script"
+<span class="c">'forge clean' running</span>
+<span class="c">'forge config --json' running</span>
+<span class="c">'forge build --build-info' running</span>
+
+INFO:Slither:. analyzed (<span class="k">77 contracts</span> with
+<span class="k">88 detectors</span>), <span class="k">0 result(s) found</span></div>
+      <p style="margin-top: 16px; color: var(--text-2); font-size: 13px;">All false-positive detectors disabled in <code style="font-family: var(--font-m); color: var(--text); background: var(--bg-1); padding: 2px 4px;">slither.config.json</code> with justifications. Remaining real findings: 0 High, 0 Medium.</p>
+    </div>
+    <div>
+      <div class="eyebrow">Defenses inventory</div>
+      <ul class="bullets">
+        <li><strong>Checks-Effects-Interactions</strong> on every AMM / Vault entry point, plus <code>nonReentrant</code> defence-in-depth.</li>
+        <li>Every privileged function gated by OpenZeppelin <strong>AccessControl</strong>; no <code>Ownable</code>, no <code>tx.origin</code>.</li>
+        <li>All ERC-20 calls use <strong>SafeERC20</strong>. All ETH sends use <code>call{value:}</code>.</li>
+        <li><strong>UUPS</strong> upgrade gated by Timelock-only <code>UPGRADER_ROLE</code>; 50-slot storage gap reserved for V2+.</li>
+        <li>Oracle reverts on stale price (<strong>configurable per asset</strong>) and on non-positive answer.</li>
+        <li>AMM <strong>Pausable</strong> circuit breaker — Timelock-controlled.</li>
+        <li>ERC-4626 <strong>decimal-offset 6</strong> mitigates first-depositor inflation attack.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-footer"><span>11 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 12. TESTING -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">Testing</span>
+  </div>
+  <h2 class="title-sm">104 tests, <em>91.72% line coverage</em>.</h2>
+  <div class="grid-4" style="margin-top: 24px;">
+    <div class="card"><div class="card-label">Unit</div><div class="card-value">80</div><p class="card-body" style="margin-top: 12px;">Happy + revert paths per public function</p></div>
+    <div class="card"><div class="card-label">Fuzz</div><div class="card-value">11</div><p class="card-body" style="margin-top: 12px;">AMM k-invariant, vault rounding, voting power, YulMath</p></div>
+    <div class="card"><div class="card-label">Invariant</div><div class="card-value">5</div><p class="card-body" style="margin-top: 12px;">k-monotonicity, reserves ≡ balances, total-assets coverage</p></div>
+    <div class="card"><div class="card-label">Fork</div><div class="card-value">4</div><p class="card-body" style="margin-top: 12px;">Real Chainlink ETH/USD, Uniswap V2 router, USDC</p></div>
+  </div>
+  <table class="table" style="margin-top: 32px;">
+    <thead><tr><th>Source</th><th>Lines</th><th>Statements</th><th>Branches</th><th>Functions</th></tr></thead>
+    <tbody>
+      <tr><td>src/GovToken.sol</td><td><span class="badge badge-ok">100.00%</span></td><td>100.00%</td><td>100.00%</td><td>100.00%</td></tr>
+      <tr><td>src/governance/ProtocolGovernor.sol</td><td><span class="badge badge-ok">90.00%</span></td><td>89.47%</td><td>100.00%</td><td>90.00%</td></tr>
+      <tr><td>src/oracle/PriceOracle.sol</td><td><span class="badge badge-ok">100.00%</span></td><td>100.00%</td><td>90.00%</td><td>100.00%</td></tr>
+      <tr><td>src/amm/SimpleAMM.sol</td><td><span class="badge badge-ok">96.84%</span></td><td>88.64%</td><td>63.64%</td><td>100.00%</td></tr>
+      <tr><td>src/vault/YieldVault.sol</td><td><span class="badge badge-ok">98.08%</span></td><td>98.11%</td><td>85.71%</td><td>100.00%</td></tr>
+      <tr><td>src/factory/VaultFactory.sol</td><td><span class="badge badge-ok">100.00%</span></td><td>100.00%</td><td>100.00%</td><td>100.00%</td></tr>
+      <tr><td>src/treasury/TreasuryV1+V2.sol</td><td><span class="badge badge-ok">100.00%</span></td><td>92.59%</td><td>50.00%</td><td>100.00%</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>91.72%</strong></td><td><strong>88.77%</strong></td><td><strong>75.68%</strong></td><td><strong>98.28%</strong></td></tr>
+    </tbody>
+  </table>
+  <div class="slide-footer"><span>12 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 13. DEPLOYMENT -->
+<section class="slide">
+  <div class="slide-header">
+    <span class="brand">Protocol<em>°</em></span>
+    <span class="slide-tag">L2 Deployment · Arbitrum Sepolia · 421614</span>
+  </div>
+  <h2 class="title-sm">12 contracts <em>deployed and verified</em>.</h2>
+  <div class="grid-2" style="margin-top: 24px;">
+    <div>
+      <div class="eyebrow">Reproducibility</div>
+      <ul class="bullets">
+        <li><strong>script/Deploy.s.sol</strong> deploys every contract from scratch in one transaction, then renounces deployer roles, leaving the Timelock as sole admin.</li>
+        <li><strong>script/VerifyDeployment.s.sol</strong> asserts Timelock owns all roles, Governor params match spec, no backdoor remains on deployer.</li>
+        <li>All bytecode <strong>verified on Arbiscan</strong> in the same forge invocation via <code>--verify --etherscan-api-key</code>.</li>
+        <li>The subgraph (Goldsky) follows: 6 entities, mappings for AMM / Factory / Governor events, indexing from the deploy block.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="code">$ source .env && forge script script/Deploy.s.sol:Deploy \
+    --rpc-url $ARBITRUM_SEPOLIA_RPC_URL \
+    --broadcast --verify \
+    --etherscan-api-key $ARBISCAN_API_KEY
+
+<span class="c">… 12 contracts deployed …</span>
+<span class="accent">All (12) contracts were verified!</span>
+
+Transactions saved to: broadcast/Deploy.s.sol/421614/run-latest.json</div>
+    </div>
+  </div>
+  <div style="margin-top: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-family: var(--font-m); font-size: 11px; color: var(--text-2);">
+    <div><strong style="color: var(--text);">GovToken</strong> · 0xf3F1C682b47AfF5c16CcC709D36bCABcE411F908</div>
+    <div><strong style="color: var(--text);">Timelock</strong> · 0x1B83B63087fFcf0eAF69443A2e8Ee53Cda8517A2</div>
+    <div><strong style="color: var(--text);">Governor</strong> · 0xe4aD6080604EAA6b8eF30A61868dC48EBD71f732</div>
+    <div><strong style="color: var(--text);">TreasuryProxy</strong> · 0xeCFda998447D4b1545583CdABcf24A5E012902AD</div>
+    <div><strong style="color: var(--text);">Oracle</strong> · 0x997fc09AC5686d68Ac872D9561e4d3869010160B</div>
+    <div><strong style="color: var(--text);">VaultFactory</strong> · 0x953FeC985064516279B9bA117048614fC24460CA</div>
+    <div><strong style="color: var(--text);">SimpleAMM</strong> · 0xD66bEaf12306c72d0Ef7b3a3Ee657CbECb9BdEe3</div>
+    <div><strong style="color: var(--text);">YieldVault</strong> · 0xEaDA38C8Ff73BFfE91e8a1be89f1fFBE626E2D18</div>
+    <div><strong style="color: var(--text);">DemoUSDC / dWETH</strong> · 0xD17b9F08… / 0xabD16093…</div>
+  </div>
+  <div class="slide-footer"><span>13 / 14</span><span>protocol°</span></div>
+</section>
+
+<!-- 14. END -->
+<section class="slide cover">
+  <div class="cover-eyebrow"><span class="dot"></span> Live demo follows · Q&A is individual</div>
+  <h1 class="cover-title">Thank <em>you</em>.</h1>
+  <div class="cover-meta" style="margin-top: 60px;">
+    <div><strong>Source</strong>~/Projects/Bachelor/Blockchain-2/final</div>
+    <div><strong>Live dApp</strong>localhost:5173</div>
+    <div><strong>Arbiscan</strong>sepolia.arbiscan.io</div>
+    <div><strong>Subgraph</strong>api.goldsky.com</div>
+  </div>
+  <div class="slide-footer"><span>14 / 14</span><span>protocol°</span></div>
+</section>
+
+</body>
+</html>

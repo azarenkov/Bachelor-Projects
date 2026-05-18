@@ -1,0 +1,483 @@
+/* ---------- Card ---------- */
+.card {
+    border: 1px solid var(--border-default);
+    background: linear-gradient(180deg, var(--bg-elev-1), var(--bg-canvas));
+    padding: var(--space-5);
+    border-radius: 4px;
+    transition: border-color 0.2s var(--ease-out);
+    position: relative;
+}
+
+.card:hover {
+    border-color: var(--border-strong);
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.cardLabel {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+}
+
+.cardCorner {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+}
+
+/* ---------- Stat block ---------- */
+.statRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-5);
+    margin-bottom: var(--space-6);
+}
+
+.stat {
+    border: 1px solid var(--border-default);
+    background: var(--bg-elev-1);
+    padding: var(--space-4) var(--space-5);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+}
+
+.statLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-3);
+}
+
+.statValue {
+    font-family: var(--font-display);
+    font-weight: 200;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.statUnit {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-left: 4px;
+}
+
+.statSub {
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* ---------- Address chip ---------- */
+.address {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 6px;
+    background: var(--bg-elev-2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 2px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s var(--ease-out);
+    display: inline-block;
+}
+
+.address:hover {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+    appearance: none;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elev-2);
+    color: var(--text-primary);
+    padding: 12px 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: all 0.15s var(--ease-out);
+}
+
+.btn:hover:not(:disabled) {
+    background: var(--bg-elev-3);
+    border-color: var(--text-secondary);
+}
+
+.btnPrimary {
+    border-color: var(--accent-dim);
+    background: var(--accent);
+    color: #0a0a0a;
+}
+
+.btnPrimary:hover:not(:disabled) {
+    background: #c9ff8a;
+    border-color: var(--accent);
+    box-shadow: 0 0 24px var(--accent-glow);
+}
+
+.btnBlock {
+    width: 100%;
+}
+
+.btnGhost {
+    background: transparent;
+    border-color: var(--border-default);
+    color: var(--text-secondary);
+}
+
+/* ---------- State badges ---------- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    border: 1px solid currentColor;
+    color: var(--text-secondary);
+}
+
+.badge::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.badgeActive {
+    color: var(--accent);
+}
+
+.badgeWarning {
+    color: var(--status-warn);
+}
+
+.badgeDanger {
+    color: var(--status-danger);
+}
+
+.badgeInfo {
+    color: var(--status-info);
+}
+
+/* ---------- Form input ---------- */
+.input {
+    width: 100%;
+    background: var(--bg-elev-2);
+    border: 1px solid var(--border-default);
+    border-radius: 2px;
+    padding: 14px 16px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    transition: border-color 0.15s var(--ease-out);
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: var(--space-4);
+}
+
+.fieldLabel {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+}
+
+/* ---------- Token amount input ---------- */
+.tokenBox {
+    border: 1px solid var(--border-default);
+    background: var(--bg-elev-1);
+    border-radius: 4px;
+    padding: var(--space-4);
+    transition: border-color 0.15s var(--ease-out);
+}
+
+.tokenBox:focus-within {
+    border-color: var(--accent);
+}
+
+.tokenBoxRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+}
+
+.tokenAmount {
+    background: transparent;
+    border: 0;
+    flex: 1;
+    font-family: var(--font-display);
+    font-weight: 200;
+    font-size: 36px;
+    color: var(--text-primary);
+    padding: 0;
+    min-width: 0;
+}
+
+.tokenAmount:focus {
+    outline: none;
+}
+
+.tokenSelect {
+    background: var(--bg-elev-2);
+    border: 1px solid var(--border-default);
+    border-radius: 2px;
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.tokenMeta {
+    margin-top: var(--space-3);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-tertiary);
+}
+
+.swapArrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: -6px 0;
+    position: relative;
+    z-index: 2;
+}
+
+.swapArrowInner {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-default);
+    background: var(--bg-canvas);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+}
+
+/* ---------- Status text & toast ---------- */
+.txStatus {
+    margin-top: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 11px;
+}
+
+.txStatusSuccess {
+    color: var(--accent);
+}
+
+.txStatusError {
+    color: var(--status-danger);
+}
+
+/* ---------- Section heading ---------- */
+.section {
+    margin-top: var(--space-7);
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.sectionTitle {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.sectionTitle em {
+    font-style: italic;
+    font-variation-settings: "SOFT" 100;
+    color: var(--text-secondary);
+}
+
+/* ---------- Proposal card ---------- */
+.proposal {
+    border: 1px solid var(--border-default);
+    background: var(--bg-elev-1);
+    padding: var(--space-5);
+    border-radius: 4px;
+    display: grid;
+    gap: var(--space-4);
+}
+
+.proposalTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+}
+
+.proposalId {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-bottom: 6px;
+}
+
+.proposalDesc {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 1.25;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.voteBars {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+}
+
+.voteBar {
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-3);
+    border-radius: 2px;
+    background: var(--bg-elev-2);
+}
+
+.voteBarLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-1);
+}
+
+.voteBarValue {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.proposalActions {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+}
+
+/* ---------- Empty state ---------- */
+.empty {
+    border: 1px dashed var(--border-default);
+    padding: var(--space-7);
+    text-align: center;
+    border-radius: 4px;
+    color: var(--text-secondary);
+}
+
+.emptyTitle {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+}
+
+/* ---------- Two column layout for forms ---------- */
+.twoCol {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: var(--space-6);
+}
+
+@media (max-width: 920px) {
+    .twoCol {
+        grid-template-columns: 1fr;
+    }
+}
+
+.aside {
+    border: 1px solid var(--border-default);
+    background: var(--bg-elev-1);
+    padding: var(--space-5);
+    border-radius: 4px;
+    height: fit-content;
+    display: grid;
+    gap: var(--space-4);
+}
+
+.asideRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.asideRow:last-child {
+    border-bottom: 0;
+}
+
+.asideKey {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+}
+
+.asideValue {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+}

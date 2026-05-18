@@ -1,0 +1,6 @@
+/Users/azarenkovalexey/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+'forge clean' running (wd: /Users/azarenkovalexey/Projects/Bachelor/Blockchain-2/final)
+'forge config --json' running
+'forge build --build-info --skip ./test/** ./script/** --force' running (wd: /Users/azarenkovalexey/Projects/Bachelor/Blockchain-2/final)
+INFO:Slither:. analyzed (77 contracts with 88 detectors), 0 result(s) found

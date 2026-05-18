@@ -1,0 +1,72 @@
+type Pool @entity(immutable: false, id: Bytes) {
+  id: Bytes!
+  token0: Bytes!
+  token1: Bytes!
+  reserve0: BigInt!
+  reserve1: BigInt!
+  totalSwapVolume0: BigInt!
+  totalSwapVolume1: BigInt!
+  swapCount: BigInt!
+  liquidityChanges: [LiquidityChange!]! @derivedFrom(field: "pool")
+  swaps: [Swap!]! @derivedFrom(field: "pool")
+}
+
+type Swap @entity(immutable: true, id: Bytes) {
+  id: Bytes!
+  pool: Pool!
+  sender: Bytes!
+  to: Bytes!
+  tokenIn: Bytes!
+  amountIn: BigInt!
+  amountOut: BigInt!
+  timestamp: BigInt!
+  block: BigInt!
+  txHash: Bytes!
+}
+
+type LiquidityChange @entity(immutable: true, id: Bytes) {
+  id: Bytes!
+  pool: Pool!
+  provider: Bytes!
+  amount0: BigInt!
+  amount1: BigInt!
+  shares: BigInt!
+  isAdd: Boolean!
+  timestamp: BigInt!
+  txHash: Bytes!
+}
+
+type Vault @entity(immutable: false, id: Bytes) {
+  id: Bytes!
+  asset: Bytes!
+  deployer: Bytes!
+  deterministic: Boolean!
+  salt: Bytes!
+  createdAt: BigInt!
+}
+
+type Proposal @entity(immutable: false, id: Bytes) {
+  id: Bytes!
+  proposalId: BigInt!
+  proposer: Bytes!
+  description: String!
+  state: String!
+  forVotes: BigInt!
+  againstVotes: BigInt!
+  abstainVotes: BigInt!
+  voteStart: BigInt!
+  voteEnd: BigInt!
+  executed: Boolean!
+  canceled: Boolean!
+  votes: [Vote!]! @derivedFrom(field: "proposal")
+}
+
+type Vote @entity(immutable: true, id: Bytes) {
+  id: Bytes!
+  proposal: Proposal!
+  voter: Bytes!
+  support: Int!
+  weight: BigInt!
+  reason: String!
+  timestamp: BigInt!
+}

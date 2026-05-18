@@ -1,0 +1,14 @@
+{
+    "filter_paths": "lib|test|script|src/mocks",
+    "exclude_informational": false,
+    "exclude_low": false,
+    "exclude_medium": false,
+    "exclude_high": false,
+    "exclude_optimization": true,
+    "detectors_to_exclude": "incorrect-exp,divide-before-multiply,assembly,naming-convention,too-many-digits,unindexed-event-address,timestamp",
+    "solc_remaps": [
+        "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+        "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+        "forge-std/=lib/forge-std/src/"
+    ]
+}

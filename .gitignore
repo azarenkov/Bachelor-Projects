@@ -1,2 +1,22 @@
 .claude/
 CLAUDE.md
+
+# Blockchain-2/final — Foundry, frontend, subgraph artifacts
+Blockchain-2/final/lib/
+Blockchain-2/final/cache/
+Blockchain-2/final/out/
+Blockchain-2/final/.env
+Blockchain-2/final/.env.*
+!Blockchain-2/final/.env.example
+Blockchain-2/final/broadcast/*/[0-9]*/*.json
+!Blockchain-2/final/broadcast/*/[0-9]*/run-latest.json
+Blockchain-2/final/frontend/node_modules/
+Blockchain-2/final/frontend/dist/
+Blockchain-2/final/subgraph/node_modules/
+Blockchain-2/final/subgraph/build/
+Blockchain-2/final/subgraph/generated/
+Blockchain-2/final/lcov.info
+Blockchain-2/final/coverage/
+
+# General
+.DS_Store

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Alexey Azarenkov">
+  <meta name="dcterms.date" content="2026-01-01">
+  <title>Protocol — DeFi Super-App</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4/dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4/dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4/dist/theme/Madrid.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Protocol — DeFi Super-App</h1>
+  <p class="subtitle">Blockchain Technologies 2 — Final Project</p>
+  <p class="author">Alexey Azarenkov</p>
+  <p class="date">2026</p>
+</section>
+
+<section id="project-overview" class="slide level1">
+<h1>Project overview</h1>
+<p><strong>Scenario A — DeFi Super-App</strong> (locked at end of Week
+6).</p>
+<p>A single integrated protocol:</p>
+<ul>
+<li><strong>AMM</strong> — constant-product (x·y=k), 0.3% fee, built
+from scratch</li>
+<li><strong>Yield Vault</strong> — ERC-4626 with performance fee</li>
+<li><strong>Oracle</strong> — Chainlink price feed adapter with
+staleness check</li>
+<li><strong>Governance</strong> — OZ Governor + 2-day Timelock +
+ERC20Votes token</li>
+<li><strong>Treasury</strong> — UUPS-upgradeable, owned by the
+Timelock</li>
+<li><strong>Factory</strong> — deploys vaults via CREATE2 for
+deterministic addresses</li>
+</ul>
+<p><strong>Deployed on Arbitrum Sepolia (chain id 421614).</strong></p>
+</section>
+<section id="architecture-c4-level-2" class="slide level1">
+<h1>Architecture (C4 level 2)</h1>
+<pre><code>        ┌─────────┐  votes  ┌──────────┐  propose  ┌──────────┐  queue/exec
+        │ Holder  │────────▶│ Governor │──────────▶│ Timelock │──────┐
+        └─────────┘         └──────────┘   2d delay└──────────┘      │
+                                                                     ▼
+        ┌────────────┐  ┌────────────┐  ┌──────────────┐  ┌──────────────┐
+        │ PriceOracle│  │ SimpleAMM  │  │ TreasuryProxy│  │ VaultFactory │
+        │  Chainlink │  │  x·y=k     │  │  UUPS (V1)   │  │  CREATE2     │
+        └────────────┘  └────────────┘  └──────────────┘  └──────────────┘
+              ▲                                                  │
+              │                                                  ▼
+        ┌──────────┐                                     ┌──────────────┐
+        │ Aggregator│                                    │ YieldVault   │
+        │   ETH/USD│                                     │  ERC-4626    │
+        └──────────┘                                     └──────────────┘</code></pre>
+<p>Every privileged role on every contract converges on the Timelock.
+The deployer renounces all admin powers in the final step of
+<code>Deploy.s.sol</code>.</p>
+</section>
+<section id="smart-contract-surface" class="slide level1">
+<h1>Smart contract surface</h1>
+<table>
+<thead>
+<tr>
+<th>Contract</th>
+<th style="text-align: right;">LoC</th>
+<th>Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GovToken</code></td>
+<td style="text-align: right;">49</td>
+<td>ERC20Votes + Permit</td>
+</tr>
+<tr>
+<td><code>ProtocolGovernor</code></td>
+<td style="text-align: right;">110</td>
+<td>Governor + TimelockControl</td>
+</tr>
+<tr>
+<td><code>ProtocolTimelock</code></td>
+<td style="text-align: right;">11</td>
+<td>TimelockController (2 day delay)</td>
+</tr>
+<tr>
+<td><code>PriceOracle</code></td>
+<td style="text-align: right;">65</td>
+<td>Oracle adapter, RBAC</td>
+</tr>
+<tr>
+<td><code>SimpleAMM</code></td>
+<td style="text-align: right;">215</td>
+<td>x·y=k, CEI, ReentrancyGuard, Pausable</td>
+</tr>
+<tr>
+<td><code>YieldVault</code></td>
+<td style="text-align: right;">130</td>
+<td>ERC-4626 + perf-fee + decimals offset 6</td>
+</tr>
+<tr>
+<td><code>VaultFactory</code></td>
+<td style="text-align: right;">80</td>
+<td>CREATE + CREATE2</td>
+</tr>
+<tr>
+<td><code>TreasuryV1</code> / <code>TreasuryV2</code></td>
+<td style="text-align: right;">60 / 35</td>
+<td>UUPS upgrade path</td>
+</tr>
+<tr>
+<td><code>YulMath</code></td>
+<td style="text-align: right;">90</td>
+<td>Inline-assembly 512-bit <code>mulDiv</code></td>
+</tr>
+</tbody>
+</table>
+<p>Total production code: ~840 LoC across 10 contracts.</p>
+</section>
+<section id="required-components-checklist" class="slide level1">
+<h1>Required components — checklist</h1>
+<table>
+<thead>
+<tr>
+<th>Lecture</th>
+<th>Requirement</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1</td>
+<td>UUPS upgradeable</td>
+<td><code>TreasuryV1</code>/<code>V2</code></td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Factory CREATE + CREATE2</td>
+<td><code>VaultFactory</code></td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Inline-assembly benchmarked</td>
+<td><code>YulMath</code></td>
+</tr>
+<tr>
+<td>L4-5</td>
+<td>DeFi primitive from scratch</td>
+<td><code>SimpleAMM</code> (x·y=k)</td>
+</tr>
+<tr>
+<td>L6</td>
+<td>ERC20Votes + ERC20Permit</td>
+<td><code>GovToken</code></td>
+</tr>
+<tr>
+<td>L6</td>
+<td>ERC-4626</td>
+<td><code>YieldVault</code> (decimal offset 6)</td>
+</tr>
+<tr>
+<td>L7</td>
+<td>L2 deployment</td>
+<td>Arbitrum Sepolia</td>
+</tr>
+<tr>
+<td>L8</td>
+<td>Chainlink + staleness</td>
+<td><code>PriceOracle</code></td>
+</tr>
+<tr>
+<td>L8</td>
+<td>The Graph subgraph</td>
+<td><code>subgraph/</code> (6 entities)</td>
+</tr>
+<tr>
+<td>L9</td>
+<td>Full Governor stack</td>
+<td><code>ProtocolGovernor</code> + <code>ProtocolTimelock</code></td>
+</tr>
+</tbody>
+</table>
+<p>All present, all under test, all called by the frontend /
+subgraph.</p>
+</section>
+<section id="security" class="slide level1">
+<h1>Security</h1>
+<ul>
+<li>Slither: <strong>0 results</strong> across all detectors after
+justified suppressions.</li>
+<li>Custom error types, no <code>require(string)</code>.</li>
+<li>All ETH transfers use <code>call{value:}</code>; no
+<code>transfer/send</code>.</li>
+<li>All ERC-20 interactions use <code>SafeERC20</code>.</li>
+<li>No <code>tx.origin</code>, no <code>block.timestamp</code> as
+randomness.</li>
+<li>Reentrancy: CEI + <code>ReentrancyGuard</code> on every AMM/Vault
+entry point.</li>
+<li>Access control: every privileged function gated by
+<code>AccessControl</code>; all roles owned by Timelock
+post-deploy.</li>
+<li>Two case studies reproduced + fixed: reentrancy (cross-function via
+LP token), tx.origin-style access control.</li>
+</ul>
+</section>
+<section id="testing-88-total-tests-104-with-extras"
+class="slide level1">
+<h1>Testing — 88 total tests (104 with extras)</h1>
+<table>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 40%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr>
+<th>Type</th>
+<th style="text-align: right;">Count</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unit</td>
+<td style="text-align: right;">80</td>
+<td>≥1 happy path + ≥1 revert path per public function</td>
+</tr>
+<tr>
+<td>Fuzz</td>
+<td style="text-align: right;">11</td>
+<td>AMM k-invariant, vault deposit/redeem, voting power, YulMath</td>
+</tr>
+<tr>
+<td>Invariant</td>
+<td style="text-align: right;">5</td>
+<td>k monotonic, reserves match balances, vault asset coverage</td>
+</tr>
+<tr>
+<td>Fork</td>
+<td style="text-align: right;">4</td>
+<td>Chainlink ETH/USD, Uniswap V2 quote, USDC whale transfer</td>
+</tr>
+</tbody>
+</table>
+<p>Coverage: <strong>91.72% lines</strong> (target ≥ 90%).</p>
+<p>All CI lanes green:
+<code>forge fmt --check → forge build → forge test → forge coverage → slither</code>.</p>
+</section>
+<section id="subgraph-the-graph" class="slide level1">
+<h1>Subgraph (The Graph)</h1>
+<p>6 entities:</p>
+<ul>
+<li><code>Pool</code> — AMM pool reserves + counters</li>
+<li><code>Swap</code> — every swap event (sender, to, tokenIn,
+amounts)</li>
+<li><code>LiquidityChange</code> — add/remove with provider +
+shares</li>
+<li><code>Vault</code> — every deployed YieldVault</li>
+<li><code>Proposal</code> — Governor proposal lifecycle</li>
+<li><code>Vote</code> — individual votes referencing proposal</li>
+</ul>
+<p>5 documented GraphQL queries: recent swaps, top LPs, active
+proposals, vote history per address, vaults per asset.</p>
+<p>dApp pulls the proposal list from the subgraph (not directly from the
+contract) per rubric requirement.</p>
+</section>
+<section id="frontend-react-wagmi-v2" class="slide level1">
+<h1>Frontend (React + Wagmi v2)</h1>
+<ul>
+<li><strong>Wallet connection</strong> via RainbowKit (MetaMask,
+WalletConnect).</li>
+<li><strong>Network detection</strong> — switches user to Arbitrum
+Sepolia if on wrong chain.</li>
+<li><strong>Reads:</strong> GOV balance, voting power, delegate, AMM
+reserves, vault shares.</li>
+<li><strong>Writes (≥3):</strong> <code>SimpleAMM.swapExactIn</code>,
+<code>YieldVault.deposit</code>,
+<code>ProtocolGovernor.castVote</code>.</li>
+<li><strong>Error handling:</strong> wallet rejection, wrong network,
+insufficient balance — all surfaced as human messages, no raw RPC
+noise.</li>
+<li><strong>Proposal list</strong> pulled from subgraph, with
+proposal-state badge and vote button.</li>
+</ul>
+</section>
+<section id="deployment-verification" class="slide level1">
+<h1>Deployment &amp; Verification</h1>
+<p><code>script/Deploy.s.sol</code>: - Idempotent — re-runs produce the
+same wiring. - Renounces deployer’s privileged roles at the end. -
+Writes <code>deployments/&lt;chainId&gt;.json</code> for the dApp /
+subgraph.</p>
+<p><code>script/VerifyDeployment.s.sol</code>: - Asserts Timelock owns
+all admin roles. - Asserts Governor params match the spec (1d delay, 1w
+period, 4% quorum, 1% threshold). - Asserts deployer holds zero
+privileged roles.</p>
+<p>All contracts verified on Arbiscan after
+<code>forge script --verify</code>.</p>
+</section>
+<section id="whats-the-team-individual-ownership" class="slide level1">
+<h1>What’s the team / individual ownership</h1>
+<p>Solo submission — Alexey Azarenkov:</p>
+<ul>
+<li>Smart contracts + tests + deploy scripts + verification.</li>
+<li>Subgraph definitions + mappings.</li>
+<li>Frontend (Wagmi + RainbowKit).</li>
+<li>CI pipeline + Slither integration.</li>
+<li>Architecture document + audit report + gas report.</li>
+</ul>
+<p>(Per the rubric this scenario is solo; team-of-2-3 column not
+applicable.)</p>
+</section>
+<section id="demo-plan" class="slide level1">
+<h1>Demo plan</h1>
+<ol type="1">
+<li>Show repo layout + 100% CI green badge.</li>
+<li><code>forge test</code> — 88 passing, 91.72% coverage.</li>
+<li><code>slither .</code> — 0 results.</li>
+<li>Open Arbiscan tab for each deployed contract — verified ABI
+present.</li>
+<li>dApp: connect wallet → token stats → swap → vault deposit → cast
+vote.</li>
+<li>Subgraph playground: run the 5 documented queries against the live
+indexer.</li>
+<li>Live propose → vote → queue → execute through the Governor.</li>
+</ol>
+</section>
+<section id="qa" class="slide level1">
+<h1>Q&amp;A</h1>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@4/dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@4/plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@4/plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@4/plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
