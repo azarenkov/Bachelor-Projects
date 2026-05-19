@@ -1,0 +1,12 @@
+.env
+.env.local
+
+# Go
+bin/
+*.test
+*.out
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
